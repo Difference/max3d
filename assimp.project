@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="assimp">
+  <Description/>
+  <Dependencies/>
+  <VirtualDirectory Name="irrXML">
+    <File Name="assimp/code/irrXML/CXMLReaderImpl.h"/>
+    <File Name="assimp/code/irrXML/fast_atof.h"/>
+    <File Name="assimp/code/irrXML/heapsort.h"/>
+    <File Name="assimp/code/irrXML/irrArray.h"/>
+    <File Name="assimp/code/irrXML/irrString.h"/>
+    <File Name="assimp/code/irrXML/irrTypes.h"/>
+    <File Name="assimp/code/irrXML/irrXML.cpp"/>
+    <File Name="assimp/code/irrXML/irrXML.h"/>
+    <File Name="assimp/code/irrXML/irrXMLWrapper.h"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="code">
+    <File Name="assimp/code/3DSConverter.cpp"/>
+    <File Name="assimp/code/3DSHelper.h"/>
+    <File Name="assimp/code/3DSLoader.cpp"/>
+    <File Name="assimp/code/3DSLoader.h"/>
+    <File Name="assimp/code/ACLoader.cpp"/>
+    <File Name="assimp/code/ACLoader.h"/>
+    <File Name="assimp/code/aiAssert.cpp"/>
+    <File Name="assimp/code/ASELoader.cpp"/>
+    <File Name="assimp/code/ASELoader.h"/>
+    <File Name="assimp/code/ASEParser.cpp"/>
+    <File Name="assimp/code/ASEParser.h"/>
+    <File Name="assimp/code/Assimp.cpp"/>
+    <File Name="assimp/code/AssimpPCH.cpp"/>
+    <File Name="assimp/code/AssimpPCH.h"/>
+    <File Name="assimp/code/BaseImporter.cpp"/>
+    <File Name="assimp/code/BaseImporter.h"/>
+    <File Name="assimp/code/BaseProcess.cpp"/>
+    <File Name="assimp/code/BaseProcess.h"/>
+    <File Name="assimp/code/BVHLoader.cpp"/>
+    <File Name="assimp/code/BVHLoader.h"/>
+    <File Name="assimp/code/ByteSwap.h"/>
+    <File Name="assimp/code/CalcTangentsProcess.cpp"/>
+    <File Name="assimp/code/CalcTangentsProcess.h"/>
+    <File Name="assimp/code/ConvertToLHProcess.cpp"/>
+    <File Name="assimp/code/ConvertToLHProcess.h"/>
+    <File Name="assimp/code/DefaultIOStream.cpp"/>
+    <File Name="assimp/code/DefaultIOStream.h"/>
+    <File Name="assimp/code/DefaultIOSystem.cpp"/>
+    <File Name="assimp/code/DefaultIOSystem.h"/>
+    <File Name="assimp/code/DefaultLogger.cpp"/>
+    <File Name="assimp/code/DXFLoader.cpp"/>
+    <File Name="assimp/code/DXFLoader.h"/>
+    <File Name="assimp/code/fast_atof.h"/>
+    <File Name="assimp/code/FileLogStream.h"/>
+    <File Name="assimp/code/FindDegenerates.cpp"/>
+    <File Name="assimp/code/FindDegenerates.h"/>
+    <File Name="assimp/code/FindInvalidDataProcess.cpp"/>
+    <File Name="assimp/code/FindInvalidDataProcess.h"/>
+    <File Name="assimp/code/FixNormalsStep.cpp"/>
+    <File Name="assimp/code/FixNormalsStep.h"/>
+    <File Name="assimp/code/GenericProperty.h"/>
+    <File Name="assimp/code/GenFaceNormalsProcess.cpp"/>
+    <File Name="assimp/code/GenFaceNormalsProcess.h"/>
+    <File Name="assimp/code/GenVertexNormalsProcess.cpp"/>
+    <File Name="assimp/code/GenVertexNormalsProcess.h"/>
+    <File Name="assimp/code/HalfLifeFileData.h"/>
+    <File Name="assimp/code/Hash.h"/>
+    <File Name="assimp/code/HMPFileData.h"/>
+    <File Name="assimp/code/HMPLoader.cpp"/>
+    <File Name="assimp/code/HMPLoader.h"/>
+    <File Name="assimp/code/IFF.h"/>
+    <File Name="assimp/code/Importer.cpp"/>
+    <File Name="assimp/code/ImproveCacheLocality.cpp"/>
+    <File Name="assimp/code/ImproveCacheLocality.h"/>
+    <File Name="assimp/code/IRRLoader.cpp"/>
+    <File Name="assimp/code/IRRLoader.h"/>
+    <File Name="assimp/code/IRRMeshLoader.cpp"/>
+    <File Name="assimp/code/IRRMeshLoader.h"/>
+    <File Name="assimp/code/JoinVerticesProcess.cpp"/>
+    <File Name="assimp/code/JoinVerticesProcess.h"/>
+    <File Name="assimp/code/LimitBoneWeightsProcess.cpp"/>
+    <File Name="assimp/code/LimitBoneWeightsProcess.h"/>
+    <File Name="assimp/code/LWOBLoader.cpp"/>
+    <File Name="assimp/code/LWOFileData.h"/>
+    <File Name="assimp/code/LWOLoader.cpp"/>
+    <File Name="assimp/code/LWOLoader.h"/>
+    <File Name="assimp/code/LWOMaterial.cpp"/>
+    <File Name="assimp/code/LWSLoader.cpp"/>
+    <File Name="assimp/code/LWSLoader.h"/>
+    <File Name="assimp/code/MaterialSystem.cpp"/>
+    <File Name="assimp/code/MaterialSystem.h"/>
+    <File Name="assimp/code/MD2FileData.h"/>
+    <File Name="assimp/code/MD2Loader.cpp"/>
+    <File Name="assimp/code/MD2Loader.h"/>
+    <File Name="assimp/code/MD2NormalTable.h"/>
+    <File Name="assimp/code/MD3FileData.h"/>
+    <File Name="assimp/code/MD3Loader.cpp"/>
+    <File Name="assimp/code/MD3Loader.h"/>
+    <File Name="assimp/code/MD5Loader.cpp"/>
+    <File Name="assimp/code/MD5Loader.h"/>
+    <File Name="assimp/code/MD5Parser.cpp"/>
+    <File Name="assimp/code/MD5Parser.h"/>
+    <File Name="assimp/code/MDCFileData.h"/>
+    <File Name="assimp/code/MDCLoader.cpp"/>
+    <File Name="assimp/code/MDCLoader.h"/>
+    <File Name="assimp/code/MDCNormalTable.h"/>
+    <File Name="assimp/code/MDLDefaultColorMap.h"/>
+    <File Name="assimp/code/MDLFileData.h"/>
+    <File Name="assimp/code/MDLLoader.cpp"/>
+    <File Name="assimp/code/MDLLoader.h"/>
+    <File Name="assimp/code/MDLMaterialLoader.cpp"/>
+    <File Name="assimp/code/MDRFileData.h"/>
+    <File Name="assimp/code/MDRLoader.cpp"/>
+    <File Name="assimp/code/MDRLoader.h"/>
+    <File Name="assimp/code/NFFLoader.cpp"/>
+    <File Name="assimp/code/NFFLoader.h"/>
+    <File Name="assimp/code/ObjFileData.h"/>
+    <File Name="assimp/code/ObjFileImporter.cpp"/>
+    <File Name="assimp/code/ObjFileImporter.h"/>
+    <File Name="assimp/code/ObjFileMtlImporter.cpp"/>
+    <File Name="assimp/code/ObjFileMtlImporter.h"/>
+    <File Name="assimp/code/ObjFileParser.cpp"/>
+    <File Name="assimp/code/ObjFileParser.h"/>
+    <File Name="assimp/code/ObjTools.h"/>
+    <File Name="assimp/code/OFFLoader.cpp"/>
+    <File Name="assimp/code/OFFLoader.h"/>
+    <File Name="assimp/code/OptimizeGraphProcess.cpp"/>
+    <File Name="assimp/code/OptimizeGraphProcess.h"/>
+    <File Name="assimp/code/ParsingUtils.h"/>
+    <File Name="assimp/code/PlyLoader.cpp"/>
+    <File Name="assimp/code/PlyLoader.h"/>
+    <File Name="assimp/code/PlyParser.cpp"/>
+    <File Name="assimp/code/PlyParser.h"/>
+    <File Name="assimp/code/PretransformVertices.cpp"/>
+    <File Name="assimp/code/PretransformVertices.h"/>
+    <File Name="assimp/code/ProcessHelper.h"/>
+    <File Name="assimp/code/qnan.h"/>
+    <File Name="assimp/code/RawLoader.cpp"/>
+    <File Name="assimp/code/RawLoader.h"/>
+    <File Name="assimp/code/RemoveComments.cpp"/>
+    <File Name="assimp/code/RemoveComments.h"/>
+    <File Name="assimp/code/RemoveRedundantMaterials.cpp"/>
+    <File Name="assimp/code/RemoveRedundantMaterials.h"/>
+    <File Name="assimp/code/RemoveVCProcess.cpp"/>
+    <File Name="assimp/code/RemoveVCProcess.h"/>
+    <File Name="assimp/code/SceneCombiner.cpp"/>
+    <File Name="assimp/code/SceneCombiner.h"/>
+    <File Name="assimp/code/SGSpatialSort.cpp"/>
+    <File Name="assimp/code/SGSpatialSort.h"/>
+    <File Name="assimp/code/SkeletonMeshBuilder.cpp"/>
+    <File Name="assimp/code/SkeletonMeshBuilder.h"/>
+    <File Name="assimp/code/SMDLoader.cpp"/>
+    <File Name="assimp/code/SMDLoader.h"/>
+    <File Name="assimp/code/SmoothingGroups.h"/>
+    <File Name="assimp/code/SortByPTypeProcess.cpp"/>
+    <File Name="assimp/code/SortByPTypeProcess.h"/>
+    <File Name="assimp/code/SpatialSort.cpp"/>
+    <File Name="assimp/code/SpatialSort.h"/>
+    <File Name="assimp/code/SplitLargeMeshes.cpp"/>
+    <File Name="assimp/code/SplitLargeMeshes.h"/>
+    <File Name="assimp/code/StandardShapes.cpp"/>
+    <File Name="assimp/code/StandardShapes.h"/>
+    <File Name="assimp/code/STLLoader.cpp"/>
+    <File Name="assimp/code/STLLoader.h"/>
+    <File Name="assimp/code/StreamReader.h"/>
+    <File Name="assimp/code/StringComparison.h"/>
+    <File Name="assimp/code/TextureTransform.cpp"/>
+    <File Name="assimp/code/TextureTransform.h"/>
+    <File Name="assimp/code/TriangulateProcess.cpp"/>
+    <File Name="assimp/code/TriangulateProcess.h"/>
+    <File Name="assimp/code/ValidateDataStructure.cpp"/>
+    <File Name="assimp/code/ValidateDataStructure.h"/>
+    <File Name="assimp/code/VertexTriangleAdjacency.cpp"/>
+    <File Name="assimp/code/VertexTriangleAdjacency.h"/>
+    <File Name="assimp/code/Win32DebugLogStream.h"/>
+    <File Name="assimp/code/XFileHelper.h"/>
+    <File Name="assimp/code/XFileImporter.cpp"/>
+    <File Name="assimp/code/XFileImporter.h"/>
+    <File Name="assimp/code/XFileParser.cpp"/>
+    <File Name="assimp/code/XFileParser.h"/>
+    <File Name="assimp/code/Q3DLoader.cpp"/>
+    <File Name="assimp/code/Q3DLoader.h"/>
+    <File Name="assimp/code/ScenePreprocessor.cpp"/>
+    <File Name="assimp/code/ScenePreprocessor.h"/>
+    <File Name="assimp/code/B3DImporter.cpp"/>
+    <File Name="assimp/code/B3DImporter.h"/>
+    <File Name="assimp/code/ColladaParser.h"/>
+    <File Name="assimp/code/ColladaLoader.cpp"/>
+    <File Name="assimp/code/ColladaLoader.h"/>
+    <File Name="assimp/code/ColladaParser.cpp"/>
+    <File Name="assimp/code/ComputeUVMappingProcess.cpp"/>
+    <File Name="assimp/code/ComputeUVMappingProcess.h"/>
+    <File Name="assimp/code/TargetAnimation.h"/>
+    <File Name="assimp/code/TargetAnimation.cpp"/>
+  </VirtualDirectory>
+  <Dependencies Name="Debug"/>
+  <Settings Type="Static Library">
+    <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Static Library">
+      <General OutputFile="$(IntermediateDirectory)/lib$(ProjectName).a" IntermediateDirectory="./Debug" Command="" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Compiler Required="yes" Options="-g">
+        <IncludePath Value="."/>
+        <IncludePath Value="./boost"/>
+      </Compiler>
+      <Linker Required="yes" Options=""/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath=""/>
+      <ResourceCompiler Required="no" Options=""/>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <CleanCommand/>
+        <BuildCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Static Library">
+      <General OutputFile="$(IntermediateDirectory)/lib$(ProjectName).a" IntermediateDirectory="./Release" Command="" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Compiler Required="yes" Options="-O2 -fno-strict-aliasing">
+        <IncludePath Value="."/>
+        <IncludePath Value="./boost"/>
+      </Compiler>
+      <Linker Required="yes" Options=""/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath=""/>
+      <ResourceCompiler Required="no" Options=""/>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <CleanCommand/>
+        <BuildCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+  </Settings>
+  <Dependencies Name="Release"/>
+</CodeLite_Project>

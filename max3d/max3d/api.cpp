@@ -1,0 +1,507 @@
+/*
+Max3D
+Copyright (c) 2008, Mark Sibly
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.
+
+* Neither the name of Max3D's copyright owner nor the names of its contributors
+may be used to endorse or promote products derived from this software without
+specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+*/
+
+/// @file
+/// @brief Max3d procedural API.
+
+#include "std.h"
+
+#include "app.h"
+#include "api.h"
+#include "entity.h"
+#include "camera.h"
+#include "light.h"
+#include "model.h"
+#include "pivot.h"
+#include "surface.h"
+#include "material.h"
+#include "sprite.h"
+#include "terrain.h"
+
+#if _WIN32
+#define API __declspec(dllexport)
+#else
+#define API __attribute__((visibility("default")))
+#endif
+
+#define _API
+
+static float to_radians=PI/180.0f;
+
+static const char *c_str( const string &t ){
+	static int sz;static char *buf;
+	if( t.size()+1>sz ){ delete[] buf;sz=t.size()+1;buf=new char[sz]; }
+	strcpy( buf,t.c_str() );return buf;
+}
+
+extern "C"{	//these will need to be CDECL too for lua...
+
+//***** App API *****
+//
+
+/// Initalize Max3d - must be called before any other commands
+API void m3dInit( const char *config ){
+
+	vector<string> toks;
+	map<string,string> cfgMap;
+
+	Tokenize( config,toks,",;:\r\n" );
+
+	for( vector<string>::iterator it=toks.begin();it!=toks.end();++it ){
+		vector<string> bits;
+		Tokenize( *it,bits,"=" );
+		if( bits.size()!=2 ){
+			Warning( "Config error" );
+			continue;
+		}
+		cfgMap[bits[0]]=bits[1];
+	}
+
+	App.Init( cfgMap );
+}
+
+_API void m3dUseRadians(){
+	to_radians=1.0f;
+}
+
+_API void m3dUseDegrees(){
+	to_radians=PI/180.0f;
+}
+
+//***** Object API *****
+API const char *m3dMax3dObjectType( CObject *obj ){
+	return c_str( obj->TypeName() );
+}
+
+API void m3dSaveMax3dObject( CObject *obj,const char *path ){
+	if( obj ) obj->Write( path );
+}
+
+API CObject *m3dLoadMax3dObject( const char *path ){
+	return CObject::Read( path );
+}
+
+//***** Resource API ******
+API void m3dRetainResource( CResource *obj ){
+	obj->Retain();
+}
+
+API void m3dReleaseResource( CResource *obj ){
+	obj->Release();
+}
+
+//***** Texture API *****
+API void m3dSetTextureLoader( void *loader ){
+	App.TextureUtil()->SetTextureLoader( (TextureLoader)loader );
+}
+
+API CTexture *m3dBlackTexture(){
+	return App.TextureUtil()->BlackTexture();
+}
+
+API CTexture *m3dWhiteTexture(){
+	return App.TextureUtil()->WhiteTexture();
+}
+
+API CTexture *m3dCreateTexture( int width,int height,int format,int flags ){
+	return App.Graphics()->CreateTexture( width,height,format,flags );
+}
+
+API void m3dSetTexturePath( CTexture *texture,const char *path ){
+	texture->SetPath( path );
+}
+
+API void m3dSetTextureData( CTexture *texture,const void *data ){
+	texture->SetData( data );
+}
+
+API CTexture *m3dCreate3dTexture( int width,int height,int depth,int format,int flags ){
+	return App.Graphics()->Create3dTexture( width,height,depth,format,flags );
+}
+
+API void m3dSet3dTextureData( CTexture *texture,const void *data ){
+	texture->Set3dData( data );
+}
+
+API CTexture *m3dCreateCubeTexture( int size,int format,int flags ){
+	return App.Graphics()->CreateCubeTexture( size,format,flags );
+}
+
+API void m3dSetCubeTextureData( CTexture *texture,const void *data ){
+	texture->SetCubeData( data );
+}
+
+//***** Shader API *****
+API CShader *m3dCreateShader( const char *source ){
+	return App.Graphics()->CreateShader( source );
+}
+
+API CShader *m3dLoadShader( const char *path ){
+	return App.ShaderUtil()->LoadShader( path );
+}
+
+API CShader *m3dMeshShader(){
+	return App.ShaderUtil()->MeshShader();
+}
+
+API CShader *m3dSpriteShader(){
+	return App.ShaderUtil()->SpriteShader();
+}
+
+//***** Material API *****
+API CMaterial *m3dCreateMaterial(){
+	return new CMaterial;
+}
+
+API void m3dSetMaterialFloat( CMaterial *material,const char *name,float value ){
+	material->SetFloat( name,value );
+}
+
+API void m3dSetMaterialColor( CMaterial *material,const char *name,float red,float green,float blue ){
+	material->SetColor( name,CVec3( red,green,blue ) );
+}
+
+API void m3dSetMaterialTexture( CMaterial *material,const char *name,CTexture *texture ){
+	material->SetTexture( name,texture );
+}
+
+//***** Surface API *****
+API CModelSurface *m3dCreateSurface(){
+	return new CModelSurface;
+}
+
+API void m3dSetSurfaceShader( CModelSurface *surface,CShader *shader ){
+	surface->SetShader( shader );
+}
+
+API CShader *m3dSurfaceShader( CModelSurface *surface ){
+	return surface->Shader();
+}
+
+API void m3dSetSurfaceMaterial( CModelSurface *surface,CMaterial *material ){
+	surface->SetMaterial( material );
+}
+
+API CMaterial *m3dSurfaceMaterial( CModelSurface *surface ){
+	return surface->Material();
+}
+
+API void m3dAddSurfaceVertex( CModelSurface *surface,float x,float y,float z,float s0,float t0 ){
+	CVertex vertex;
+	vertex.position=CVec3( x,y,z );
+	vertex.texcoords[0]=CVec2( s0,t0 );
+	surface->AddVertex( vertex );
+}
+
+API void m3dAddSurfaceTriangle( CModelSurface *surface,int vertex0,int vertex1,int vertex2 ){
+	surface->AddTriangle( vertex0,vertex1,vertex2 );
+}
+
+//***** Entity API *****
+API void m3dDestroyEntity( CEntity *entity ){
+	delete entity;
+}
+
+API CEntity *m3dCopyEntity( CEntity *entity ){
+	CEntity *copy=(CEntity*)entity->Copy();
+	copy->SetVisible( true );
+	return copy;
+}
+
+API void m3dShowEntity( CEntity *entity ){
+	entity->SetVisible( true );
+}
+
+API void m3dHideEntity( CEntity *entity ){
+	entity->SetVisible( false );
+}
+
+API void m3dSetEntityParent( CEntity *entity,CEntity *parent ){
+	entity->SetParent( parent );
+}
+
+API void m3dSetEntityTranslation( CEntity *entity,float x,float y,float z ){
+	entity->SetTranslation( CVec3( x,y,z ) );
+}
+
+API void m3dSetEntityRotation( CEntity *entity,float yaw,float pitch,float roll ){
+	entity->SetRotation( CQuat::YawPitchRollQuat( CVec3( yaw,pitch,roll ) * to_radians ) );
+}
+
+API void m3dSetEntityScale( CEntity *entity,float x,float y,float z ){
+	entity->SetScale( CVec3( x,y,z ) );
+}
+
+API void m3dMoveEntity( CEntity *entity,float x,float y,float z ){
+	entity->Move( CVec3( x,y,z ) );
+}
+
+API void m3dTurnEntity( CEntity *entity,float yaw,float pitch,float roll ){
+	entity->Turn( CQuat::YawPitchRollQuat( CVec3( yaw,pitch,roll ) * to_radians ) );
+}
+
+API float m3dEntityX( CEntity *entity ){
+	return entity->Translation().x;
+}
+
+API float m3dEntityY( CEntity *entity ){
+	return entity->Translation().y;
+}
+
+API float m3dEntityZ( CEntity *entity ){
+	return entity->Translation().z;
+}
+
+//***** Model API *****
+API CModel *m3dLoadModel( const char *path,int collType,float mass ){
+	CModel *model=App.ModelUtil()->LoadModel( path,collType,mass );
+	if( model ) model->SetVisible( true );
+	return model;
+}
+
+API CModel *m3dCreateModel(){
+	CModel *model=new CModel;
+	model->SetVisible( true );
+	return model;
+}
+
+API CModel *m3dCreateSphere( CMaterial *material,float radius,int collType,float mass ){
+	CModel *model=App.ModelUtil()->CreateSphere( material,radius,collType,mass );
+	model->SetVisible( true );
+	return model;
+}
+
+API CModel *m3dCreateCapsule( CMaterial *material,float radius,float length,int collType,float mass ){
+	CModel *model=App.ModelUtil()->CreateCapsule( material,radius,length,collType,mass );
+	model->SetVisible( true );
+	return model;
+}
+
+API CModel *m3dCreateCylinder( CMaterial *material,float radius,float length,int collType,float mass ){
+	CModel *model=App.ModelUtil()->CreateCylinder( material,radius,length,collType,mass );
+	model->SetVisible( true );
+	return model;
+}
+
+API CModel *m3dCreateBox( CMaterial *material,float width,float height,float depth,int collType,float mass ){
+	CModel *model=App.ModelUtil()->CreateBox( material,width,height,depth,collType,mass );
+	model->SetVisible( true );
+	return model;
+}
+
+API void m3dAddModelSurface( CModel *model,CModelSurface *surface ){
+	model->AddSurface( surface );
+}
+
+API void m3dUpdateModelNormals( CModel *model ){
+	model->UpdateNormals();
+}
+
+API void m3dUpdateModelTangents( CModel *model ){
+	model->UpdateTangents();
+}
+
+API void m3dScaleModelTexCoords( CModel *model,float s_scale,float t_scale ){
+	model->ScaleTexCoords( s_scale,t_scale );
+}
+
+API void m3dResetModelTransform( CModel *model ){
+	model->ResetTransform();
+}
+
+API void m3dFlipModel( CModel *model ){
+	model->Flip();
+}
+
+//***** Pivot API *****
+API CEntity *m3dCreatePivot(){
+	CEntity *pivot=new CPivot;
+	pivot->SetVisible( true );
+	return pivot;
+}
+
+//***** Camera API *****
+API CCamera *m3dCreateCamera(){
+	CCamera *camera=new CCamera;
+	camera->SetVisible( true );
+	return camera;
+}
+
+API void m3dSetCameraViewport( CCamera *camera,int x,int y,int width,int height ){
+	camera->SetViewport( CRect( x,y,width,height ) );
+}
+
+//***** Light API *****
+API CLight *m3dCreateSpotLight(){
+	CLight *light=new CLight;
+	light->SetShader( App.ShaderUtil()->SpotLightShader() );
+	light->SetVisible( true );
+	return light;
+}
+
+API CLight *m3dCreatePointLight(){
+	CLight *light=new CLight;
+	light->SetShader( App.ShaderUtil()->PointLightShader() );
+	light->SetVisible( true );
+	return light;
+}
+
+API CLight *m3dCreateDistantLight(){
+	CLight *light=new CLight;
+	light->SetShader( App.ShaderUtil()->DistantLightShader() );
+	light->SetVisible( true );
+	return light;
+}
+
+API void m3dSetLightAngle( CLight *light,float angle ){
+	light->SetAngle( angle );
+}
+
+API void m3dSetLightRange( CLight *light,float range ){
+	light->SetRange( range );
+}
+
+API void m3dSetLightColor( CLight *light,float red,float green,float blue ){
+	light->SetColor( CVec3(red,green,blue) );
+}
+
+API void m3dSetLightTexture( CLight *light,CTexture *texture ){
+	light->SetTexture( texture );
+}
+
+API void m3dSetLightShadowMask( CLight *light,int shadowMask ){
+	light->SetShadowMask( shadowMask );
+}
+
+//***** Sprite API *****
+API CSprite *m3dCreateSprite( CMaterial *material ){
+	CSprite *sprite=new CSprite;
+	sprite->SetMaterial( material );
+	sprite->SetVisible( true );
+	return sprite;
+}
+
+//***** Terrain API *****
+API CTerrain *m3dCreateTerrain( CMaterial *material,int xsize,int zsize,float width,float height,float depth ){
+	CTerrain *terrain=new CTerrain;
+	terrain->SetMaterial( material );
+	terrain->SetData( xsize,zsize,width,height,depth,0 );
+	terrain->SetVisible( true );
+	return terrain;
+}
+
+API void m3dSetTerrainHeight( CTerrain *terrain,float height,int x,int z ){
+	terrain->SetHeight( height,x,z );
+}
+
+//***** Physics *****
+API void m3dCreateSphereBody( CEntity *entity,float radius,int collType,float mass ){
+	CBody *body=App.World()->Physics()->CreateSphereBody( radius,collType,mass );
+	entity->SetBody( body );
+}
+
+API void m3dCreateCapsuleBody( CEntity *entity,float radius,float length,int collType,float mass ){
+	CBody *body=App.World()->Physics()->CreateCapsuleBody( radius,length,collType,mass );
+	entity->SetBody( body );
+}
+
+API void m3dCreateCylinderBody( CEntity *entity,float radius,float length,int collType,float mass ){
+	CBody *body=App.World()->Physics()->CreateCylinderBody( radius,length,collType,mass );
+	entity->SetBody( body );
+}
+
+API void m3dCreateBoxBody( CEntity *entity,float width,float height,float depth,int collType,float mass ){
+	CBody *body=App.World()->Physics()->CreateBoxBody( width,height,depth,collType,mass );
+	entity->SetBody( body );
+}
+
+API void m3dCreateSurfaceBody( CEntity *entity,CModelSurface *surface,int collType,float mass ){
+	CBody *body=App.World()->Physics()->CreateSurfaceBody( surface,collType,mass );
+	entity->SetBody( body );
+}
+
+API void m3dCreateModelBody( CEntity *entity,CModel *model,int collType,float mass ){
+	CBody *body=App.ModelUtil()->CreateModelBody( model,collType,mass );
+	entity->SetBody( body );
+}
+
+API void m3dCreateTerrainBody( CEntity *entity,CTerrain *terrain,int collType,float mass ){
+	CBody *body=App.World()->Physics()->CreateSurfaceBody( terrain->Surface(),collType,mass );
+	entity->SetBody( body );
+}
+
+API void m3dCreateBallJoint( CEntity *entity,CEntity *body1,CEntity *body2 ){
+	CJoint *joint=App.World()->Physics()->CreateBallJoint();
+	joint->Attach( body1 ? body1->Body() : 0,body2 ? body2->Body() : 0 );
+	entity->SetJoint( joint );
+}
+
+//***** Animator ******
+API void m3dCreateAnimator( CEntity *entity ){
+	CAnimator *animator=new CAnimator;
+	entity->SetAnimator( animator );
+}
+
+API void m3dSetAnimationKey( CEntity *entity,int seq,float time,CEntity *keyEntity,int flags ){
+	entity->Animator()->SetKey( seq,keyEntity,time,flags );
+}
+
+API void m3dSetAnimatorTime( CEntity *entity,int seq,float time ){
+	entity->Animator()->Animate( seq,time );
+}
+
+//***** World API *****//
+API void m3dEnableCollisions( int collType1,int collType2,float friction,float bounciness,float stiffness ){
+	App.World()->Physics()->EnableCollisions( collType1,collType2,friction,bounciness,stiffness );
+}
+
+API void m3dSetGravity( float x,float y,float z ){
+	App.World()->Physics()->SetGravity( CVec3( x,y,z ) );
+}
+
+API void m3dSetClearColor( float r,float g,float b ){
+	App.World()->SetClearColor( CVec3( r,g,b ) );
+}
+
+API void m3dSetAmbientColor( float r,float g,float b ){
+	App.World()->SetAmbientColor( CVec3( r,g,b ) );
+}
+
+API void m3dUpdateWorld(){
+	App.World()->Update();
+}
+
+API void m3dRenderWorld(){
+	App.World()->Render();
+}
+
+}

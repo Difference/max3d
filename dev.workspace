@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Workspace Name="dev" Database="./dev.tags">
+  <Project Name="max3d" Path="max3d.project" Active="Yes"/>
+  <Project Name="ode" Path="ode.project" Active="No"/>
+  <Project Name="assimp" Path="assimp.project" Active="No"/>
+  <BuildMatrix>
+    <WorkspaceConfiguration Name="Macos Debug" Selected="no">
+      <Project Name="ode" ConfigName="Debug"/>
+      <Project Name="max3d" ConfigName="Macos Debug"/>
+      <Project Name="assimp" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Macos Release" Selected="no">
+      <Project Name="ode" ConfigName="Release"/>
+      <Project Name="max3d" ConfigName="Macos Release"/>
+      <Project Name="assimp" ConfigName="Release"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Linux Release" Selected="no">
+      <Project Name="ode" ConfigName="Release"/>
+      <Project Name="max3d" ConfigName="Linux Release"/>
+      <Project Name="assimp" ConfigName="Release"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Linux Debug" Selected="no">
+      <Project Name="ode" ConfigName="Debug"/>
+      <Project Name="max3d" ConfigName="Linux Debug"/>
+      <Project Name="assimp" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Win32 Release" Selected="yes">
+      <Project Name="ode" ConfigName="Release"/>
+      <Project Name="max3d" ConfigName="Win32 Release"/>
+      <Project Name="assimp" ConfigName="Release"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Win32 Debug" Selected="no">
+      <Project Name="ode" ConfigName="Debug"/>
+      <Project Name="max3d" ConfigName="Win32 Debug"/>
+      <Project Name="assimp" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+  </BuildMatrix>
+</CodeLite_Workspace>

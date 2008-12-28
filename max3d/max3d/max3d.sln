@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "max3d", "max3d.vcproj", "{AFFE576C-9D97-4486-B744-CDDCEF4EA267}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AFFE576C-9D97-4486-B744-CDDCEF4EA267}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AFFE576C-9D97-4486-B744-CDDCEF4EA267}.Debug|Win32.Build.0 = Debug|Win32
+		{AFFE576C-9D97-4486-B744-CDDCEF4EA267}.Release|Win32.ActiveCfg = Release|Win32
+		{AFFE576C-9D97-4486-B744-CDDCEF4EA267}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

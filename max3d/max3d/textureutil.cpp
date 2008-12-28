@@ -1,0 +1,85 @@
+/*
+Max3D
+Copyright (c) 2008, Mark Sibly
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.
+
+* Neither the name of Max3D's copyright owner nor the names of its contributors
+may be used to endorse or promote products derived from this software without
+specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+*/
+
+#include "std.h"
+
+#include "app.h"
+#include "textureutil.h"
+
+CTextureUtil::CTextureUtil(){
+	int texData;
+	
+	texData=0xff000000;
+	_blackTexture=App.Graphics()->CreateTexture( 1,1,FORMAT_RGBA8,TEXTURE_STATIC );
+	_blackTexture->SetPath( "<black>" );
+	_blackTexture->SetData( &texData );
+
+	texData=0xffffffff;
+	_whiteTexture=App.Graphics()->CreateTexture( 1,1,FORMAT_RGBA8,TEXTURE_STATIC );
+	_whiteTexture->SetPath( "<white>" );
+	_whiteTexture->SetData( &texData );
+	
+	texData=0xffff7f7f;
+	_flatTexture=App.Graphics()->CreateTexture( 1,1,FORMAT_RGBA8,TEXTURE_STATIC );
+	_flatTexture->SetPath( "<flat>" );
+	_flatTexture->SetData( &texData );
+	
+	texData=0x00000000;
+	_zeroTexture=App.Graphics()->CreateTexture( 1,1,FORMAT_RGBA8,TEXTURE_STATIC );
+	_zeroTexture->SetPath( "<zero>" );
+	_zeroTexture->SetData( &texData );
+}
+
+void CTextureUtil::SetTextureLoader( TextureLoader loader ){
+	_textureLoader=loader;
+}
+
+CTexture *CTextureUtil::LoadTexture( string path ){
+	if( path=="<black>" ) return _blackTexture;
+	if( path=="<white>" ) return _whiteTexture;
+	if( path=="<flat>" ) return _flatTexture;
+	if( path=="<zero>" ) return _zeroTexture;
+	CTexture *texture=_textureLoader( path.c_str() );
+	return texture;
+}
+
+CTexture *CTextureUtil::ReadTexture( CStream *stream ){
+	string path=stream->ReadString();
+	if( !path.size() ) Error( "TODO" );
+	return LoadTexture( path );
+}
+
+void CTextureUtil::WriteTexture( CTexture *texture,CStream *stream ){
+	string path=texture->Path();
+	if( !path.size() ) Error( "TODO" );
+	stream->WriteString( path );
+}

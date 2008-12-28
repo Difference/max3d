@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="ode">
+  <Description/>
+  <Dependencies/>
+  <VirtualDirectory Name="src">
+    <File Name="opende/ode/src/array.cpp"/>
+    <File Name="opende/ode/src/array.h"/>
+    <File Name="opende/ode/src/box.cpp"/>
+    <File Name="opende/ode/src/capsule.cpp"/>
+    <File Name="opende/ode/src/collision_cylinder_box.cpp"/>
+    <File Name="opende/ode/src/collision_cylinder_plane.cpp"/>
+    <File Name="opende/ode/src/collision_cylinder_sphere.cpp"/>
+    <File Name="opende/ode/src/collision_cylinder_trimesh.cpp"/>
+    <File Name="opende/ode/src/collision_kernel.cpp"/>
+    <File Name="opende/ode/src/collision_kernel.h"/>
+    <File Name="opende/ode/src/collision_quadtreespace.cpp"/>
+    <File Name="opende/ode/src/collision_sapspace.cpp"/>
+    <File Name="opende/ode/src/collision_space.cpp"/>
+    <File Name="opende/ode/src/collision_space_internal.h"/>
+    <File Name="opende/ode/src/collision_std.h"/>
+    <File Name="opende/ode/src/collision_transform.cpp"/>
+    <File Name="opende/ode/src/collision_transform.h"/>
+    <File Name="opende/ode/src/collision_trimesh_box.cpp"/>
+    <File Name="opende/ode/src/collision_trimesh_ccylinder.cpp"/>
+    <File Name="opende/ode/src/collision_trimesh_colliders.h"/>
+    <File Name="opende/ode/src/collision_trimesh_disabled.cpp"/>
+    <File Name="opende/ode/src/collision_trimesh_distance.cpp"/>
+    <File Name="opende/ode/src/collision_trimesh_gimpact.cpp"/>
+    <File Name="opende/ode/src/collision_trimesh_internal.h"/>
+    <File Name="opende/ode/src/collision_trimesh_opcode.cpp"/>
+    <File Name="opende/ode/src/collision_trimesh_plane.cpp"/>
+    <File Name="opende/ode/src/collision_trimesh_ray.cpp"/>
+    <File Name="opende/ode/src/collision_trimesh_sphere.cpp"/>
+    <File Name="opende/ode/src/collision_trimesh_trimesh.cpp"/>
+    <File Name="opende/ode/src/collision_trimesh_trimesh_new.cpp"/>
+    <File Name="opende/ode/src/collision_util.cpp"/>
+    <File Name="opende/ode/src/collision_util.h"/>
+    <File Name="opende/ode/src/config.h"/>
+    <File Name="opende/ode/src/convex.cpp"/>
+    <File Name="opende/ode/src/cylinder.cpp"/>
+    <File Name="opende/ode/src/error.cpp"/>
+    <File Name="opende/ode/src/export-dif.cpp"/>
+    <File Name="opende/ode/src/fastdot.c"/>
+    <File Name="opende/ode/src/fastldlt.c"/>
+    <File Name="opende/ode/src/fastlsolve.c"/>
+    <File Name="opende/ode/src/fastltsolve.c"/>
+    <File Name="opende/ode/src/heightfield.cpp"/>
+    <File Name="opende/ode/src/heightfield.h"/>
+    <File Name="opende/ode/src/lcp.cpp"/>
+    <File Name="opende/ode/src/lcp.h"/>
+    <File Name="opende/ode/src/mass.cpp"/>
+    <File Name="opende/ode/src/mat.cpp"/>
+    <File Name="opende/ode/src/mat.h"/>
+    <File Name="opende/ode/src/matrix.cpp"/>
+    <File Name="opende/ode/src/memory.cpp"/>
+    <File Name="opende/ode/src/misc.cpp"/>
+    <File Name="opende/ode/src/objects.h"/>
+    <File Name="opende/ode/src/obstack.cpp"/>
+    <File Name="opende/ode/src/obstack.h"/>
+    <File Name="opende/ode/src/ode.cpp"/>
+    <File Name="opende/ode/src/odeinit.cpp"/>
+    <File Name="opende/ode/src/odemath.cpp"/>
+    <File Name="opende/ode/src/odeou.cpp"/>
+    <File Name="opende/ode/src/odeou.h"/>
+    <File Name="opende/ode/src/odetls.cpp"/>
+    <File Name="opende/ode/src/odetls.h"/>
+    <File Name="opende/ode/src/plane.cpp"/>
+    <File Name="opende/ode/src/quickstep.cpp"/>
+    <File Name="opende/ode/src/quickstep.h"/>
+    <File Name="opende/ode/src/ray.cpp"/>
+    <File Name="opende/ode/src/rotation.cpp"/>
+    <File Name="opende/ode/src/sphere.cpp"/>
+    <File Name="opende/ode/src/step.cpp"/>
+    <File Name="opende/ode/src/step.h"/>
+    <File Name="opende/ode/src/stepfast.cpp"/>
+    <File Name="opende/ode/src/testing.cpp"/>
+    <File Name="opende/ode/src/testing.h"/>
+    <File Name="opende/ode/src/timer.cpp"/>
+    <File Name="opende/ode/src/util.cpp"/>
+    <File Name="opende/ode/src/util.h"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="include"/>
+  <VirtualDirectory Name="joints">
+    <File Name="opende/ode/src/joints/amotor.cpp"/>
+    <File Name="opende/ode/src/joints/amotor.h"/>
+    <File Name="opende/ode/src/joints/ball.cpp"/>
+    <File Name="opende/ode/src/joints/ball.h"/>
+    <File Name="opende/ode/src/joints/contact.cpp"/>
+    <File Name="opende/ode/src/joints/contact.h"/>
+    <File Name="opende/ode/src/joints/fixed.cpp"/>
+    <File Name="opende/ode/src/joints/fixed.h"/>
+    <File Name="opende/ode/src/joints/hinge.cpp"/>
+    <File Name="opende/ode/src/joints/hinge.h"/>
+    <File Name="opende/ode/src/joints/hinge2.cpp"/>
+    <File Name="opende/ode/src/joints/hinge2.h"/>
+    <File Name="opende/ode/src/joints/joint.cpp"/>
+    <File Name="opende/ode/src/joints/joint.h"/>
+    <File Name="opende/ode/src/joints/joint_internal.h"/>
+    <File Name="opende/ode/src/joints/joints.h"/>
+    <File Name="opende/ode/src/joints/lmotor.cpp"/>
+    <File Name="opende/ode/src/joints/lmotor.h"/>
+    <File Name="opende/ode/src/joints/null.cpp"/>
+    <File Name="opende/ode/src/joints/null.h"/>
+    <File Name="opende/ode/src/joints/piston.cpp"/>
+    <File Name="opende/ode/src/joints/piston.h"/>
+    <File Name="opende/ode/src/joints/plane2d.cpp"/>
+    <File Name="opende/ode/src/joints/plane2d.h"/>
+    <File Name="opende/ode/src/joints/pr.cpp"/>
+    <File Name="opende/ode/src/joints/pr.h"/>
+    <File Name="opende/ode/src/joints/pu.cpp"/>
+    <File Name="opende/ode/src/joints/pu.h"/>
+    <File Name="opende/ode/src/joints/slider.cpp"/>
+    <File Name="opende/ode/src/joints/slider.h"/>
+    <File Name="opende/ode/src/joints/universal.cpp"/>
+    <File Name="opende/ode/src/joints/universal.h"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="Ice">
+    <File Name="opende/OPCODE/Ice/IceAABB.cpp"/>
+    <File Name="opende/OPCODE/Ice/IceAABB.h"/>
+    <File Name="opende/OPCODE/Ice/IceAxes.h"/>
+    <File Name="opende/OPCODE/Ice/IceBoundingSphere.h"/>
+    <File Name="opende/OPCODE/Ice/IceContainer.cpp"/>
+    <File Name="opende/OPCODE/Ice/IceContainer.h"/>
+    <File Name="opende/OPCODE/Ice/IceFPU.h"/>
+    <File Name="opende/OPCODE/Ice/IceHPoint.cpp"/>
+    <File Name="opende/OPCODE/Ice/IceHPoint.h"/>
+    <File Name="opende/OPCODE/Ice/IceIndexedTriangle.cpp"/>
+    <File Name="opende/OPCODE/Ice/IceIndexedTriangle.h"/>
+    <File Name="opende/OPCODE/Ice/IceLSS.h"/>
+    <File Name="opende/OPCODE/Ice/IceMatrix3x3.cpp"/>
+    <File Name="opende/OPCODE/Ice/IceMatrix3x3.h"/>
+    <File Name="opende/OPCODE/Ice/IceMatrix4x4.cpp"/>
+    <File Name="opende/OPCODE/Ice/IceMatrix4x4.h"/>
+    <File Name="opende/OPCODE/Ice/IceMemoryMacros.h"/>
+    <File Name="opende/OPCODE/Ice/IceOBB.cpp"/>
+    <File Name="opende/OPCODE/Ice/IceOBB.h"/>
+    <File Name="opende/OPCODE/Ice/IcePairs.h"/>
+    <File Name="opende/OPCODE/Ice/IcePlane.cpp"/>
+    <File Name="opende/OPCODE/Ice/IcePlane.h"/>
+    <File Name="opende/OPCODE/Ice/IcePoint.cpp"/>
+    <File Name="opende/OPCODE/Ice/IcePoint.h"/>
+    <File Name="opende/OPCODE/Ice/IcePreprocessor.h"/>
+    <File Name="opende/OPCODE/Ice/IceRandom.cpp"/>
+    <File Name="opende/OPCODE/Ice/IceRandom.h"/>
+    <File Name="opende/OPCODE/Ice/IceRay.cpp"/>
+    <File Name="opende/OPCODE/Ice/IceRay.h"/>
+    <File Name="opende/OPCODE/Ice/IceRevisitedRadix.cpp"/>
+    <File Name="opende/OPCODE/Ice/IceRevisitedRadix.h"/>
+    <File Name="opende/OPCODE/Ice/IceSegment.cpp"/>
+    <File Name="opende/OPCODE/Ice/IceSegment.h"/>
+    <File Name="opende/OPCODE/Ice/IceTriangle.cpp"/>
+    <File Name="opende/OPCODE/Ice/IceTriangle.h"/>
+    <File Name="opende/OPCODE/Ice/IceTriList.h"/>
+    <File Name="opende/OPCODE/Ice/IceTypes.h"/>
+    <File Name="opende/OPCODE/Ice/IceUtils.cpp"/>
+    <File Name="opende/OPCODE/Ice/IceUtils.h"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="OPCODE">
+    <File Name="opende/OPCODE/OPC_AABBCollider.cpp"/>
+    <File Name="opende/OPCODE/OPC_AABBCollider.h"/>
+    <File Name="opende/OPCODE/OPC_AABBTree.cpp"/>
+    <File Name="opende/OPCODE/OPC_AABBTree.h"/>
+    <File Name="opende/OPCODE/OPC_BaseModel.cpp"/>
+    <File Name="opende/OPCODE/OPC_BaseModel.h"/>
+    <File Name="opende/OPCODE/OPC_BoxBoxOverlap.h"/>
+    <File Name="opende/OPCODE/OPC_BoxPruning.cpp"/>
+    <File Name="opende/OPCODE/OPC_BoxPruning.h"/>
+    <File Name="opende/OPCODE/OPC_Collider.cpp"/>
+    <File Name="opende/OPCODE/OPC_Collider.h"/>
+    <File Name="opende/OPCODE/OPC_Common.cpp"/>
+    <File Name="opende/OPCODE/OPC_Common.h"/>
+    <File Name="opende/OPCODE/OPC_HybridModel.cpp"/>
+    <File Name="opende/OPCODE/OPC_HybridModel.h"/>
+    <File Name="opende/OPCODE/OPC_IceHook.h"/>
+    <File Name="opende/OPCODE/OPC_LSSAABBOverlap.h"/>
+    <File Name="opende/OPCODE/OPC_LSSCollider.cpp"/>
+    <File Name="opende/OPCODE/OPC_LSSCollider.h"/>
+    <File Name="opende/OPCODE/OPC_LSSTriOverlap.h"/>
+    <File Name="opende/OPCODE/OPC_MeshInterface.cpp"/>
+    <File Name="opende/OPCODE/OPC_MeshInterface.h"/>
+    <File Name="opende/OPCODE/OPC_Model.cpp"/>
+    <File Name="opende/OPCODE/OPC_Model.h"/>
+    <File Name="opende/OPCODE/OPC_OBBCollider.cpp"/>
+    <File Name="opende/OPCODE/OPC_OBBCollider.h"/>
+    <File Name="opende/OPCODE/OPC_OptimizedTree.cpp"/>
+    <File Name="opende/OPCODE/OPC_OptimizedTree.h"/>
+    <File Name="opende/OPCODE/OPC_Picking.cpp"/>
+    <File Name="opende/OPCODE/OPC_Picking.h"/>
+    <File Name="opende/OPCODE/OPC_PlanesAABBOverlap.h"/>
+    <File Name="opende/OPCODE/OPC_PlanesCollider.cpp"/>
+    <File Name="opende/OPCODE/OPC_PlanesCollider.h"/>
+    <File Name="opende/OPCODE/OPC_PlanesTriOverlap.h"/>
+    <File Name="opende/OPCODE/OPC_RayAABBOverlap.h"/>
+    <File Name="opende/OPCODE/OPC_RayCollider.cpp"/>
+    <File Name="opende/OPCODE/OPC_RayCollider.h"/>
+    <File Name="opende/OPCODE/OPC_RayTriOverlap.h"/>
+    <File Name="opende/OPCODE/OPC_Settings.h"/>
+    <File Name="opende/OPCODE/OPC_SphereAABBOverlap.h"/>
+    <File Name="opende/OPCODE/OPC_SphereCollider.cpp"/>
+    <File Name="opende/OPCODE/OPC_SphereCollider.h"/>
+    <File Name="opende/OPCODE/OPC_SphereTriOverlap.h"/>
+    <File Name="opende/OPCODE/OPC_SweepAndPrune.cpp"/>
+    <File Name="opende/OPCODE/OPC_SweepAndPrune.h"/>
+    <File Name="opende/OPCODE/OPC_ThreadLocalData.cpp"/>
+    <File Name="opende/OPCODE/OPC_ThreadLocalData.h"/>
+    <File Name="opende/OPCODE/OPC_TreeBuilders.cpp"/>
+    <File Name="opende/OPCODE/OPC_TreeBuilders.h"/>
+    <File Name="opende/OPCODE/OPC_TreeCollider.cpp"/>
+    <File Name="opende/OPCODE/OPC_TreeCollider.h"/>
+    <File Name="opende/OPCODE/OPC_TriBoxOverlap.h"/>
+    <File Name="opende/OPCODE/OPC_TriTriOverlap.h"/>
+    <File Name="opende/OPCODE/OPC_VolumeCollider.cpp"/>
+    <File Name="opende/OPCODE/OPC_VolumeCollider.h"/>
+    <File Name="opende/OPCODE/Opcode.cpp"/>
+    <File Name="opende/OPCODE/Opcode.h"/>
+    <File Name="opende/OPCODE/StdAfx.cpp"/>
+    <File Name="opende/OPCODE/Stdafx.h"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="ode">
+    <File Name="opende/include/ode/collision.h"/>
+    <File Name="opende/include/ode/collision_space.h"/>
+    <File Name="opende/include/ode/collision_trimesh.h"/>
+    <File Name="opende/include/ode/common.h"/>
+    <File Name="opende/include/ode/compatibility.h"/>
+    <File Name="opende/include/ode/contact.h"/>
+    <File Name="opende/include/ode/error.h"/>
+    <File Name="opende/include/ode/export-dif.h"/>
+    <File Name="opende/include/ode/mass.h"/>
+    <File Name="opende/include/ode/matrix.h"/>
+    <File Name="opende/include/ode/memory.h"/>
+    <File Name="opende/include/ode/misc.h"/>
+    <File Name="opende/include/ode/objects.h"/>
+    <File Name="opende/include/ode/ode.h"/>
+    <File Name="opende/include/ode/odeconfig.h"/>
+    <File Name="opende/include/ode/odecpp.h"/>
+    <File Name="opende/include/ode/odecpp_collision.h"/>
+    <File Name="opende/include/ode/odeinit.h"/>
+    <File Name="opende/include/ode/odemath.h"/>
+    <File Name="opende/include/ode/rotation.h"/>
+    <File Name="opende/include/ode/timer.h"/>
+  </VirtualDirectory>
+  <Dependencies Name="MSVC Release"/>
+  <Dependencies Name="MinGW Release"/>
+  <Dependencies Name="GCC Release"/>
+  <Settings Type="Static Library">
+    <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Static Library">
+      <General OutputFile="$(IntermediateDirectory)/lib$(ProjectName).a" IntermediateDirectory="./Debug" Command="" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Compiler Required="yes" Options="-g">
+        <IncludePath Value="."/>
+        <IncludePath Value="./opende/include"/>
+        <IncludePath Value="./opende/OPCODE"/>
+        <IncludePath Value="./opende/ode/src"/>
+      </Compiler>
+      <Linker Required="yes" Options=""/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath=""/>
+      <ResourceCompiler Required="no" Options=""/>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <CleanCommand/>
+        <BuildCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Static Library">
+      <General OutputFile="$(IntermediateDirectory)/lib$(ProjectName).a" IntermediateDirectory="./Release" Command="" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Compiler Required="yes" Options="-O2 -fno-strict-aliasing">
+        <IncludePath Value="."/>
+        <IncludePath Value="./opende/include"/>
+        <IncludePath Value="./opende/OPCODE"/>
+        <IncludePath Value="./opende/ode/src"/>
+      </Compiler>
+      <Linker Required="yes" Options=""/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath=""/>
+      <ResourceCompiler Required="no" Options=""/>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <CleanCommand/>
+        <BuildCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="VC9 Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Static Library">
+      <General OutputFile="$(IntermediateDirectory)/lib$(ProjectName).a" IntermediateDirectory="./Release" Command="" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Compiler Required="yes" Options="">
+        <IncludePath Value="."/>
+        <IncludePath Value="./opende/include"/>
+        <IncludePath Value="./opende/OPCODE"/>
+        <IncludePath Value="./opende/ode/src"/>
+      </Compiler>
+      <Linker Required="yes" Options=""/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath=""/>
+      <ResourceCompiler Required="no" Options=""/>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <CleanCommand/>
+        <BuildCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+  </Settings>
+  <Dependencies Name="Debug"/>
+  <Dependencies Name="VC9 Release"/>
+  <Dependencies Name="Release"/>
+</CodeLite_Project>
