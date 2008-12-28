@@ -3,11 +3,11 @@ Strict
 
 Import Max3d.Max3d
 
-Max3dGraphics 1024,768
+Max3dGraphics 800,600
 
 SetClearColor 0,0,0
 
-EnableCollisions 1,2,0,0
+EnableCollisions 1,2,0,0,1
 
 Local yellow=CreateMaterial()
 SetMaterialColor yellow,"DiffuseColor",1,1,0

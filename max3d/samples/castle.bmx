@@ -3,7 +3,7 @@ Strict
 
 Import Max3d.Max3d
 
-Max3dGraphics 640,480
+Max3dGraphics 800,600
 
 'collision types:
 '1=player
