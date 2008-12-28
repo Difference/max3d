@@ -398,8 +398,8 @@ API void m3dSetLightTexture( CLight *light,CTexture *texture ){
 	light->SetTexture( texture );
 }
 
-API void m3dSetLightShadowMask( CLight *light,int shadowMask ){
-	light->SetShadowMask( shadowMask );
+API void m3dSetLightShadowBufferSize( CLight *light,int size ){
+	light->SetShadowBufferSize( size );
 }
 
 //***** Sprite API *****

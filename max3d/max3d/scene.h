@@ -39,6 +39,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
 class CScene : public CObject{
 public:
+	CScene();
+	~CScene();
+	
 	void Clear();
 
 	void AddCamera( CCamera *camera );

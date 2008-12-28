@@ -47,12 +47,12 @@ For Local x=-100 To 100 Step 10
 Next
 DestroyEntity ground
 
-Local light1=CreateDistantLight()
-TurnEntity light1,0,45,0
+Local light=CreateDistantLight()
+TurnEntity light,0,45,0
+SetLightShadowBufferSize light,0'2048
 
 Local castle=LoadModel( "CASTLE1.X",4,0 )
 MoveEntity castle,0,.5,0
-
 
 Local player=CreateCapsule( blue,.5,2,1,-1 )
 MoveEntity player,0,5,-10

@@ -35,21 +35,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "app.h"
 #include "scene.h"
 
-void CScene::AddCamera( CCamera *camera ){
-	_cameras.push_back( camera );
-}
-
-void CScene::AddLight( CLight *light ){
-	_lights.push_back( light );
-}
-
-void CScene::AddSurface( CSurface *surface ){
-	_surfaces.push_back( surface );
-}
-
 static CHull _nullHull;
 
-static bool shadows;
 static bool hdr;					
 
 static CVertexBuffer *quadVB;
@@ -66,9 +53,20 @@ static CTexture *depthBuffer;
 
 static CShader *clearShader;
 
-static const int SHADOWMAP_SIZE=2048;
+static int shadowBufSize;
 static CTexture *shadowBuffer;
 static CShader *shadowMapShader;
+
+static void SetShadowBufferSize( int size ){
+	if( size<=shadowBufSize ) return;
+	if( shadowBuffer ){
+		shadowBuffer->Release();
+		shadowBuffer=0;
+	}
+	shadowBufSize=size;
+	shadowBuffer=App.Graphics()->CreateTexture( shadowBufSize,shadowBufSize,FORMAT_DEPTH,TEXTURE_CLAMPST|TEXTURE_RENDER );
+	App.Graphics()->SetTextureParam( "bb_ShadowBuffer",shadowBuffer );
+}
 
 void scene_init(){
 
@@ -78,7 +76,6 @@ void scene_init(){
 	App.Graphics()->SetVec2Param( "bb_WindowSize",CVec2( w,h ) );
 	App.Graphics()->SetVec2Param( "bb_WindowScale",CVec2( 1.0f/w,1.0f/h ) );
 	
-	shadows=(App.Config( "SHADOWS" )=="TRUE");
 	hdr=(App.Config( "HDR" )=="TRUE");
 
 	float vbdata[]={ 0,0,1,0,1,1,0,1 };
@@ -115,24 +112,31 @@ void scene_init(){
 	App.Graphics()->SetTextureParam( "bb_DepthBuffer",depthBuffer );
 		
 	clearShader=App.ShaderUtil()->LoadShader( "clear" );
+	shadowMapShader=App.ShaderUtil()->LoadShader( "shadowmap" );
+}
 
-	if( shadows ){
-		string h=string( 
-			"//@common\n"
-			"#define bb_ShadowMapSize " )+SHADOWMAP_SIZE+".0\n";
-		App.Graphics()->AppendShaderHeader( h );
+CScene::CScene(){
+}
 
-		shadowBuffer=App.Graphics()->CreateTexture( SHADOWMAP_SIZE,SHADOWMAP_SIZE,FORMAT_DEPTH,TEXTURE_CLAMPST|TEXTURE_RENDER );
-		App.Graphics()->SetTextureParam( "bb_ShadowBuffer",shadowBuffer );
-
-		shadowMapShader=App.ShaderUtil()->LoadShader( "shadowmap" );
-	}
+CScene::~CScene(){
 }
 
 void CScene::Clear(){
 	_cameras.clear();
 	_lights.clear();
 	_surfaces.clear();
+}
+
+void CScene::AddCamera( CCamera *camera ){
+	_cameras.push_back( camera );
+}
+
+void CScene::AddLight( CLight *light ){
+	_lights.push_back( light );
+}
+
+void CScene::AddSurface( CSurface *surface ){
+	_surfaces.push_back( surface );
 }
 
 void CScene::SetShaderMode( string mode ){
@@ -158,7 +162,7 @@ void CScene::SetShaderMode( string mode ){
 	}else if( mode=="shadow" ){
 		App.Graphics()->SetColorBuffer( 0,0 );
 		App.Graphics()->SetDepthBuffer( shadowBuffer );
-		App.Graphics()->SetViewport( SHADOWMAP_SIZE/2-_shadowMapSize/2,SHADOWMAP_SIZE/2-_shadowMapSize/2,_shadowMapSize,_shadowMapSize );
+		App.Graphics()->SetViewport( shadowBufSize/2-shadowBufSize/2,shadowBufSize/2-_shadowMapSize/2,_shadowMapSize,_shadowMapSize );
 		App.Graphics()->SetWriteMask( WRITEMASK_DEPTH );
 		App.Graphics()->SetBlendFunc( BLENDFUNC_ONE,BLENDFUNC_ZERO );
 		App.Graphics()->SetDepthFunc( DEPTHFUNC_LE );
@@ -256,7 +260,7 @@ void CScene::RenderSpotLight( CLight *light,CCamera *camera ){
 	if( !tex ) tex=App.TextureUtil()->WhiteTexture();
 	App.Graphics()->SetTextureParam( "bb_LightTexture",tex );
 	
-	if( !shadows || !light->ShadowMask() ){
+	if( !light->ShadowBufferSize() ){
 		SetShaderMode( "spotlight" );
 		App.Graphics()->SetShader( light->Shader() );
 		App.Graphics()->SetMat4Param( "bb_LightMatrix",light->RenderMatrix() );
@@ -264,16 +268,17 @@ void CScene::RenderSpotLight( CLight *light,CCamera *camera ){
 		RenderBox( lightBox );
 		return;
 	}
+	SetShadowBufferSize( light->ShadowBufferSize() );
 	
 	//calc shadowmap size
 	CMat4 camMat=App.Graphics()->Mat4Param( "bb_CameraMatrix" );
 	float d=camMat.Translation().Distance( light->RenderMatrix().Translation() );
-	float sz=light->Range()/d * SHADOWMAP_SIZE;
+	float sz=light->Range()/d * shadowBufSize;
 	sz=(int(sz)&~1);
-	if( sz>SHADOWMAP_SIZE ) sz=SHADOWMAP_SIZE;
+	if( sz>shadowBufSize ) sz=shadowBufSize;
 	_shadowMapSize=int(sz);
 	
-	App.Graphics()->SetFloatParam( "bb_ShadowMapScale",sz/SHADOWMAP_SIZE );
+	App.Graphics()->SetFloatParam( "bb_ShadowMapScale",sz/shadowBufSize );
 	
 	CMat4 shadowProjectionMatrix=CMat4::FrustumMatrix( -1,1,-1,1,1,0 );
 	CMat4 lightMatrix=light->RenderMatrix();
@@ -317,7 +322,7 @@ void CScene::RenderPointLight( CLight *light,CCamera *camera ){
 	App.Graphics()->SetFloatParam( "bb_ShadowNearClip",-1024 );
 	App.Graphics()->SetFloatParam( "bb_ShadowFarClip",1024 );
 
-	if( !shadows || !light->ShadowMask() ){
+	if( !light->ShadowBufferSize() ){
 		SetShaderMode( "pointlight" );
 		App.Graphics()->SetShader( light->Shader() );
 		App.Graphics()->SetMat4Param( "bb_LightMatrix",light->RenderMatrix() );
@@ -325,18 +330,19 @@ void CScene::RenderPointLight( CLight *light,CCamera *camera ){
 		RenderBox( lightBox );
 		return;
 	}
+	SetShadowBufferSize( light->ShadowBufferSize() );
 
 	CHull rhull=light->RenderMatrix() * lightBox;
 
 	//calc shadowmap size
 	CMat4 camMat=App.Graphics()->Mat4Param( "bb_CameraMatrix" );
 	float d=camMat.Translation().Distance( light->RenderMatrix().Translation() );
-	float sz=light->Range()/d * SHADOWMAP_SIZE;
+	float sz=light->Range()/d * shadowBufSize;
 	sz=(int(sz)&~1);
-	if( sz>SHADOWMAP_SIZE ) sz=SHADOWMAP_SIZE;
+	if( sz>shadowBufSize ) sz=shadowBufSize;
 	_shadowMapSize=int(sz);
 
-	App.Graphics()->SetFloatParam( "bb_ShadowMapScale",sz/SHADOWMAP_SIZE );
+	App.Graphics()->SetFloatParam( "bb_ShadowMapScale",sz/shadowBufSize );
 	
 	CMat4 shadowProjectionMatrix=CMat4::FrustumMatrix( -1,1,-1,1,1,range );
 
@@ -393,13 +399,14 @@ void CScene::RenderDistantLight( CLight *light,CCamera *camera ){
 	App.Graphics()->SetVec3Param( "bb_LightColor",light->Color() );
 	App.Graphics()->SetMat4Param( "bb_LightMatrix",light->RenderMatrix() );
 
-	if( !shadows || !light->ShadowMask() ){
+	if( !light->ShadowBufferSize() ){
 		SetShaderMode( "distantlight" );
 		App.Graphics()->SetShader( light->Shader() );
 		App.Graphics()->SetMat4Param( "bb_ModelMatrix",camMat );
 		RenderBox( lightBox );
 		return;
 	}
+	SetShadowBufferSize( light->ShadowBufferSize() );
 	
 	//2 passes
 //	float segs[]={1.0f,16.0f,256.0f};
@@ -413,10 +420,10 @@ void CScene::RenderDistantLight( CLight *light,CCamera *camera ){
 	//8 passes
 //	float segs[]={1.0f,2.0f,4.0f,8.0f,16.0f,32.0f,64.0f,128.0f,256.0f };
 
-	float sz=SHADOWMAP_SIZE;
+	float sz=shadowBufSize;
 	_shadowMapSize=int(sz);
 	
-	App.Graphics()->SetFloatParam( "bb_ShadowMapScale",sz/SHADOWMAP_SIZE );
+	App.Graphics()->SetFloatParam( "bb_ShadowMapScale",sz/shadowBufSize );
 
 	CMat4 cameraLightMatrix=light->InverseRenderMatrix() * camMat;
 

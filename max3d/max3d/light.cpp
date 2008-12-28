@@ -41,7 +41,7 @@ _range(100),
 _color(CVec3(1)),
 _shader(0),
 _texture(0),
-_shadowMask(~0){
+_shadowBufSize(2048){
 }
 
 CLight::CLight( CLight *light,CCopier *copier ):
@@ -51,7 +51,7 @@ _range( light->_range ),
 _color( light->_color ),
 _shader( light->_shader ),
 _texture( light->_texture ),
-_shadowMask( light->_shadowMask ){
+_shadowBufSize( light->_shadowBufSize ){
 	if( _shader ) _shader->Retain();
 	if( _texture ) _texture->Retain();
 }
@@ -85,8 +85,8 @@ void CLight::SetTexture( CTexture *texture ){
 	_texture=texture;
 }
 
-void CLight::SetShadowMask( int mask ){
-	_shadowMask=mask;
+void CLight::SetShadowBufferSize( int size ){
+	_shadowBufSize=size;
 }
 
 void CLight::OnRender(){

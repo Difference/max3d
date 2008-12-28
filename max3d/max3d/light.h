@@ -56,10 +56,10 @@ public:
 
 	void SetTexture( CTexture *texture );
 	CTexture *Texture(){ return _texture; }
-
-	void SetShadowMask( int mask );
-	int ShadowMask(){ return _shadowMask; }
 	
+	void SetShadowBufferSize( int size );
+	int ShadowBufferSize(){ return _shadowBufSize; }
+
 	virtual void OnRender();
 
 private:
@@ -72,7 +72,7 @@ private:
 	CVec3 _color;
 	CShader *_shader;
 	CTexture *_texture;
-	int _shadowMask;
+	int _shadowBufSize;
 };
 
 #endif

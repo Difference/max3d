@@ -38,13 +38,10 @@ MoveEntity box,0,-.5,0
 ResetModelTransform box
 CreateBallJoint box,box,pbody
 
-'Local lightTex=LoadTexture( "Fig-1.jpg" )
-
 Local light=CreateSpotLight()
 MoveEntity light,0,0,-4
 SetLightRange light,20
 SetLightColor light,2,2,2
-'SetLightTexture light,lightTex
 
 Local camera=CreateCamera()
 CreateSphereBody camera,.5,1,-1
@@ -53,9 +50,6 @@ Local yaw#,pitch#,zoom#=-5
 
 While Not KeyHit( KEY_ESCAPE )
 
-	TurnEntity light,0,0,.3
-'	TurnEntity box,.1,.2,0
-	
 	If KeyDown( KEY_LEFT )
 		yaw:-1
 	Else If KeyDown( KEY_RIGHT )

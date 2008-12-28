@@ -2,11 +2,7 @@
 Strict
 
 'works for marky!
-Global bmx_path$=RealPath( "../../blitzmax" )
-
-If FileType( bmx_path+"/mod" )<>FILETYPE_DIR
-	bmx_path=RequestDir( "BlitzMax path..." )
-EndIf
+Global bmx_path$=RequestDir( "BlitzMax path..." )
 
 If FileType( bmx_path+"/mod" )<>FILETYPE_DIR
 	Notify "Can't find BMX path"
@@ -151,15 +147,17 @@ For Local tline$=EachIn api.Split( "~n" )
 Next
 
 Local devPath$=RealPath( CurrentDir()+"/.." )
-Print devPath
+'Print devPath
 
 Local max3d$=LoadString( "max3d_template.bmx" )
 max3d=max3d.Replace( "{INITS}",bmx_inits )
 max3d=max3d.Replace( "{DECLS}",bmx_decls )
 max3d=max3d.Replace( "{DEVPATH}",devPath )
 
-Print max3d
+'Print max3d
 
 CreateDir bmx_path+"/mod/max3d.mod"
 CreateDir bmx_path+"/mod/max3d.mod/max3d.mod"
 SaveString max3d,bmx_path+"/mod/max3d.mod/max3d.mod/max3d.bmx"
+
+Print "Created module max3d.max3d"
