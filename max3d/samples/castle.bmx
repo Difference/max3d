@@ -5,6 +5,8 @@ Import Max3d.Max3d
 
 Max3dGraphics 800,600
 
+DisableShadows
+
 'collision types:
 '1=player
 '2=dynamic scenery
@@ -49,7 +51,6 @@ DestroyEntity ground
 
 Local light=CreateDistantLight()
 TurnEntity light,0,45,0
-SetLightShadowBufferSize light,0'2048
 
 Local castle=LoadModel( "CASTLE1.X",4,0 )
 MoveEntity castle,0,.5,0
@@ -61,7 +62,7 @@ Local camera=CreateCamera()
 SetEntityParent camera,player
 MoveEntity camera,0,1,0
 
-Local yvel#
+Local yvel#,falling
 
 While Not KeyHit( KEY_ESCAPE )
 
@@ -94,6 +95,7 @@ While Not KeyHit( KEY_ESCAPE )
 	yvel=EntityY( player )-y
 	
 	RenderWorld
+
 	Flip
 
 Wend

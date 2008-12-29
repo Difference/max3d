@@ -3,9 +3,11 @@ Strict
 
 Import Max3d.Max3d
 
-Max3dGraphics 800,600
+Max3dGraphics 800,600,32,60
 
-SetClearColor 0,0,0
+SetClearColor 0,0,1
+
+DisableShadows
 
 EnableCollisions 1,2,0,0,1
 
@@ -75,6 +77,6 @@ While Not KeyHit( KEY_ESCAPE )
 	UpdateWorld
 	RenderWorld
 	
-	Flip
+	Flip 
 	
 Wend

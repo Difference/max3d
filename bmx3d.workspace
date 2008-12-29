@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CodeLite_Workspace Name="dev" Database="./dev.tags">
+<CodeLite_Workspace Name="bmx3d" Database="./bmx3d.tags">
   <Project Name="max3d" Path="max3d.project" Active="Yes"/>
   <Project Name="ode" Path="ode.project" Active="No"/>
   <Project Name="assimp" Path="assimp.project" Active="No"/>

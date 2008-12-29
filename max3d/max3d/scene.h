@@ -53,12 +53,16 @@ public:
 	void AddSurface( CSurface *surface );
 	const vector<CSurface*> &Surfaces(){ return _surfaces; }
 	
+	void SetShadowsEnabled( bool enabled );
+	bool ShadowsEnabled(){ return _shadowsEnabled; }
+	
 	void Render();
 	
 	void Render( CCamera *camera );
 
 private:
 	void SetShaderMode( string mode );
+	void SetShadowBufferSize( int size );
 
 	void RenderQuad();
 	void RenderBox( const CBox &box );
@@ -69,8 +73,9 @@ private:
 	void RenderDistantLight( CLight *light,CCamera *camera );
 	
 	int _modeMask;
-	int _shadowMapSize;
+	int _shadowBufSize;
 	CRect _viewport;
+	bool _shadowsEnabled;
 
 	vector<CCamera*> _cameras;
 	vector<CLight*> _lights;

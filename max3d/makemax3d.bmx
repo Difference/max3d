@@ -160,4 +160,7 @@ CreateDir bmx_path+"/mod/max3d.mod"
 CreateDir bmx_path+"/mod/max3d.mod/max3d.mod"
 SaveString max3d,bmx_path+"/mod/max3d.mod/max3d.mod/max3d.bmx"
 
+system_ bmx_path+"/bin/bmk makemods"
+
 Print "Created module max3d.max3d"
+

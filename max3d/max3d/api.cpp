@@ -480,6 +480,14 @@ API void m3dSetAnimatorTime( CEntity *entity,int seq,float time ){
 }
 
 //***** World API *****//
+API void m3dEnableShadows(){
+	App.Scene()->SetShadowsEnabled( true );
+}
+
+API void m3dDisableShadows(){
+	App.Scene()->SetShadowsEnabled( false );
+}
+
 API void m3dEnableCollisions( int collType1,int collType2,float friction,float bounciness,float stiffness ){
 	App.World()->Physics()->EnableCollisions( collType1,collType2,friction,bounciness,stiffness );
 }

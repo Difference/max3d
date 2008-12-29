@@ -366,7 +366,6 @@ public:
 			glTexParameteri( _gltarget,GL_TEXTURE_MAG_FILTER,GL_LINEAR );
 			if( _flags & TEXTURE_MIPMAP ){
 				glTexParameteri( _gltarget,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR );
-//				glTexParameteri( _gltarget,GL_TEXTURE_MIN_FILTER,GL_NEAREST_MIPMAP_NEAREST );
 			}else{
 				glTexParameteri( _gltarget,GL_TEXTURE_MIN_FILTER,GL_LINEAR );
 			}
@@ -786,21 +785,14 @@ _dirty(~0){
 	if( !GLEE_EXT_framebuffer_object ){
 		Error( "Max3d requires OpenGL framebuffer object extension" );
 	}
-	if( !GLEE_ARB_texture_float ){
-		Warning( "OpenGL driver does not support floating point textures" );
+	if( GLEE_EXT_draw_instanced ){
+		gpu_instancing=true;
 	}
-	if( App.Config( "GPU_INSTANCING" )=="TRUE" ){
-		if( GLEE_EXT_draw_instanced ){
-			gpu_instancing=true;
-		}else{
-			Warning( "GPU Instancing not available" );
-		}
-	}
-	glFrontFace( GL_CW );
 	int vp[4];
 	glGetIntegerv( GL_VIEWPORT,vp );
 	_windowWidth=vp[2];
 	_windowHeight=vp[3];
+	glFrontFace( GL_CW );
 }
 
 CVertexBuffer *COpenGLGraphics::CreateVertexBuffer( int capacity,string format ){
@@ -846,7 +838,6 @@ void COpenGLGraphics::SetDepthBuffer( CTexture *texture ){
 }
 
 void COpenGLGraphics::SetViewport( int x,int y,int width,int height ){
-//	ValidateFrameBuffer();
 	glViewport( x,y,width,height );
 }
 
