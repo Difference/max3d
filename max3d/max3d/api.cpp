@@ -46,6 +46,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "material.h"
 #include "sprite.h"
 #include "terrain.h"
+#include "mirror.h"
 
 #if _WIN32
 #define API __declspec(dllexport)
@@ -421,6 +422,21 @@ API CTerrain *m3dCreateTerrain( CMaterial *material,int xsize,int zsize,float wi
 
 API void m3dSetTerrainHeight( CTerrain *terrain,float height,int x,int z ){
 	terrain->SetHeight( height,x,z );
+}
+
+//***** Mirror *****
+API CMirror *m3dCreateMirror(){
+	CMirror *mirror=new CMirror;
+	mirror->SetVisible( true );
+	return mirror;
+}
+
+API void m3dSetMirrorSize( CMirror *mirror,float width,float height ){
+	mirror->SetSize( width,height );
+}
+
+API void m3dSetMirrorResolution( CMirror *mirror,int width,int height ){
+	mirror->SetResolution( width,height );
 }
 
 //***** Physics *****

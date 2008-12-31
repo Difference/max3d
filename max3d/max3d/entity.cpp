@@ -64,7 +64,10 @@ _flags(0){
 	}
 }
 
-void CEntity::OnRender(){
+void CEntity::OnRenderWorld(){
+}
+
+void CEntity::OnRenderCamera( CCamera *camera ){
 }
 
 CEntity::~CEntity(){

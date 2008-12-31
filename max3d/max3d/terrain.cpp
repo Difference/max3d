@@ -97,7 +97,7 @@ CModelSurface *CTerrain::Surface(){
 	return _surface;
 }
 
-void CTerrain::OnRender(){
+void CTerrain::OnRenderWorld(){
 	ValidateSurface();
 	if( !_surface->Instances().size() ) App.Scene()->AddSurface( _surface );
 	_surface->Instances().push_back( RenderMatrix() );

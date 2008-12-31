@@ -54,10 +54,8 @@ void CSurface::SetMaterial( CMaterial *material ){
 	_material=material;
 }
 
-void CSurface::OnBeginCameraPass( CCamera *camera ){
+void CSurface::OnRenderCamera( CCamera *camera ){
 }
 
-void CSurface::OnEndCameraPass(){
+void CSurface::OnClearInstances(){
 }
-
-

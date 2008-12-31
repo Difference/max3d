@@ -49,15 +49,16 @@ _texture(0),
 _dirty(~0){
 	_camera=new CCamera;
 	_material=new CMaterial;
-	_surface=new CModelSurface;
+	_surface=new CMirrorSurface( this );
+	_surface->SetShader( App.ShaderUtil()->MirrorShader() );
 	_surface->SetMaterial( _material );
 }
 
 CMirror::~CMirror(){
-	delete _camera;
 	if( _texture ) _texture->Release();
 	_material->Release();
 	_surface->Release();
+	delete _camera;
 }
 
 void CMirror::SetSize( float width,float height ){
@@ -71,28 +72,22 @@ void CMirror::SetResolution( int width,int height ){
 	_rHeight=height;
 	_dirty|=DIRTY_TEXTURE;
 }
-/*
-void CMirror::OnBeginCameraPass( CCamera *camera ){
-	if( _dirty & DIRTY_TEXTURE ){
-		if( _texture ) _texture->Release();
-		_texture=App.Graphics()->CreateTexture( _rWidth,_rHeight,FORMAT_RGB8,TEXTURE_FILTER|TEXTURE_CLAMPST|TEXTURE_RENDER );
-		_material->SetTexture( "MirrorTexture",_texture );
-		_dirty&=~DIRTY_TEXTURE;
-	}
-	App.Renderer()->Render( camera,_texture );
-}
-*/
-void CMirror::OnRender(){
+
+CSurface *CMirror::Surface(){
 	if( _dirty & DIRTY_SURFACE ){
 		CVertex v0,v1,v2,v3;
 		v0.position=CVec3( -_width/2,_height/2,0 );
-		v0.texcoords[0]=CVec2( 0,0 );
+		v0.normal=CVec3(0,0,-1);
+		v0.texcoords[0]=CVec2( 0,1 );
 		v1.position=CVec3( _width/2,_height/2,0 );
-		v1.texcoords[0]=CVec2( 1,0 );
+		v1.normal=CVec3(0,0,-1);
+		v1.texcoords[0]=CVec2( 1,1 );
 		v2.position=CVec3( _width/2,-_height/2,0 );
-		v2.texcoords[0]=CVec2( 1,1 );
+		v2.normal=CVec3(0,0,-1);
+		v2.texcoords[0]=CVec2( 1,0 );
 		v3.position=CVec3( -_width/2,-_height/2,0 );
-		v3.texcoords[0]=CVec2( 0,1 );
+		v3.normal=CVec3(0,0,-1);
+		v3.texcoords[0]=CVec2( 0,0 );
 		_surface->Clear();
 		_surface->AddVertex( v0 );
 		_surface->AddVertex( v1 );
@@ -102,6 +97,50 @@ void CMirror::OnRender(){
 		_surface->AddTriangle( 0,2,3 );
 		_dirty&=~DIRTY_SURFACE;
 	}
+	return _surface;
 }
 
+CTexture *CMirror::Texture(){
+	if( _dirty & DIRTY_TEXTURE ){
+		if( _texture ) _texture->Release();
+		_texture=App.Graphics()->CreateTexture( _rWidth,_rHeight,FORMAT_RGB8,TEXTURE_FILTER|TEXTURE_CLAMPST|TEXTURE_RENDER );
+		_material->SetTexture( "MirrorTexture",_texture );
+		_camera->SetViewport( CRect( 0,0,_rWidth,_rHeight ) );
+		_dirty&=~DIRTY_TEXTURE;
+	}
+	return _texture;
+}
 
+void CMirror::OnRenderWorld(){
+	App.Scene()->AddSurface( Surface() );
+}
+
+CMirrorSurface::CMirrorSurface( CMirror *mirror ):_mirror(mirror){
+}
+
+void CMirrorSurface::OnRenderCamera( CCamera *camera ){
+	Instances().clear();
+	
+	//Don't recurse!
+	if( camera==_mirror->_camera ) return;
+	
+	//do fancy reflection matrix thang here!
+	//For now, just use mirror render matrix as camera...
+
+	_mirror->_camera->SetMatrix( camera->RenderMatrix() );
+
+	CTexture *cb=App.Graphics()->ColorBuffer( 0 );
+
+	App.Graphics()->SetColorBuffer( 0,_mirror->Texture() );
+
+	App.Scene()->RenderCamera( _mirror->_camera );
+
+	App.Graphics()->SetColorBuffer( 0,cb );
+
+	Instances().push_back( _mirror->RenderMatrix() );
+}
+
+void CMirrorSurface::OnRenderInstances( const CHull &bounds ){
+	if( !Instances().size() ) return;
+	CModelSurface::OnRenderInstances( bounds );
+}

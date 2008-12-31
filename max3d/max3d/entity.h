@@ -36,6 +36,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "physics.h"
 #include "animator.h"
 
+class CCamera;
+
 class CEntity : public CObject{
 public:
 	//construction
@@ -43,7 +45,8 @@ public:
 	~CEntity();
 	
 	//Rendering
-	virtual void OnRender();
+	virtual void OnRenderWorld();
+	virtual void OnRenderCamera( CCamera *camera );
 	
 	//hierarchy ops
 	void SetVisible( bool visible );

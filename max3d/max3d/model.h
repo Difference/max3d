@@ -53,7 +53,7 @@ public:
 	void ResetTransform();
 	void Optimize();
 	
-	virtual void OnRender();
+	virtual void OnRenderWorld();
 	
 private:
 	CModel( CModel *model,CCopier *copier );
@@ -114,7 +114,7 @@ public:
 	vector<CMat4> &Instances(){ return _instances; }
 	
 	void OnRenderInstances( const CHull &bounds );
-	void OnEndCameraPass();
+	void OnClearInstances();
 	
 private:
 	void ValidateBounds();

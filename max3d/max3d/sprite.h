@@ -35,7 +35,25 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "scene.h"
 
-class CSprite;
+class CSpriteSurface;
+
+class CSprite : public CEntity{
+public:
+	CSprite();
+	~CSprite();
+	
+	void SetMaterial( CMaterial *material );
+	CMaterial *Material();
+	
+	virtual void OnRenderWorld();
+
+private:
+	CSprite( CSprite *sprite,CCopier *copier );
+	
+	CSprite *OnCopy( CCopier *copier ){ return new CSprite( this,copier ); }
+
+	CSpriteSurface *_surface;
+};
 
 class CSpriteSurface : public CSurface{
 public:
@@ -44,37 +62,16 @@ public:
 	
 	vector<CSprite*> &Instances(){ return _instances; }
 
-private:
-	void OnBeginCameraPass( CCamera *camera );
+	void OnRenderCamera( CCamera *camera );
 	void OnRenderInstances( const CHull &bounds );
-	void OnEndCameraPass();
+	void OnClearInstances();
 
-int _capacity;
+private:
+	int _capacity;
 	CVertexBuffer *_vertexBuffer;
 	CIndexBuffer *_indexBuffer;
 	
 	vector<CSprite*> _instances;
-};
-
-class CSprite : public CEntity{
-public:
-	CSprite();
-	~CSprite();
-	
-	void SetShader( CShader *shader );
-	CShader *Shader(){ return _surface->Shader(); }
-
-	void SetMaterial( CMaterial *material );
-	CMaterial *Material(){ return _surface->Material(); }
-	
-	void OnRender();
-
-private:
-	CSprite( CSprite *sprite,CCopier *copier );
-	
-	CSprite *OnCopy( CCopier *copier ){ return new CSprite( this,copier ); }
-
-	CSpriteSurface *_surface;
 };
 
 #endif

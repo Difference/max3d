@@ -460,13 +460,12 @@ void CScene::RenderDistantLight( CLight *light,CCamera *camera ){
 	RenderBox( lightBox );
 }
 
-void CScene::Render(){
-	for( vector<CCamera*>::const_iterator it=Cameras().begin();it!=Cameras().end();++it ){
-		Render( *it );
+void CScene::RenderCamera( CCamera *camera ){
+	
+	for( vector<CSurface*>::iterator it=_surfaces.begin();it!=_surfaces.end();++it ){
+		CSurface *surface=*it;
+		surface->OnRenderCamera( camera );
 	}
-}
-
-void CScene::Render( CCamera *camera ){
 	
 	//push graphics target state
 	CTexture *colorBuffers[4];
@@ -491,11 +490,6 @@ void CScene::Render( CCamera *camera ){
 	App.Graphics()->SetFloatParam( "bb_zNear",camera->NearZ() );
 	App.Graphics()->SetFloatParam( "bb_zFar",camera->FarZ() );
 
-	for( vector<CSurface*>::iterator it=_surfaces.begin();it!=_surfaces.end();++it ){
-		CSurface *surface=*it;
-		surface->OnBeginCameraPass( camera );
-	}
-	
 	App.Graphics()->SetColorBuffer( 1,materialBuffer );
 	App.Graphics()->SetColorBuffer( 2,normalBuffer );
 	App.Graphics()->SetColorBuffer( 3,0 );
@@ -513,7 +507,7 @@ void CScene::Render( CCamera *camera ){
 
 	App.Graphics()->SetColorBuffer( 1,0 );
 	App.Graphics()->SetColorBuffer( 2,0 );
-
+	
 	//lighting
 	for( vector<CLight*>::const_iterator it=_lights.begin();it!=_lights.end();++it ){
 		_shadowBufSize=0;
@@ -533,12 +527,6 @@ void CScene::Render( CCamera *camera ){
 	//additive
 	SetShaderMode( "additive" );
 	RenderSurfaces( camera->RenderFrustum() );
-
-	//end camera pass
-	for( vector<CSurface*>::iterator it=_surfaces.begin();it!=_surfaces.end();++it ){
-		CSurface *surface=*it;
-		surface->OnEndCameraPass();
-	}
 
 	//copy to target
 	_viewport=camera->Viewport();

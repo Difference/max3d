@@ -60,7 +60,7 @@ public:
 	void SetShadowBufferSize( int size );
 	int ShadowBufferSize(){ return _shadowBufSize; }
 
-	virtual void OnRender();
+	virtual void OnRenderWorld();
 
 private:
 	CLight( CLight *light,CCopier *copier );

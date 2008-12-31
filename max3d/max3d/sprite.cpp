@@ -37,6 +37,45 @@ POSSIBILITY OF SUCH DAMAGE.
 
 static map<CMaterial*,CSpriteSurface*> _matMap;
 
+CSprite::CSprite():_surface(0){
+}
+
+CSprite::CSprite( CSprite *sprite,CCopier *copier ):CEntity( sprite,copier ),
+_surface( sprite->_surface ){
+	if( _surface ) _surface->Retain();
+}
+
+CSprite::~CSprite(){
+	if( _surface ) _surface->Release();
+}
+
+void CSprite::SetMaterial( CMaterial *material ){
+	CSpriteSurface *surface=0;
+	if( material ){
+		map<CMaterial*,CSpriteSurface*>::iterator it=_matMap.find( material );
+		if( it==_matMap.end() ){
+			surface=new CSpriteSurface;
+			surface->SetShader( App.ShaderUtil()->SpriteShader() );
+			surface->SetMaterial( material );
+			_matMap.insert( make_pair( material,surface ) );
+		}else{
+			surface=it->second;
+		}
+	}
+	if( surface ) surface->Retain();
+	if( _surface ) _surface->Release();
+	_surface=surface;
+}
+
+CMaterial *CSprite::Material(){
+	return _surface->Material();
+}
+
+void CSprite::OnRenderWorld(){
+	if( !_surface->Instances().size() ) App.Scene()->AddSurface( _surface );
+	_surface->Instances().push_back( this );
+}
+
 CSpriteSurface::CSpriteSurface():_capacity(0),_vertexBuffer(0),_indexBuffer(0){
 	SetShader( App.ShaderUtil()->SpriteShader() );
 }
@@ -46,7 +85,7 @@ CSpriteSurface::~CSpriteSurface(){
 	if( _indexBuffer ) _indexBuffer->Release();
 }
 
-void CSpriteSurface::OnBeginCameraPass( CCamera *camera ){
+void CSpriteSurface::OnRenderCamera( CCamera *camera ){
 	int n=_instances.size();
 	if( n>_capacity ){
 		_capacity=n;
@@ -91,7 +130,7 @@ void CSpriteSurface::OnBeginCameraPass( CCamera *camera ){
 		_indexBuffer->Unlock();
 	}
 	const CVec3 v0(-1,1,0),v1(1,1,0),v2(1,-1,0),v3(-1,-1,0);
-	const CMat4 &viewMat=-camera->RenderMatrix();
+	const CMat4 &viewMat=camera->InverseRenderMatrix();
 	float *vp=(float*)_vertexBuffer->Lock();
 	for( int i=0;i<n;++i ){
 		CVec3 t=viewMat * _instances[i]->RenderMatrix().Translation();
@@ -110,43 +149,8 @@ void CSpriteSurface::OnRenderInstances( const CHull &bounds ){
 	App.Graphics()->Render( 3,0,_instances.size()*6,1 );
 }
 
-void CSpriteSurface::OnEndCameraPass(){
+void CSpriteSurface::OnClearInstances(){
 	_instances.clear();
-}
-
-CSprite::CSprite():_surface(0){
-}
-
-CSprite::CSprite( CSprite *sprite,CCopier *copier ):CEntity( sprite,copier ),
-_surface( sprite->_surface ){
-	if( _surface ) _surface->Retain();
-}
-
-CSprite::~CSprite(){
-	if( _surface ) _surface->Release();
-}
-
-void CSprite::SetMaterial( CMaterial *material ){
-	CSpriteSurface *surface=0;
-	if( material ){
-		map<CMaterial*,CSpriteSurface*>::iterator it=_matMap.find( material );
-		if( it==_matMap.end() ){
-			surface=new CSpriteSurface;
-			surface->SetShader( App.ShaderUtil()->SpriteShader() );
-			surface->SetMaterial( material );
-			_matMap.insert( make_pair( material,surface ) );
-		}else{
-			surface=it->second;
-		}
-	}
-	if( surface ) surface->Retain();
-	if( _surface ) _surface->Release();
-	_surface=surface;
-}
-
-void CSprite::OnRender(){
-	if( !_surface->Instances().size() ) App.Scene()->AddSurface( _surface );
-	_surface->Instances().push_back( this );
 }
 
 REGISTERTYPE( CSprite )

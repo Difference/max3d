@@ -52,7 +52,7 @@ public:
 	//Only valid during rendering...
 	const CHull &RenderFrustum(){ return _renderFrustum; }
 	
-	virtual void OnRender();
+	virtual void OnRenderWorld();
 	
 private:
 	CCamera( CCamera *camera,CCopier *copier );

@@ -35,6 +35,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "model.h"
 
+class CMirrorSurface;
+
 class CMirror : public CEntity{
 public:
 	CMirror();
@@ -43,16 +45,32 @@ public:
 	void SetSize( float width,float height );
 	void SetResolution( int width,int height );
 
-	virtual void OnRender();
+	virtual void OnRenderWorld();
 
 private:
+	friend class CMirrorSurface;
+
+	CSurface *Surface();
+	CTexture *Texture();
+	
 	int _dirty;
 	float _width,_height;
 	int _rWidth,_rHeight;
 	CCamera *_camera;
 	CTexture *_texture;
 	CMaterial *_material;
-	CModelSurface *_surface;
+	CMirrorSurface *_surface;
+};
+
+class CMirrorSurface : public CModelSurface{
+public:
+	CMirrorSurface( CMirror *mirror );
+	
+	virtual void OnRenderCamera( CCamera *camera );
+	virtual void OnRenderInstances( const CHull &bounds );
+
+private:
+	CMirror *_mirror;
 };
 
 #endif

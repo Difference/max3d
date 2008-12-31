@@ -76,7 +76,7 @@ void CCamera::SetProjectionMatrix( const CMat4 &tmat ){
 	}
 }
 
-void CCamera::OnRender(){
+void CCamera::OnRenderWorld(){
 	_renderFrustum=RenderMatrix() * Frustum();
 	App.Scene()->AddCamera( this );
 }

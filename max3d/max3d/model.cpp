@@ -107,7 +107,7 @@ void CModel::Optimize(){
 	}
 }
 
-void CModel::OnRender(){
+void CModel::OnRenderWorld(){
 	for( vector<CModelSurface*>::iterator it=_surfaces.begin();it!=_surfaces.end();++it ){
 		CModelSurface *surface=*it;
 		if( !surface->Instances().size() ) App.Scene()->AddSurface( surface );
@@ -350,7 +350,7 @@ void CModelSurface::OnRenderInstances( const CHull &bounds ){
 	}
 }
 
-void CModelSurface::OnEndCameraPass(){
+void CModelSurface::OnClearInstances(){
 	_instances.clear();
 }
 

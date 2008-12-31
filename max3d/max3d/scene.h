@@ -56,9 +56,7 @@ public:
 	void SetShadowsEnabled( bool enabled );
 	bool ShadowsEnabled(){ return _shadowsEnabled; }
 	
-	void Render();
-	
-	void Render( CCamera *camera );
+	void RenderCamera( CCamera *camera );
 
 private:
 	void SetShaderMode( string mode );

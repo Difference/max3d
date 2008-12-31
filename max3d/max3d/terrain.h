@@ -53,7 +53,7 @@ public:
 	
 	CModelSurface *Surface();
 	
-	virtual void OnRender();
+	virtual void OnRenderWorld();
 	
 private:
 	void ValidateSurface();

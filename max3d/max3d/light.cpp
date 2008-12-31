@@ -89,7 +89,7 @@ void CLight::SetShadowBufferSize( int size ){
 	_shadowBufSize=size;
 }
 
-void CLight::OnRender(){
+void CLight::OnRenderWorld(){
 	App.Scene()->AddLight( this );
 }
 
