@@ -149,10 +149,6 @@ void CWorld::Render(){
 	
 	for( vector<CCamera*>::const_iterator it=App.Scene()->Cameras().begin();it!=App.Scene()->Cameras().end();++it ){
 		CCamera *camera=*it;
-		for( set<CEntity*>::iterator it=_entities.begin();it!=_entities.end();++it ){
-			CEntity *entity=*it;
-			entity->OnRenderCamera( camera );
-		}
 		App.Scene()->RenderCamera( camera );
 	}
 	

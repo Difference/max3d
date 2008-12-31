@@ -67,9 +67,6 @@ _flags(0){
 void CEntity::OnRenderWorld(){
 }
 
-void CEntity::OnRenderCamera( CCamera *camera ){
-}
-
 CEntity::~CEntity(){
 	while( Children() ) delete Children();
 	SetVisible( false );

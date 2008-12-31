@@ -46,7 +46,6 @@ public:
 	
 	//Rendering
 	virtual void OnRenderWorld();
-	virtual void OnRenderCamera( CCamera *camera );
 	
 	//hierarchy ops
 	void SetVisible( bool visible );
