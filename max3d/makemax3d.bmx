@@ -1,11 +1,23 @@
 
 Strict
 
-'works for marky!
 Global bmx_path$=RequestDir( "BlitzMax path...","C:\Program Files\BlitzMax" )
 
 If FileType( bmx_path+"/mod" )<>FILETYPE_DIR
 	Notify "Can't find BMX path"
+EndIf
+
+Local mod_time=FileTime( bmx_path+"/mod/bmx3d.mod/max3d.mod/max3d.bmx" )
+If mod_time
+	If mod_time>FileTime( "max3d/api.cpp" )
+		If mod_time>FileTime( "makemax3d.bmx" )
+			If mod_time>FileTime( "max3d_template.bmx" )
+				If Not Confirm( "Max3d mod appears to be up to date - make anyway?" )
+					End
+				EndIf
+			EndIf
+		EndIf
+	EndIf
 EndIf
 
 Const TYPE_VOID=0
@@ -147,22 +159,23 @@ CreateDir bmx_path+"/mod/bmx3d.mod"
 CreateDir bmx_path+"/mod/bmx3d.mod/max3d.mod"
 
 Local incbins$
+Rem
 For Local f$=EachIn LoadDir( "max3d" )
 	If f.EndsWith( ".glsl" ) And FileType( "max3d/"+f )=FILETYPE_FILE
 		CopyFile "max3d/"+f,bmx_path+"/mod/bmx3d.mod/max3d.mod/"+f
 		incbins:+"Incbin ~q"+f+"~q~n"
 	EndIf
 Next
+End Rem
 
-Local devPath$=RealPath( CurrentDir()+"/.." )
-'Print devPath
+Local devDir$=RealPath( CurrentDir()+"/.." )
 
 Local max3d$=LoadString( "max3d_template.bmx" )
 
 max3d=max3d.Replace( "{INCBINS}",incbins )
 max3d=max3d.Replace( "{INITS}",bmx_inits )
 max3d=max3d.Replace( "{DECLS}",bmx_decls )
-max3d=max3d.Replace( "{DEVPATH}",devPath )
+max3d=max3d.Replace( "{DEVDIR}",devDir )
 
 'Print max3d
 

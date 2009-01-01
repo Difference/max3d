@@ -39,7 +39,7 @@ class CModelUtil{
 public:
 	CBody *CreateModelBody( CModel *model,int collType,float mass );
 	
-	CModel *LoadModel( const string &path,int collType,float mass );
+	CModel *ImportModel( const string &path,int collType,float mass );
 
 	CModel *CreateSphere( CMaterial *material,float radius,int collType,float mass );
 	CModel *CreateCapsule( CMaterial *material,float radius,float length,int collType,float mass );

@@ -33,6 +33,8 @@ Const TEXTURE_CLAMPST=TEXTURE_CLAMPS|TEXTURE_CLAMPT
 
 {DECLS}
 
+Global Max3dImportDirs$[]=["{DEVDIR}/max3d/max3d"]
+
 Rem
 bbdoc: Max3dGraphics
 End Rem
@@ -45,26 +47,18 @@ Rem
 bbdoc: LoadShader
 End Rem
 Function LoadShader( path$ )
-	Local source$
-	If path.StartsWith( "<" ) And path.EndsWith( ">" )
-		Local name$=path[1..path.length-1]+".glsl"
-		source=String.FromBytes( IncbinPtr( name ),IncbinLen( name ) )
-	Else
-		source=LoadString( path )
-	EndIf
-	Return CreateShader( source )
-End Function	
+	Local source$=LoadString( path )
+	Local shader=CreateShader( source )
+	Return shader
+End Function
 
 Rem
 bbdoc: LoadTexture
 End Rem
 Function LoadTexture( path$ )
 	Local flags=TEXTURE_FILTER|TEXTURE_MIPMAP|TEXTURE_STATIC
-'	Print "Loading texture:"+path
 	Local t:TPixmap=LoadPixmap( path )
-	If Not t t=LoadPixmap( "../samples/"+StripDir(path) )
-	If Not t t=LoadPixmap( "../media/"+StripDir(path) )
-	If Not t Return 0
+	If Not t Return
 	Local fmt=m3dPixelFormat( t )
 	Local tex=CreateTexture( t.width,t.height,fmt,flags )
 	If Not tex Return 0
@@ -78,11 +72,8 @@ bbdoc: LoadCubeTexture
 End Rem
 Function LoadCubeTexture( path$ )
 	Local flags=TEXTURE_FILTER|TEXTURE_MIPMAP|TEXTURE_STATIC
-'	Print "Loading cube texture:"+path
 	Local t:TPixmap=LoadPixmap( path )
-	If Not t t=LoadPixmap( "../samples/"+StripDir(path) )
-	If Not t t=LoadPixmap( "../media/"+StripDir(path) )
-	If Not t Return 0
+	If Not t Return
 	Local size=t.width
 	If size=t.height
 		Local p:TPixmap=TPixmap.Create( size,size*6,t.format )
@@ -102,10 +93,20 @@ Function LoadCubeTexture( path$ )
 End Function
 
 Rem
+bbdoc: LoadMaterial
+End Rem
+Function LoadMaterial( path$ )
+	Local material=CreateMaterial()
+	Local diffuse=LoadTexture( path )
+	If diffuse SetMaterialTexture material,"DiffuseMap",diffuse
+	Return material
+End Function
+
+Rem
 bbdoc: LoadTerrain
 End Rem
 Function LoadTerrain( path$,material,width#,height#,depth#,collType,mass# )
-	Local hmap:TPixmap=LoadPixmap( "terrain_256.png" )
+	Local hmap:TPixmap=LoadPixmap( path )
 	If Not hmap Return
 	Local xsize=hmap.width
 	Local zsize=hmap.height
@@ -119,27 +120,35 @@ Function LoadTerrain( path$,material,width#,height#,depth#,collType,mass# )
 	Return terrain
 End Function
 
-Rem
-bbdoc: LoadMaterial
-End Rem
-Function LoadMaterial( path$ )
-	Local material=CreateMaterial()
-	Local diffuse=LoadTexture( path )
-	If diffuse SetMaterialTexture material,"DiffuseMap",diffuse
-	Return material
-End Function
-
 Private
 
 Function m3dImporter( classz:Byte Ptr,pathz:Byte Ptr )
 	Local class$=String.FromCString( classz )
 	Local path$=String.FromCString( pathz )
+	
+	If FileType( path )=FILETYPE_NONE
+		Local file$=StripDir( path ),tpath$
+		For Local dir$=EachIn Max3dImportDirs
+			tpath=dir+"/"+file
+			If FileType( tpath )=FILETYPE_FILE Exit
+			tpath=""
+		Next
+		If Not tpath
+			Print "Max3d Error: Unable to locate object of type '"+class+"' at:"+path
+			Return
+		EndIf
+		path=tpath
+	EndIf
+	
 	Select class
 	Case "CShader"
 		Return LoadShader( path )
 	Case "CTexture"
 		Return LoadTexture( path )
+	Case "CMaterial"
+		Return LoadMaterial( path )
 	End Select
+
 	Print "Max3d Error: Don't know how to import object of type '"+class+"'"
 	End
 End Function
@@ -190,39 +199,28 @@ End Function
 Function OpenMax3d()
 	If m3dLib Return
 	
-	Local ext$
-?Win32
-	ext=".dll"
-?Macos
-	ext=".dylib"
-?Linux
-	ext=".so"
-?
-	Local cd$=CurrentDir()
-	ChangeDir "{DEVPATH}"
-	Local dbg$="Debug/max3d"+ext,rel$="Release/max3d"+ext,ver$
+	Local lib$="{DEVDIR}/"
 ?Debug
-	ver=dbg
+	lib:+"Debug/"
 ?Not Debug
-	ver=rel
-?
-'	Print "Opening Max3d lib:"+ver
+	lib:+"Release/"
 ?Win32
-	m3dLib=LoadLibraryA( ver$ )
+	lib:+"max3d.dll"
+?Macos
+	lib:+"max3d.dylib"
+?Linux
+	lib:+"max3d.so"
+?Win32
+	m3dLib=LoadLibraryA( lib )
 ?Not Win32
-	m3dLib=dlopen( ver$,1 )
+	m3dLib=dlopen( lib,1 )
 ?
-	ChangeDir cd
 	If Not m3dLib
-		Print "Max3d Error: Can't open Max3d lib:"+ver
+		Print "Max3d Error: Can't open Max3d lib:"+lib
 		End
 	EndIf
 	
-{INITS}
-
-	ChangeDir "{DEVPATH}/max3d/max3d"
-
-	InitMax3d m3dImporter
+	{INITS}
 	
-	ChangeDir cd
+	InitMax3d m3dImporter
 End Function

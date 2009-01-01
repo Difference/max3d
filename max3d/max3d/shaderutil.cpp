@@ -36,12 +36,12 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "shaderutil.h"
 
 CShaderUtil::CShaderUtil(){
-	_modelShader=(CShader*)App.ImportObject( "CShader","<model>" );
-	_spriteShader=(CShader*)App.ImportObject( "CShader","<sprite>" );
-	_terrainShader=(CShader*)App.ImportObject( "CShader","<terrain>" );
-	_mirrorShader=(CShader*)App.ImportObject( "CShader","<mirror>" );
+	_modelShader=(CShader*)App.ImportObject( "CShader","model.glsl" );
+	_spriteShader=(CShader*)App.ImportObject( "CShader","sprite.glsl" );
+	_terrainShader=(CShader*)App.ImportObject( "CShader","terrain.glsl" );
+	_mirrorShader=(CShader*)App.ImportObject( "CShader","mirror.glsl" );
 	
-	_spotLightShader=(CShader*)App.ImportObject( "CShader","<spotlight>" );
-	_pointLightShader=(CShader*)App.ImportObject( "CShader","<pointlight>" );
-	_distantLightShader=(CShader*)App.ImportObject( "CShader","<distantlight>" );
+	_spotLightShader=(CShader*)App.ImportObject( "CShader","spotlight.glsl" );
+	_pointLightShader=(CShader*)App.ImportObject( "CShader","pointlight.glsl" );
+	_distantLightShader=(CShader*)App.ImportObject( "CShader","distantlight.glsl" );
 }

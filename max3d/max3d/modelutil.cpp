@@ -128,7 +128,7 @@ CBody *CModelUtil::CreateModelBody( CModel *model,int collType,float mass ){
 	return body;
 }
 
-CModel *CModelUtil::LoadModel( const string &path,int collType,float mass ){
+CModel *CModelUtil::ImportModel( const string &path,int collType,float mass ){
 	Assimp::Importer importer;
 
 	int flags=

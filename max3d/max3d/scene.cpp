@@ -68,7 +68,7 @@ void scene_init(){
 	quadVB->SetData( vbdata );
 	quadIB=App.Graphics()->CreateIndexBuffer( 6,"1i" );
 	quadIB->SetData( ibdata );
-	quadShader=(CShader*)App.ImportObject( "CShader","<quad>" );
+	quadShader=(CShader*)App.ImportObject( "CShader","quad.glsl" );
 
 	boxVB=App.Graphics()->CreateVertexBuffer( 8,"3f" );
 	int ip[]={
@@ -92,8 +92,8 @@ void scene_init(){
 	App.Graphics()->SetTextureParam( "bb_NormalBuffer",normalBuffer );
 	App.Graphics()->SetTextureParam( "bb_DepthBuffer",depthBuffer );
 		
-	clearShader=(CShader*)App.ImportObject( "CShader", "<clear>" );
-	shadowMapShader=(CShader*)App.ImportObject( "CShader", "<shadowmap>" );
+	clearShader=(CShader*)App.ImportObject( "CShader", "clear.glsl" );
+	shadowMapShader=(CShader*)App.ImportObject( "CShader", "shadowmap.glsl" );
 }
 
 CScene::CScene(){

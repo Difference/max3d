@@ -67,7 +67,7 @@ MoveEntity mirror,0,3,6
 SetMirrorSize mirror,2,2
 SetMirrorResolution mirror,256,256
 
-Local yvel#,falling
+Local yvel#
 
 While Not KeyHit( KEY_ESCAPE )
 

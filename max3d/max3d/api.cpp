@@ -252,7 +252,7 @@ API float m3dEntityZ( CEntity *entity ){
 
 //***** Model API *****
 API CModel *m3dLoadModel( const char *path,int collType,float mass ){
-	CModel *model=App.ModelUtil()->LoadModel( path,collType,mass );
+	CModel *model=App.ModelUtil()->ImportModel( path,collType,mass );
 	if( model ) model->SetVisible( true );
 	return model;
 }
