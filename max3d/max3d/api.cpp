@@ -70,44 +70,28 @@ extern "C"{	//these will need to be CDECL too for lua...
 //
 
 /// Initalize Max3d - must be called before any other commands
-API void m3dInit( const char *config ){
-
-	vector<string> toks;
-	map<string,string> cfgMap;
-
-	Tokenize( config,toks,",;:\r\n" );
-
-	for( vector<string>::iterator it=toks.begin();it!=toks.end();++it ){
-		vector<string> bits;
-		Tokenize( *it,bits,"=" );
-		if( bits.size()!=2 ){
-			Warning( "Config error" );
-			continue;
-		}
-		cfgMap[bits[0]]=bits[1];
-	}
-
-	App.Init( cfgMap );
+API void m3dInitMax3D( void *importer ){
+	App.Init( (TObjectImporter)importer );
 }
 
-_API void m3dUseRadians(){
-	to_radians=1.0f;
-}
-
-_API void m3dUseDegrees(){
+API void m3dUseDegrees(){
 	to_radians=PI/180.0f;
 }
 
+API void m3dUseRadians(){
+	to_radians=1.0f;
+}
+
 //***** Object API *****
-API const char *m3dMax3dObjectType( CObject *obj ){
+_API const char *m3dMax3dObjectType( CObject *obj ){
 	return c_str( obj->TypeName() );
 }
 
-API void m3dSaveMax3dObject( CObject *obj,const char *path ){
+_API void m3dSaveMax3dObject( CObject *obj,const char *path ){
 	if( obj ) obj->Write( path );
 }
 
-API CObject *m3dLoadMax3dObject( const char *path ){
+_API CObject *m3dLoadMax3dObject( const char *path ){
 	return CObject::Read( path );
 }
 
@@ -121,10 +105,6 @@ API void m3dReleaseResource( CResource *obj ){
 }
 
 //***** Texture API *****
-API void m3dSetTextureLoader( void *loader ){
-	App.TextureUtil()->SetTextureLoader( (TextureLoader)loader );
-}
-
 API CTexture *m3dBlackTexture(){
 	return App.TextureUtil()->BlackTexture();
 }
@@ -164,18 +144,6 @@ API void m3dSetCubeTextureData( CTexture *texture,const void *data ){
 //***** Shader API *****
 API CShader *m3dCreateShader( const char *source ){
 	return App.Graphics()->CreateShader( source );
-}
-
-API CShader *m3dLoadShader( const char *path ){
-	return App.ShaderUtil()->LoadShader( path );
-}
-
-API CShader *m3dMeshShader(){
-	return App.ShaderUtil()->MeshShader();
-}
-
-API CShader *m3dSpriteShader(){
-	return App.ShaderUtil()->SpriteShader();
 }
 
 //***** Material API *****

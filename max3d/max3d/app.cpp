@@ -38,22 +38,23 @@ POSSIBILITY OF SUCH DAMAGE.
 
 CApp App;
 
-CApp::CApp(){
-}
-
 void odephysics_init();
 void scene_init();
 void stdparams_init();
 
-void CApp::Init( const map<string,string> &config ){
+CApp::CApp(){
+}
 
-	_config=config;
+void CApp::Init( TObjectImporter importer ){
+
+	_importer=importer;
+
 	_graphics=new COpenGLGraphics;
 
 	stdparams_init();
 	scene_init();
 	odephysics_init();
-
+	
 	_scene=new CScene;
 	_world=new CWorld;
 	_textureUtil=new CTextureUtil;

@@ -2,7 +2,7 @@
 Strict
 
 'works for marky!
-Global bmx_path$=RequestDir( "BlitzMax path..." )
+Global bmx_path$=RequestDir( "BlitzMax path...","C:\Program Files\BlitzMax" )
 
 If FileType( bmx_path+"/mod" )<>FILETYPE_DIR
 	Notify "Can't find BMX path"
@@ -24,11 +24,8 @@ Function Bmx_Func( ty,id$,argtys[],argids$[] )
 	Global ty_names$[]=["","%","#","%","$z",":Byte Ptr",":Byte Ptr"]
 	
 	Local tid$=id
-	Select id
-	Case "m3dInit"
-	Default
-		If tid.StartsWith( "m3d" ) tid=tid[3..]
-	End Select
+
+	If tid.StartsWith( "m3d" ) tid=tid[3..]
 	
 	Local decl$="Global "+tid+ty_names[ty]+"("
 	For Local i=0 Until argids.length
@@ -146,21 +143,31 @@ For Local tline$=EachIn api.Split( "~n" )
 
 Next
 
+CreateDir bmx_path+"/mod/bmx3d.mod"
+CreateDir bmx_path+"/mod/bmx3d.mod/max3d.mod"
+
+Local incbins$
+For Local f$=EachIn LoadDir( "max3d" )
+	If f.EndsWith( ".glsl" ) And FileType( "max3d/"+f )=FILETYPE_FILE
+		CopyFile "max3d/"+f,bmx_path+"/mod/bmx3d.mod/max3d.mod/"+f
+		incbins:+"Incbin ~q"+f+"~q~n"
+	EndIf
+Next
+
 Local devPath$=RealPath( CurrentDir()+"/.." )
 'Print devPath
 
 Local max3d$=LoadString( "max3d_template.bmx" )
+
+max3d=max3d.Replace( "{INCBINS}",incbins )
 max3d=max3d.Replace( "{INITS}",bmx_inits )
 max3d=max3d.Replace( "{DECLS}",bmx_decls )
 max3d=max3d.Replace( "{DEVPATH}",devPath )
 
 'Print max3d
 
-CreateDir bmx_path+"/mod/max3d.mod"
-CreateDir bmx_path+"/mod/max3d.mod/max3d.mod"
-SaveString max3d,bmx_path+"/mod/max3d.mod/max3d.mod/max3d.bmx"
+SaveString max3d,bmx_path+"/mod/bmx3d.mod/max3d.mod/max3d.bmx"
 
-system_ bmx_path+"/bin/bmk makemods"
+system_ bmx_path+"/bin/bmk makemods -a bmx3d"
 
-Print "Created module max3d.max3d"
-
+Print "Created module bmx3d"

@@ -70,10 +70,6 @@ void CCamera::SetProjectionMatrix( const CMat4 &tmat ){
 	_frustum.planes.push_back( CPlane( t.xyz(),t.w ).Normalize() );
 	_frustum.planes.push_back( CPlane( n.xyz(),n.w ).Normalize() );
 	_frustum.planes.push_back( CPlane( f.xyz(),f.w ).Normalize() );
-	
-	for( int i=0;i<6;++i ){
-		cout<<_frustum.planes[i]<<endl;
-	}
 }
 
 void CCamera::OnRenderWorld(){

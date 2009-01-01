@@ -35,18 +35,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "graphics.h"
 
-typedef CTexture*(*TextureLoader)( const char *path );
-
 class CTextureUtil{
 public:
 	CTextureUtil();
 
-	//Set texture loader callback
-	void SetTextureLoader( TextureLoader loader );
-
-	//Load a texture
-	CTexture *LoadTexture( string path );
-	
 	//Get stock white texture - read only!
 	CTexture *WhiteTexture(){ return _whiteTexture; }
 
@@ -58,19 +50,8 @@ public:
 	
 	//Get stock alpha 0 texture - read only!
 	CTexture *ZeroTexture(){ return _zeroTexture; }
-	
-	//Use this to read a texture...
-	CTexture *ReadTexture( CStream *stream );
-
-	//And this to write...
-	void WriteTexture( CTexture *texture,CStream *stream );
 
 private:
-	TextureLoader _textureLoader;
-
-	map<string,CTexture*> _paths;
-	map<CTexture*,string> _textures;
-
 	CTexture *_blackTexture;
 	CTexture *_whiteTexture;
 	CTexture *_flatTexture;

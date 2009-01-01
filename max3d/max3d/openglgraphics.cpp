@@ -468,7 +468,6 @@ private:
 class GLFrameBuffer{
 public:
 	GLFrameBuffer *Create( CTexture *colorBuffers[4],CTexture *depthBuffer ){
-		cout<<"Creating frame buffer"<<endl;
 		glGenFramebuffersEXT( 1,&_glfbo );
 		glBindFramebufferEXT( GL_FRAMEBUFFER_EXT,_glfbo );
 		for( int i=0;i<4;++i ){

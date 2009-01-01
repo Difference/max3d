@@ -40,16 +40,15 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "shaderutil.h"
 #include "modelutil.h"
 
+typedef CObject *(*TObjectImporter)( const char *type,const char *path );
+
 class CApp{
 public:
 	CApp();
 
 	//Startup
-	void Init( const map<string,string> &config );
+	void Init( TObjectImporter importer );
 
-	//get configuration
-	string Config( string key ){ return _config[key]; }
-	
 	//graphics driver
 	CGraphics *Graphics(){ return _graphics; }
 	
@@ -58,7 +57,7 @@ public:
 
 	//Current world
 	CWorld *World(){ return _world; }
-
+	
 	//txeture utilities
 	CTextureUtil *TextureUtil(){ return _textureUtil; }
 
@@ -68,8 +67,11 @@ public:
 	//Model utilities
 	CModelUtil *ModelUtil(){ return _modelUtil; }
 
+	//Import an object
+	CObject *ImportObject( string type,string path ){ return _importer( type.c_str(),path.c_str() ); }
+	
 private:
-	map<string,string> _config;
+	TObjectImporter _importer;
 	CGraphics *_graphics;
 	CScene *_scene;
 	CWorld *_world;

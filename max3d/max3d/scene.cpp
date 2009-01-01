@@ -37,8 +37,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 static CHull _nullHull;
 
-static bool hdr;					
-
 static CVertexBuffer *quadVB;
 static CIndexBuffer *quadIB;
 static CShader *quadShader;
@@ -50,7 +48,6 @@ static CTexture *accumBuffer;
 static CTexture *normalBuffer;
 static CTexture *materialBuffer;
 static CTexture *depthBuffer;
-
 static CShader *clearShader;
 
 static int maxShadowBufSize;
@@ -65,15 +62,13 @@ void scene_init(){
 	App.Graphics()->SetVec2Param( "bb_WindowSize",CVec2( w,h ) );
 	App.Graphics()->SetVec2Param( "bb_WindowScale",CVec2( 1.0f/w,1.0f/h ) );
 	
-	hdr=(App.Config( "HDR" )=="TRUE");
-
 	float vbdata[]={ 0,0,1,0,1,1,0,1 };
 	int ibdata[]={0,1,2,0,2,3 };
 	quadVB=App.Graphics()->CreateVertexBuffer( 4,"2f" );
 	quadVB->SetData( vbdata );
 	quadIB=App.Graphics()->CreateIndexBuffer( 6,"1i" );
 	quadIB->SetData( ibdata );
-	quadShader=App.ShaderUtil()->LoadShader( "quad" );
+	quadShader=(CShader*)App.ImportObject( "CShader","<quad>" );
 
 	boxVB=App.Graphics()->CreateVertexBuffer( 8,"3f" );
 	int ip[]={
@@ -86,11 +81,8 @@ void scene_init(){
 	boxIB=App.Graphics()->CreateIndexBuffer( 36,"1i" );
 	boxIB->SetData( ip );
 	
-	if( hdr ){
-		accumBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA16F,TEXTURE_CLAMPST|TEXTURE_RENDER );
-	}else{
-		accumBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_RENDER );
-	}
+	//accumBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA16F,TEXTURE_CLAMPST|TEXTURE_RENDER );
+	accumBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_RENDER );
 	materialBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_RENDER );
 	normalBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_RENDER );
 	depthBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_DEPTH,TEXTURE_RENDER );
@@ -100,8 +92,8 @@ void scene_init(){
 	App.Graphics()->SetTextureParam( "bb_NormalBuffer",normalBuffer );
 	App.Graphics()->SetTextureParam( "bb_DepthBuffer",depthBuffer );
 		
-	clearShader=App.ShaderUtil()->LoadShader( "clear" );
-	shadowMapShader=App.ShaderUtil()->LoadShader( "shadowmap" );
+	clearShader=(CShader*)App.ImportObject( "CShader", "<clear>" );
+	shadowMapShader=(CShader*)App.ImportObject( "CShader", "<shadowmap>" );
 }
 
 CScene::CScene(){

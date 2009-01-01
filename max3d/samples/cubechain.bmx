@@ -1,9 +1,9 @@
 
 Strict
 
-Import Max3d.Max3d
+Import Bmx3d.Max3d
 
-Max3dGraphics 800,600,32,60
+Max3dGraphics 1024,768
 
 SetClearColor 0,0,1
 

@@ -38,10 +38,8 @@ POSSIBILITY OF SUCH DAMAGE.
 class CShaderUtil{
 public:
 	CShaderUtil();
-
-	CShader *LoadShader( string path );
-
-	CShader *MeshShader(){ return _meshShader; }
+	
+	CShader *ModelShader(){ return _modelShader; }
 	CShader *SpriteShader(){ return _spriteShader; }
 	CShader *TerrainShader(){ return _terrainShader; }
 	CShader *MirrorShader(){ return _mirrorShader; }
@@ -51,10 +49,11 @@ public:
 	CShader *DistantLightShader(){ return _distantLightShader; }
 
 private:
-	CShader *_meshShader;
+	CShader *_modelShader;
 	CShader *_spriteShader;
 	CShader *_terrainShader;
 	CShader *_mirrorShader;
+
 	CShader *_spotLightShader;
 	CShader *_pointLightShader;
 	CShader *_distantLightShader;

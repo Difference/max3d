@@ -58,28 +58,3 @@ CTextureUtil::CTextureUtil(){
 	_zeroTexture->SetPath( "<zero>" );
 	_zeroTexture->SetData( &texData );
 }
-
-void CTextureUtil::SetTextureLoader( TextureLoader loader ){
-	_textureLoader=loader;
-}
-
-CTexture *CTextureUtil::LoadTexture( string path ){
-	if( path=="<black>" ) return _blackTexture;
-	if( path=="<white>" ) return _whiteTexture;
-	if( path=="<flat>" ) return _flatTexture;
-	if( path=="<zero>" ) return _zeroTexture;
-	CTexture *texture=_textureLoader( path.c_str() );
-	return texture;
-}
-
-CTexture *CTextureUtil::ReadTexture( CStream *stream ){
-	string path=stream->ReadString();
-	if( !path.size() ) Error( "TODO" );
-	return LoadTexture( path );
-}
-
-void CTextureUtil::WriteTexture( CTexture *texture,CStream *stream ){
-	string path=texture->Path();
-	if( !path.size() ) Error( "TODO" );
-	stream->WriteString( path );
-}

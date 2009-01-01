@@ -109,7 +109,7 @@ void CMaterial::OnRead( CStream *stream ){
 	int n_textures=stream->ReadInt();
 	for( int i=0;i<n_textures;++i ){
 		string name=stream->ReadString();
-		SetTexture( name,App.TextureUtil()->ReadTexture( stream ) );
+//		SetTexture( name,App.TextureUtil()->ReadTexture( stream ) );
 	}
 }
 
@@ -127,7 +127,7 @@ void CMaterial::OnWrite( CStream *stream ){
 	stream->WriteInt( _textures.size() );
 	for( map<CParam*,CTexture*>::iterator it=_textures.begin();it!=_textures.end();++it ){
 		stream->WriteString( it->first->Name() );
-		App.TextureUtil()->WriteTexture( it->second,stream );
+//		App.TextureUtil()->WriteTexture( it->second,stream );
 	}
 }
 

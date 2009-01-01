@@ -119,7 +119,7 @@ CModelSurface::CModelSurface():
 _vertexBuffer(0),
 _indexBuffer(0),
 _dirty(~0){
-	SetShader( App.ShaderUtil()->MeshShader() );
+	SetShader( App.ShaderUtil()->ModelShader() );
 }
 
 CModelSurface::~CModelSurface(){

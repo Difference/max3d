@@ -54,25 +54,25 @@ static CMaterial *cmaterial( const aiMaterial *mat ){
 	aiString path;
 
 	if( aiGetMaterialTexture( mat,aiTextureType_DIFFUSE,0,&path,0,0,0,0,0 )==AI_SUCCESS ){
-		cmat->SetTexture( "DiffuseMap",App.TextureUtil()->LoadTexture( cstring( path ) ) );
+		cmat->SetTexture( "DiffuseMap",(CTexture*)App.ImportObject( "CTexture",cstring( path ) ) );
 	}else if( aiGetMaterialColor( mat,AI_MATKEY_COLOR_DIFFUSE,&color )==AI_SUCCESS ){
 		cmat->SetColor( "DiffuseColor",ccolor( color ) );
 	}
 
 	if( aiGetMaterialTexture( mat,aiTextureType_SPECULAR,0,&path,0,0,0,0,0 )==AI_SUCCESS ){
-		cmat->SetTexture( "SpecularMap",App.TextureUtil()->LoadTexture( cstring( path ) ) );
+		cmat->SetTexture( "SpecularMap",(CTexture*)App.ImportObject( "CTexture",cstring( path ) ) );
 	}else if( aiGetMaterialColor( mat,AI_MATKEY_COLOR_SPECULAR,&color )==AI_SUCCESS ){
 		cmat->SetColor( "SpecularColor",ccolor( color ) );
 	}
 	
 	if( aiGetMaterialTexture( mat,aiTextureType_EMISSIVE,0,&path,0,0,0,0,0 )==AI_SUCCESS ){
-		cmat->SetTexture( "EmissiveMap",App.TextureUtil()->LoadTexture( cstring( path ) ) );
+		cmat->SetTexture( "EmissiveMap",(CTexture*)App.ImportObject( "CTexture",cstring( path ) ) );
 	}else if( aiGetMaterialColor( mat,AI_MATKEY_COLOR_EMISSIVE,&color )==AI_SUCCESS ){
 		cmat->SetColor( "EmissiveColor",ccolor( color ) );
 	}
 	
 	if( aiGetMaterialTexture( mat,aiTextureType_NORMALS,0,&path,0,0,0,0,0 )==AI_SUCCESS ){
-		cmat->SetTexture( "NormalMap",App.TextureUtil()->LoadTexture( cstring( path ) ) );
+		cmat->SetTexture( "NormalMap",(CTexture*)App.ImportObject( "CTexture",cstring( path ) ) );
 	}
 
 	return cmat;

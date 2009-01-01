@@ -4,12 +4,14 @@ Strict
 Rem
 bbdoc: Max3D
 End Rem
-Module Max3D.Max3D
+Module Bmx3D.Max3D
 
 Import BRL.Pixmap
 Import BRL.FileSystem
 Import BRL.StandardIO
 Import BRL.GLGraphics
+
+{INCBINS}
 
 Const FORMAT_A8=1
 Const FORMAT_I8=2
@@ -40,11 +42,25 @@ Function Max3dGraphics( w,h,d=0,r=60 )
 End Function
 
 Rem
+bbdoc: LoadShader
+End Rem
+Function LoadShader( path$ )
+	Local source$
+	If path.StartsWith( "<" ) And path.EndsWith( ">" )
+		Local name$=path[1..path.length-1]+".glsl"
+		source=String.FromBytes( IncbinPtr( name ),IncbinLen( name ) )
+	Else
+		source=LoadString( path )
+	EndIf
+	Return CreateShader( source )
+End Function	
+
+Rem
 bbdoc: LoadTexture
 End Rem
 Function LoadTexture( path$ )
 	Local flags=TEXTURE_FILTER|TEXTURE_MIPMAP|TEXTURE_STATIC
-	Print "Loading texture:"+path
+'	Print "Loading texture:"+path
 	Local t:TPixmap=LoadPixmap( path )
 	If Not t t=LoadPixmap( "../samples/"+StripDir(path) )
 	If Not t t=LoadPixmap( "../media/"+StripDir(path) )
@@ -62,7 +78,7 @@ bbdoc: LoadCubeTexture
 End Rem
 Function LoadCubeTexture( path$ )
 	Local flags=TEXTURE_FILTER|TEXTURE_MIPMAP|TEXTURE_STATIC
-	Print "Loading cube texture:"+path
+'	Print "Loading cube texture:"+path
 	Local t:TPixmap=LoadPixmap( path )
 	If Not t t=LoadPixmap( "../samples/"+StripDir(path) )
 	If Not t t=LoadPixmap( "../media/"+StripDir(path) )
@@ -115,8 +131,17 @@ End Function
 
 Private
 
-Function m3dLoadTexture( pathz:Byte Ptr )
-	Return LoadTexture( String.FromCString( pathz ) )
+Function m3dImporter( classz:Byte Ptr,pathz:Byte Ptr )
+	Local class$=String.FromCString( classz )
+	Local path$=String.FromCString( pathz )
+	Select class
+	Case "CShader"
+		Return LoadShader( path )
+	Case "CTexture"
+		Return LoadTexture( path )
+	End Select
+	Print "Max3d Error: Don't know how to import object of type '"+class+"'"
+	End
 End Function
 
 Function m3dPixelFormat( t:TPixmap Var )
@@ -131,7 +156,7 @@ Function m3dPixelFormat( t:TPixmap Var )
 '		t=t.Convert( PF_RGB )
 		Return FORMAT_RGB8
 	End Select
-	Print "Unknown pixel format"
+	Print "Max3d Error: Unknown pixel format"
 	End
 End Function
 
@@ -157,8 +182,9 @@ Function m3dProc:Byte Ptr( t$ )
 ?Not Win32
 	p=dlsym( m3dLib,t )
 ?
-	If Not p Throw "Can't find Max3d symbol:"+t
-	Return p
+	If p Return p
+	Print "Max3d Error: Can't find Max3d symbol:"+t
+	End
 End Function
 
 Function OpenMax3d()
@@ -180,20 +206,23 @@ Function OpenMax3d()
 ?Not Debug
 	ver=rel
 ?
-	Print "Opening Max3d lib:"+ver
+'	Print "Opening Max3d lib:"+ver
 ?Win32
 	m3dLib=LoadLibraryA( ver$ )
 ?Not Win32
 	m3dLib=dlopen( ver$,1 )
 ?
 	ChangeDir cd
-	If Not m3dLib Throw "Can't open Max3d lib:"+ver
+	If Not m3dLib
+		Print "Max3d Error: Can't open Max3d lib:"+ver
+		End
+	EndIf
 	
 {INITS}
 
 	ChangeDir "{DEVPATH}/max3d/max3d"
-	m3dInit "SHADOWS=TRUE"
-	ChangeDir cd
 
-	SetTextureLoader m3dLoadTexture
+	InitMax3d m3dImporter
+	
+	ChangeDir cd
 End Function
