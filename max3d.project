@@ -10,7 +10,6 @@
     <File Name="max3d/max3d/api.h"/>
     <File Name="max3d/max3d/app.cpp"/>
     <File Name="max3d/max3d/app.h"/>
-    <File Name="max3d/max3d/blur.glsl"/>
     <File Name="max3d/max3d/camera.cpp"/>
     <File Name="max3d/max3d/camera.h"/>
     <File Name="max3d/max3d/distantlight.glsl"/>
@@ -23,11 +22,9 @@
     <File Name="max3d/max3d/light.cpp"/>
     <File Name="max3d/max3d/light.h"/>
     <File Name="max3d/max3d/material.cpp"/>
-    <File Name="max3d/max3d/material.glsl"/>
     <File Name="max3d/max3d/material.h"/>
     <File Name="max3d/max3d/math3d.cpp"/>
     <File Name="max3d/max3d/math3d.h"/>
-    <File Name="max3d/max3d/mesh.glsl"/>
     <File Name="max3d/max3d/model.cpp"/>
     <File Name="max3d/max3d/model.h"/>
     <File Name="max3d/max3d/object.cpp"/>
@@ -49,7 +46,6 @@
     <File Name="max3d/max3d/surface.h"/>
     <File Name="max3d/max3d/textureutil.cpp"/>
     <File Name="max3d/max3d/textureutil.h"/>
-    <File Name="max3d/max3d/tonemap.glsl"/>
     <File Name="max3d/max3d/world.cpp"/>
     <File Name="max3d/max3d/world.h"/>
     <File Name="max3d/max3d/animator.h"/>
@@ -59,8 +55,6 @@
     <File Name="max3d/max3d/spotlight.glsl"/>
     <File Name="max3d/max3d/odephysics.h"/>
     <File Name="max3d/max3d/odephysics.cpp"/>
-    <File Name="max3d/max3d/bulletphysics.h"/>
-    <File Name="max3d/max3d/bulletphysics.cpp"/>
     <File Name="max3d/max3d/sprite.h"/>
     <File Name="max3d/max3d/sprite.cpp"/>
     <File Name="max3d/max3d/sprite.glsl"/>
@@ -70,14 +64,12 @@
     <File Name="max3d/max3d/pivot.cpp"/>
     <File Name="max3d/max3d/terrain.cpp"/>
     <File Name="max3d/max3d/terrain.h"/>
-    <File Name="max3d/max3d/actor.h"/>
-    <File Name="max3d/max3d/actor.cpp"/>
     <File Name="max3d/max3d/mirror.h"/>
     <File Name="max3d/max3d/mirror.cpp"/>
     <File Name="max3d/max3d/mirror.glsl"/>
     <File Name="max3d/max3d/scene.h"/>
     <File Name="max3d/max3d/scene.cpp"/>
-    <File Name="max3d\max3d\model.glsl"/>
+    <File Name="max3d/max3d/model.glsl"/>
   </VirtualDirectory>
   <Dependencies Name="Debug">
     <Project Name="assimp"/>
