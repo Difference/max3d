@@ -62,11 +62,6 @@ Local camera=CreateCamera()
 SetEntityParent camera,player
 MoveEntity camera,0,1,0
 
-Local mirror=CreateMirror()
-MoveEntity mirror,0,3,6
-SetMirrorSize mirror,2,2
-SetMirrorResolution mirror,256,256
-
 Local yvel#
 
 While Not KeyHit( KEY_ESCAPE )
