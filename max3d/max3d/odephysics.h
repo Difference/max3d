@@ -33,8 +33,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #ifndef ODEPHYSICS_H
 #define ODEPHYSICS_H
 
-#ifdef USE_ODE
-
 #include "physics.h"
 
 #include <ode/ode.h>
@@ -143,7 +141,5 @@ private:
 	int _collideBits[32];
 	dSurfaceParameters _surfaces[32*32];	//lazy!
 };
-
-#endif
 
 #endif

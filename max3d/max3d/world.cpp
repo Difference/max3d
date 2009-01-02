@@ -39,22 +39,13 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "scene.h"
 
 #include "odephysics.h"
-#include "bulletphysics.h"
 
 CWorld::CWorld(){
 
 	_clear=CVec3( 0.0f,0.75f,1.0f );
 	_ambient=CVec3( .25f,.25f,.25f );
 
-	_physics=0;
-
-#ifdef USE_BULLET
-	if( app.Config( "PHYSICS" )=="BULLET" ){
-		_physics=new CBulletPhysics;
-	}
-#endif
-
-	if( !_physics ) _physics=new COdePhysics;
+	_physics=new COdePhysics;
 
 	_physics->SetGravity( CVec3( 0,-9.81f,0 ) );
 }

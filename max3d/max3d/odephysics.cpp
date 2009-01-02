@@ -35,8 +35,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "app.h"
 #include "odephysics.h"
 
-#ifdef USE_ODE
-
 static const int ODE_MAX_CONTACTS=100;
 
 static dJointGroupID odeContactGroup;
@@ -476,10 +474,3 @@ void odephysics_init(){
 		odeContacts[i].surface.mu=0;//dInfinity;
 	}
 }
-
-#else
-
-void odephysics_init(){
-}
-
-#endif

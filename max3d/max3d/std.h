@@ -43,27 +43,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <fstream>
 #include <iostream>
 #include <queue>
+
 using namespace std;
-
-//Loader
-#define USE_ASSIMP 1
-
-//Physics
-#define USE_ODE 1
-//#define USE_BULLET 1
-
-//Graphics
-#define USE_OPENGL 1
-//#define USE_DIRECT3D9 1
-
-//LUA
-/*
-extern "C"{
-#include <lua.h>
-#include <lualib.h>
-#include <lauxlib.h>
-}
-*/
 
 void _LOG_( const string &t,const char *file,int line );
 void _ERROR_( const string &t,const char *file,int line );
@@ -89,7 +70,6 @@ inline string operator+( float n,const string &t ){ return operator+( t,n ); }
 void Tokenize(const string& str,vector<string>& tokens,const string& delimiters = " ");
 
 string toupper( string t );
-
 string tolower( string t );
 
 #undef LoadString
