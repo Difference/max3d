@@ -36,11 +36,11 @@ Local yaw#,pitch#=45,zoom#=-50,rot#=0
 While Not KeyHit( KEY_ESCAPE )
 
 	If KeyDown( KEY_SPACE )
-		For Local i=0 Until 1
+		For Local i=0 Until 3
 			rot:+25
 			Local copy=CopyEntity( shape )
 			TurnEntity copy,rot,0,0
-			MoveEntity copy,0,20,7
+			MoveEntity copy,0,Cos( MilliSecs()/3 )*3+15,Sin( MilliSecs() )*6+12;
 		Next
 	EndIf
 

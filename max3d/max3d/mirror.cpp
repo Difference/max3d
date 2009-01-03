@@ -78,16 +78,16 @@ CSurface *CMirror::Surface(){
 		CVertex v0,v1,v2,v3;
 		v0.position=CVec3( -_width/2,_height/2,0 );
 		v0.normal=CVec3(0,0,-1);
-		v0.texcoords[0]=CVec2( 0,1 );
+		v0.texcoords[0]=CVec2( 1,1 );
 		v1.position=CVec3( _width/2,_height/2,0 );
 		v1.normal=CVec3(0,0,-1);
-		v1.texcoords[0]=CVec2( 1,1 );
+		v1.texcoords[0]=CVec2( 0,1 );
 		v2.position=CVec3( _width/2,-_height/2,0 );
 		v2.normal=CVec3(0,0,-1);
-		v2.texcoords[0]=CVec2( 1,0 );
+		v2.texcoords[0]=CVec2( 0,0 );
 		v3.position=CVec3( -_width/2,-_height/2,0 );
 		v3.normal=CVec3(0,0,-1);
-		v3.texcoords[0]=CVec2( 0,0 );
+		v3.texcoords[0]=CVec2( 1,0 );
 		_surface->Clear();
 		_surface->AddVertex( v0 );
 		_surface->AddVertex( v1 );
@@ -125,14 +125,36 @@ void CMirrorSurface::OnRenderCamera( CCamera *camera ){
 	if( camera==_mirror->_camera ) return;
 	
 	//do fancy reflection matrix thang here!
-	//For now, just use mirror render matrix as camera...
+	const CMat4 &cam=camera->RenderMatrix();
+	const CMat4 &mir=_mirror->RenderMatrix();
 
-	_mirror->_camera->SetMatrix( camera->RenderMatrix() );
+	//put eye into mirror space
+	CVec3 eye=-mir * cam.t.xyz();
+	if( eye.z>0 ) return;
 
+	//reflect
+	eye.z=-eye.z;
+
+	//projection matrix
+	float znear=eye.z;
+	float zfar=256.0f;
+	float left=(-_mirror->_width/2-eye.x),right=left+_mirror->_width;
+	float bottom=(-_mirror->_height/2+eye.y),top=bottom+_mirror->_height;
+	CMat4 proj=CMat4::FrustumMatrix( left,right,bottom,top,znear,zfar );
+
+	//camera matrix
+	CMat4 mat;
+	mat.i.x=-1;
+	mat.k.z=-1;
+	mat.t.xyz()=eye;
+	mat=mir * mat;
+
+	_mirror->_camera->SetMatrix( mat );
+	_mirror->_camera->SetProjectionMatrix( proj );
+	
 	CTexture *cb=App.Graphics()->ColorBuffer( 0 );
-
 	App.Graphics()->SetColorBuffer( 0,_mirror->Texture() );
-
+	
 	App.Scene()->RenderCamera( _mirror->_camera );
 
 	App.Graphics()->SetColorBuffer( 0,cb );

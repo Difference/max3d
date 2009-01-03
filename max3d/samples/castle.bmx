@@ -5,7 +5,10 @@ Import Bmx3d.Max3d
 
 Max3dGraphics 1024,768
 
+'EnableShadows
 DisableShadows
+
+'SetAmbientColor .01,.01,.01
 
 'collision types:
 '1=player
@@ -61,6 +64,17 @@ MoveEntity player,0,5,-10
 Local camera=CreateCamera()
 SetEntityParent camera,player
 MoveEntity camera,0,1,0
+
+Local mirror=CreateMirror()
+SetMirrorResolution mirror,512,512
+
+MoveEntity mirror,0,3.5,6
+SetMirrorSize mirror,2,2
+
+'big floor mirror...
+'MoveEntity mirror,0,1.29,8.5
+'TurnEntity mirror,0,90,0
+'SetMirrorSize mirror,12,12
 
 Local yvel#
 
