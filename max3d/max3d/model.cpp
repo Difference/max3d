@@ -315,6 +315,7 @@ CIndexBuffer *CModelSurface::IndexBuffer(){
 }
 
 void CModelSurface::OnRenderInstances( const CHull &bounds ){
+	if( !_instances.size() ) return;
 	
 	App.Graphics()->SetVertexBuffer( VertexBuffer() );
 	App.Graphics()->SetIndexBuffer( IndexBuffer() );

@@ -115,18 +115,20 @@ void CMirror::OnRenderWorld(){
 	App.Scene()->AddSurface( Surface() );
 }
 
-CMirrorSurface::CMirrorSurface( CMirror *mirror ):_mirror(mirror){
-}
+//Forwared here from CMirrorSurface::OnRenderCamera();
+void CMirror::OnRenderCamera( CCamera *camera ){
+	_surface->Instances().clear();
+	
+	//No recursion yet...
+	if( camera==_camera ) return;
 
-void CMirrorSurface::OnRenderCamera( CCamera *camera ){
-	Instances().clear();
+	//frustum clipping.
+	//Note: CModelSurface still clips itself - add enable/disable clipping for CModelSurface
+	CBox bounds=RenderMatrix() * CBox( CVec3( -_width/2,-_height/2,0 ),CVec3( _width/2,_height/2,0 ) );
+	if( !camera->RenderFrustum().Intersects( bounds ) ) return;
 	
-	//Don't recurse!
-	if( camera==_mirror->_camera ) return;
-	
-	//do fancy reflection matrix thang here!
+	const CMat4 &mir=RenderMatrix();
 	const CMat4 &cam=camera->RenderMatrix();
-	const CMat4 &mir=_mirror->RenderMatrix();
 
 	//put eye into mirror space
 	CVec3 eye=-mir * cam.t.xyz();
@@ -138,8 +140,8 @@ void CMirrorSurface::OnRenderCamera( CCamera *camera ){
 	//projection matrix
 	float znear=eye.z;
 	float zfar=256.0f;
-	float left=(-_mirror->_width/2-eye.x),right=left+_mirror->_width;
-	float bottom=(-_mirror->_height/2+eye.y),top=bottom+_mirror->_height;
+	float left=(-_width/2-eye.x),right=left+_width;
+	float bottom=(-_height/2+eye.y),top=bottom+_height;
 	CMat4 proj=CMat4::FrustumMatrix( left,right,bottom,top,znear,zfar );
 
 	//camera matrix
@@ -149,20 +151,21 @@ void CMirrorSurface::OnRenderCamera( CCamera *camera ){
 	mat.t.xyz()=eye;
 	mat=mir * mat;
 
-	_mirror->_camera->SetMatrix( mat );
-	_mirror->_camera->SetProjectionMatrix( proj );
+	_camera->SetMatrix( mat );
+	_camera->SetProjectionMatrix( proj );
 	
 	CTexture *cb=App.Graphics()->ColorBuffer( 0 );
-	App.Graphics()->SetColorBuffer( 0,_mirror->Texture() );
-	
-	App.Scene()->RenderCamera( _mirror->_camera );
-
+	App.Graphics()->SetColorBuffer( 0,Texture() );
+	App.Scene()->RenderCamera( _camera );
 	App.Graphics()->SetColorBuffer( 0,cb );
-
-	Instances().push_back( _mirror->RenderMatrix() );
+	
+	_surface->Instances().push_back( mir );
 }
 
-void CMirrorSurface::OnRenderInstances( const CHull &bounds ){
-	if( !Instances().size() ) return;
-	CModelSurface::OnRenderInstances( bounds );
+CMirrorSurface::CMirrorSurface( CMirror *mirror ):
+_mirror( mirror ){
+}
+
+void CMirrorSurface::OnRenderCamera( CCamera *camera ){
+	_mirror->OnRenderCamera( camera );
 }

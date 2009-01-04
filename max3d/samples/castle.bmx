@@ -8,7 +8,7 @@ Max3dGraphics 1024,768
 'EnableShadows
 DisableShadows
 
-'SetAmbientColor .01,.01,.01
+SetAmbientColor .25,.25,.25'1,1,1'.01,.01,.01
 
 'collision types:
 '1=player
@@ -66,15 +66,10 @@ SetEntityParent camera,player
 MoveEntity camera,0,1,0
 
 Local mirror=CreateMirror()
+MoveEntity mirror,0,1.29,8.5
+TurnEntity mirror,0,90,0
+SetMirrorSize mirror,12,12
 SetMirrorResolution mirror,512,512
-
-MoveEntity mirror,0,3.5,6
-SetMirrorSize mirror,2,2
-
-'big floor mirror...
-'MoveEntity mirror,0,1.29,8.5
-'TurnEntity mirror,0,90,0
-'SetMirrorSize mirror,12,12
 
 Local yvel#
 

@@ -298,7 +298,6 @@ void CScene::RenderSpotLight( CLight *light,CCamera *camera ){
 }
 
 void CScene::RenderPointLight( CLight *light,CCamera *camera ){
-	
 	float range=light->Range();
 	
 	if( !camera->RenderFrustum().Intersects( CSphere( light->RenderMatrix().Translation(),range ) ) ) return;
@@ -379,7 +378,7 @@ void CScene::RenderPointLight( CLight *light,CCamera *camera ){
 }
 
 void CScene::RenderDistantLight( CLight *light,CCamera *camera ){
-	CBox lightBox=CBox( CVec3(-2),CVec3(2) );
+	CBox lightBox=CBox( CVec3(-256),CVec3(256) );
 
 	CMat4 camMat=App.Graphics()->Mat4Param( "bb_CameraMatrix" );
 
@@ -453,7 +452,6 @@ void CScene::RenderDistantLight( CLight *light,CCamera *camera ){
 }
 
 void CScene::RenderCamera( CCamera *camera ){
-	
 	for( vector<CSurface*>::iterator it=_surfaces.begin();it!=_surfaces.end();++it ){
 		CSurface *surface=*it;
 		surface->OnRenderCamera( camera );

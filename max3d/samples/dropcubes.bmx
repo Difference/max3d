@@ -10,7 +10,7 @@ DisableShadows
 EnableCollisions 1,1,1000,0,0
 EnableCollisions 1,10,1000,0,0
 
-SetAmbientColor .1,.1,.1
+'SetAmbientColor 1,1,1
 
 Local light=CreateDistantLight()
 TurnEntity light,0,60,0
