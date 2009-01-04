@@ -119,6 +119,7 @@ public:
 private:
 	void ValidateBounds();
 	void ValidateBuffers();
+	void RenderInstances( int first,int count );
 
 	int _dirty;
 	vector<CVertex> _vertices;

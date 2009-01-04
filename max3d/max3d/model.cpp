@@ -314,6 +314,22 @@ CIndexBuffer *CModelSurface::IndexBuffer(){
 	return _indexBuffer;
 }
 
+void CModelSurface::RenderInstances( int first,int count ){
+
+	const int MAXINSTS=48;
+	CParam *bb_mm=CParam::ForName( "bb_ModelMatrices" );
+	
+	for( int i=0;i<count / MAXINSTS;++i ){
+		bb_mm->SetFloatValue( MAXINSTS*16,&_instances[first+i*MAXINSTS].i.x );
+		App.Graphics()->Render( 3,0,_triangles.size()*3,MAXINSTS );
+	}
+
+	if( int r=count % MAXINSTS ){
+		bb_mm->SetFloatValue( r*16,&_instances[first+count-r].i.x );
+		App.Graphics()->Render( 3,0,_triangles.size()*3,r );
+	}
+}
+
 void CModelSurface::OnRenderInstances( const CHull &bounds ){
 	if( !_instances.size() ) return;
 	
@@ -324,29 +340,19 @@ void CModelSurface::OnRenderInstances( const CHull &bounds ){
 	CParam *bb_mm=CParam::ForName( "bb_ModelMatrices" );
 	
 	if( bounds.Empty() ){
-		for( int i=0;i<_instances.size()/MAXINSTS;++i ){
-			bb_mm->SetFloatValue( MAXINSTS*16,&_instances[i*MAXINSTS].i.x );
-			App.Graphics()->Render( 3,0,_triangles.size()*3,MAXINSTS );
-		}
-		if( int n=_instances.size()%MAXINSTS ){
-			bb_mm->SetFloatValue( n*16,&_instances[_instances.size()-n].i.x );
-			App.Graphics()->Render( 3,0,_triangles.size()*3,n );
-		}
+		RenderInstances( 0,_instances.size() );
 	}else{
 		int n=0;
 		for( int i=0;i<_instances.size();++i ){
 			if( bounds.Intersects( _instances[i] * Bounds() ) ){
-				if( ++n<MAXINSTS ) continue;
-			}
-			if( n ){
-				bb_mm->SetFloatValue( n*16,&_instances[i-n].i.x );
-				App.Graphics()->Render( 3,0,_triangles.size()*3,n );
+				++n;
+			}else if( n ){
+				RenderInstances( i-n,n );
 				n=0;
 			}
 		}
 		if( n ){
-			bb_mm->SetFloatValue( n*16,&_instances[_instances.size()-n].i.x );
-			App.Graphics()->Render( 3,0,_triangles.size()*3,n );
+			RenderInstances( _instances.size()-n,n );
 		}
 	}
 }

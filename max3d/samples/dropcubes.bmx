@@ -41,6 +41,9 @@ While Not KeyHit( KEY_ESCAPE )
 			Local copy=CopyEntity( shape )
 			TurnEntity copy,rot,0,0
 			MoveEntity copy,0,Cos( MilliSecs()/3 )*3+15,Sin( MilliSecs() )*6+12;
+			Global n
+			n:+1
+			Print n
 		Next
 	EndIf
 
