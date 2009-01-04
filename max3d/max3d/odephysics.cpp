@@ -168,6 +168,8 @@ COdeBody *COdeBody::Create( dGeomID geom,int collType,float mass ){
 			dBodySetMaxAngularSpeed( _odeBody,0 );
 		}else if( mass==-2 ){
 			dBodySetKinematic( _odeBody );
+		}else{
+			dBodySetAutoDisableFlag( _odeBody,1 );
 		}
 
 		dGeomSetBody( _odeGeom,_odeBody );

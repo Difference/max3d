@@ -66,7 +66,7 @@ SetEntityParent camera,player
 MoveEntity camera,0,1,0
 
 Local mirror=CreateMirror()
-MoveEntity mirror,0,1.29,8.5
+MoveEntity mirror,0,1.3,8.5
 TurnEntity mirror,0,90,0
 SetMirrorSize mirror,12,12
 SetMirrorResolution mirror,512,512

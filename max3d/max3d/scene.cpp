@@ -378,7 +378,7 @@ void CScene::RenderPointLight( CLight *light,CCamera *camera ){
 }
 
 void CScene::RenderDistantLight( CLight *light,CCamera *camera ){
-	CBox lightBox=CBox( CVec3(-256),CVec3(256) );
+	CBox lightBox=CBox( CVec3(-128),CVec3(128) );
 
 	CMat4 camMat=App.Graphics()->Mat4Param( "bb_CameraMatrix" );
 

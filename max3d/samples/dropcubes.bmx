@@ -43,7 +43,7 @@ While Not KeyHit( KEY_ESCAPE )
 			MoveEntity copy,0,Cos( MilliSecs()/3 )*3+15,Sin( MilliSecs() )*6+12;
 			Global n
 			n:+1
-			Print n
+'			Print n
 		Next
 	EndIf
 
