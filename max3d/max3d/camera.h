@@ -45,7 +45,10 @@ public:
 	void SetProjectionMatrix( const CMat4 &matrix );
 	const CMat4 &ProjectionMatrix(){ return _projection; }
 
+	//frustum planes in order:
+	//left, right, bottom, top, near, far
 	const CHull &Frustum(){ return _frustum; }
+
 	float NearZ(){ return -_frustum.planes[4].d; }
 	float FarZ(){ return _frustum.planes[5].d; }
 	

@@ -12,6 +12,8 @@ EnableCollisions 1,10,1000,0,0
 
 'SetAmbientColor 1,1,1
 
+Local camera=CreateCamera()
+
 Local light=CreateDistantLight()
 TurnEntity light,0,60,0
 
@@ -28,8 +30,6 @@ Local shape=CreateBox( green,1,1,1,1,1 )
 HideEntity shape
 
 Local ground=CreateBox( yellow,50,1,50,10,0 )
-
-Local camera=CreateCamera()
 
 Local yaw#,pitch#=45,zoom#=-50,rot#=0
 

@@ -21,16 +21,14 @@ void main(){
 	//
 	//fragPos is view space fragment pos, and fragCoords is fragbuffer texcoords
 	//
-	vec2 fragXY=vpos.xy/vpos.w;
-	vec2 fragCoords=fragXY/2.0+0.5;
-	fragCoords*=bb_ViewportSize/bb_WindowSize;
-
+	vec2 fragCoords=gl_FragCoord.xy/bb_WindowSize;
+	
 	float fragZ=texture2D( bb_DepthBuffer,fragCoords ).r;
 	fragZ=bb_zNear * bb_zFar / (fragZ * (bb_zNear-bb_zFar) + bb_zFar);
-
-	vec3 fragPos=vec3( fragXY * fragZ,fragZ );
-	//
 	
+	vec3 fragPos=vec3( (fragCoords * bb_FragScale + bb_FragOffset) * fragZ,fragZ );
+	//
+
 	//fragment vals
 	vec3 diffuse=texture2D( bb_MaterialBuffer,fragCoords ).rgb;
 	vec3 specular=vec3( texture2D( bb_MaterialBuffer,fragCoords ).a );

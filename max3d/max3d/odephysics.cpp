@@ -169,7 +169,7 @@ COdeBody *COdeBody::Create( dGeomID geom,int collType,float mass ){
 		}else if( mass==-2 ){
 			dBodySetKinematic( _odeBody );
 		}else{
-			dBodySetAutoDisableFlag( _odeBody,1 );
+//			dBodySetAutoDisableFlag( _odeBody,1 );
 		}
 
 		dGeomSetBody( _odeGeom,_odeBody );

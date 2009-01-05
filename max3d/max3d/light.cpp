@@ -41,7 +41,12 @@ _range(100),
 _color(CVec3(1)),
 _shader(0),
 _texture(0),
-_shadowBufSize(2048){
+_shadowSize(2048){
+	_shadowSplits.push_back( 1 );
+	_shadowSplits.push_back( 4 );
+	_shadowSplits.push_back( 16 );
+	_shadowSplits.push_back( 64 );
+	_shadowSplits.push_back( 256 );
 }
 
 CLight::CLight( CLight *light,CCopier *copier ):
@@ -51,7 +56,8 @@ _range( light->_range ),
 _color( light->_color ),
 _shader( light->_shader ),
 _texture( light->_texture ),
-_shadowBufSize( light->_shadowBufSize ){
+_shadowSize( light->_shadowSize ),
+_shadowSplits( light->_shadowSplits ){
 	if( _shader ) _shader->Retain();
 	if( _texture ) _texture->Retain();
 }
@@ -85,12 +91,29 @@ void CLight::SetTexture( CTexture *texture ){
 	_texture=texture;
 }
 
-void CLight::SetShadowBufferSize( int size ){
-	_shadowBufSize=size;
+void CLight::SetShadowSize( int size ){
+	_shadowSize=size;
+}
+
+void CLight::SetShadowSplits( const vector<float> &splits ){
+	_shadowSplits=splits;
 }
 
 void CLight::OnRenderWorld(){
 	App.Scene()->AddLight( this );
+}
+
+vector<float> CLight::ComputeShadowSplits( int count,float znear,float zfar,float blend ){
+	vector<float> splits( count,0.0f );
+	splits[0]=znear;
+	for( int i=1;i<count-1;++i ){
+		float t=i/float(count);
+		float log=znear * powf(zfar/znear,t);
+		float uniform=znear + (zfar-znear) * t;
+		splits[i]=log * (1-blend) + uniform * blend;
+	}
+	splits[count-1]=zfar;
+	return splits;
 }
 
 REGISTERTYPE( CLight )

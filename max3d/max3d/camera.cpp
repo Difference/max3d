@@ -37,9 +37,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 CCamera::CCamera(){
 	SetViewport( CRect( 0,0,App.Graphics()->WindowWidth(),App.Graphics()->WindowHeight() ) );
-	SetProjectionMatrix( CMat4::FrustumMatrix( -.1,.1,-.1,.1,.1,256.0 ) );
-//	SetProjectionMatrix( FrustumMatrix( -1,1,-1,1,1,1000 ) );
-//	SetProjectionMatrix( OrthoMatrix( -10,10,-10,10,-10,10 ) );
+	float aspect=float( App.Graphics()->WindowWidth() )/float( App.Graphics()->WindowHeight() );
+	SetProjectionMatrix( CMat4::PerspectiveMatrix( PI/2,aspect,1,256 ) );
 }
 
 CCamera::CCamera( CCamera *camera,CCopier *copier ):
@@ -70,6 +69,10 @@ void CCamera::SetProjectionMatrix( const CMat4 &tmat ){
 	_frustum.planes.push_back( CPlane( t.xyz(),t.w ).Normalize() );
 	_frustum.planes.push_back( CPlane( n.xyz(),n.w ).Normalize() );
 	_frustum.planes.push_back( CPlane( f.xyz(),f.w ).Normalize() );
+	
+//	for( int i=0;i<6;++i ){
+//		cout<<_frustum.planes[i]<<endl;
+//	}
 }
 
 void CCamera::OnRenderWorld(){

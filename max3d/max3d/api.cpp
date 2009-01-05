@@ -329,6 +329,18 @@ API void m3dSetCameraViewport( CCamera *camera,int x,int y,int width,int height 
 	camera->SetViewport( CRect( x,y,width,height ) );
 }
 
+API void m3dSetCameraOrtho( CCamera *camera,float left,float right,float bottom,float top,float zNear,float zFar ){
+	camera->SetProjectionMatrix( CMat4::OrthoMatrix( left,right,bottom,top,zNear,zFar ) );
+}
+
+API void m3dSetCameraFrustum( CCamera *camera,float left,float right,float bottom,float top,float zNear,float zFar ){
+	camera->SetProjectionMatrix( CMat4::FrustumMatrix( left,right,bottom,top,zNear,zFar ) );
+}
+
+API void m3dSetCameraPerspective( CCamera *camera,float fovy,float aspect,float zNear,float zFar ){
+	camera->SetProjectionMatrix( CMat4::PerspectiveMatrix( fovy * to_radians,aspect,zNear,zFar ) );
+}
+
 //***** Light API *****
 API CLight *m3dCreateSpotLight(){
 	CLight *light=new CLight;
@@ -367,8 +379,17 @@ API void m3dSetLightTexture( CLight *light,CTexture *texture ){
 	light->SetTexture( texture );
 }
 
-API void m3dSetLightShadowBufferSize( CLight *light,int size ){
-	light->SetShadowBufferSize( size );
+API void m3dSetLightShadowSize( CLight *light,int size ){
+	light->SetShadowSize( size );
+}
+
+API void m3dSetLightShadowSplits( CLight *light,int splitCount,float znear,float zfar,float blend ){
+	light->SetShadowSplits( CLight::ComputeShadowSplits( splitCount,znear,zfar,blend ) );
+}
+
+API void m3dSetLightShadowSplitsTable( CLight *light,int floatCount,const void *floats ){
+	vector<float> splits( (const float*)floats,((const float*)floats)+floatCount );
+	light->SetShadowSplits( splits );
 }
 
 //***** Sprite API *****

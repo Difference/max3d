@@ -260,6 +260,18 @@ struct CPlane{
 		d=-n.Dot( v0 );
 	}
 	
+	float SolveX( float y,float z )const{
+		return (n.y*y+n.z*z+d)/-n.x;
+	}
+	
+	float SolveY( float x,float z )const{
+		return (n.x*x+n.z*z+d)/-n.y;
+	}
+	
+	float SolveZ( float x,float y )const{
+		return (n.x*x+n.y*y+d)/-n.z;
+	}
+	
 	float Distance( const CVec3 &v )const{
 		return n.Dot( v )+d;
 	}
@@ -751,133 +763,12 @@ struct CMat4{
 		r.t.w=0;
 		return r;
 	}
-	/*
-		
-		t[0][0]=znear2/w;
-		t[1][1]=znear2/h;
-		t[2][0]=(right+left)/w;
-		t[2][1]=(top+bottom)/h;
-		if( zfar ){
-			float d=zfar-znear;
-			t[2][2]=(zfar+znear)/d;
-			t[2][3]=1;
-			t[3][2]=-(zfar*znear2)/d;
-			t[3][3]=0;
-		}else{
-			float eps=.001f;
-			t[2][2]=1-eps;
-			t[2][3]=1;//znear2;
-			t[3][2]=znear*(eps-1);
-			t[3][3]=0;
-		}
-		return t;
-	*/
-};
-
-/*
-inline CMat4 YawMatrix( float q ){
-	return CMat4( CVec4(cosf(q),0,sinf(q),0),CVec4(0,1,0,0),CVec4(-sinf(q),0,cosf(q),0),CVec4(0,0,0,1) );
-}
-
-inline CMat4 PitchMatrix( float q ){
-	return CMat4( CVec4(1,0,0,0),CVec4(0,cosf(q),sinf(q),0),CVec4(0,-sinf(q),cosf(q),0),CVec4(0,0,0,1) );
-}
-
-inline CMat4 RollMatrix( float q ){
-	return CMat4( CVec4(cosf(q),sinf(q),0,0),CVec4(-sinf(q),cosf(q),0,0),CVec4(0,0,1,0),CVec4(0,0,0,1) );
-}
-
-inline CQuat RotationToQuaternion( const CVec3 &e ){
-	CQuat r;
-	float c1=cosf(-e.z/2),s1=sinf(-e.z/2);
-	float c2=cosf(-e.y/2),s2=sinf(-e.y/2);
-	float c3=cosf( e.x/2),s3=sinf( e.x/2);
-	float c1_c2=c1*c2,s1_s2=s1*s2;
-	r.v.x=c1*s2*c3-s1*c2*s3;
-	r.v.y=c1_c2*s3+s1_s2*c3;
-	r.v.z=s1*c2*c3+c1*s2*s3;
-	r.w=c1_c2*c3-s1_s2*s3;
-	return r;
-}
-
-inline CVec3 QuaternionToRotation( const CQuat &q ){
-	CVec3 r;
-	float x2=q.v.x*q.v.x,y2=q.v.y*q.v.y,z2=q.v.z*q.v.z;
-	r.x=atan2f( 2*q.v.y*q.w-2*q.v.z*q.v.x,1-2*y2-2*x2 );
-	r.y=-asinf( 2*q.v.z*q.v.y+2*q.v.x*q.w );
-	r.z=-atan2f( 2*q.v.z*q.w-2*q.v.y*q.v.x,1-2*z2-2*x2 );
-	return r;
-}
-
-inline CMat4 TranslationMatrix( const CVec3 &v ){
-	CMat4 r;
-	r.t.xyz()=v;
-	return r;
-}
-
-inline CMat4 QuaternionMatrix( const CQuat &q ){
-	CMat4 r;
-	float xx=q.v.x*q.v.x,yy=q.v.y*q.v.y,zz=q.v.z*q.v.z;
-	float xy=q.v.x*q.v.y,xz=q.v.x*q.v.z,yz=q.v.y*q.v.z;
-	float wx=q.w*q.v.x,wy=q.w*q.v.y,wz=q.w*q.v.z;
-	r.i=CVec4( 1-2*(yy+zz),  2*(xy-wz),  2*(xz+wy),0 );
-	r.j=CVec4(   2*(xy+wz),1-2*(xx+zz),  2*(yz-wx),0 );
-	r.k=CVec4(   2*(xz-wy),  2*(yz+wx),1-2*(xx+yy),0 );
-	return r;
-}
-
-inline CMat4 RotationMatrix( const CVec3 &r ){
-	return YawMatrix(r.x) * PitchMatrix(r.y) * RollMatrix(r.z);
-}
-
-inline CMat4 ScaleMatrix( const CVec3 &v ){
-	CMat4 r;
-	r.i.x=v.x;
-	r.j.y=v.y;
-	r.k.z=v.z;
-	return r;
-}
-
-inline CMat4 AnimMatrix( const CVec3 &t,const CQuat &q,const CVec3 &s ){
-	return TranslationMatrix(t) * QuaternionMatrix(q) * ScaleMatrix(s);
-}
-
-inline CMat4 OrthoMatrix( float left,float right,float bottom,float top,float znear,float zfar ){
-	CMat4 t;
-	t.i.x=2/(right-left);
-	t.j.y=2/(top-bottom);
-	t.k.z=2/(zfar-znear);
-	t.t.x=-(right+left)/(right-left);
-	t.t.y=-(top+bottom)/(top-bottom);
-	t.t.z=-(zfar+znear)/(zfar-znear);
-	return t;
-}
-
-inline CMat4 FrustumMatrix( float left,float right,float bottom,float top,float znear,float zfar ){
-	CMat4 t;
-	float znear2=znear*2;
-	float w=right-left;
-	float h=top-bottom;
-	t[0][0]=znear2/w;
-	t[1][1]=znear2/h;
-	t[2][0]=(right+left)/w;
-	t[2][1]=(top+bottom)/h;
-	if( zfar ){
-		float d=zfar-znear;
-		t[2][2]=(zfar+znear)/d;
-		t[2][3]=1;
-		t[3][2]=-(zfar*znear2)/d;
-		t[3][3]=0;
-	}else{
-		float eps=.001f;
-		t[2][2]=1-eps;
-		t[2][3]=1;//znear2;
-		t[3][2]=znear*(eps-1);
-		t[3][3]=0;
+	
+	static CMat4 PerspectiveMatrix( float fovy,float aspect,float znear,float zfar ){
+			float t=znear * tan( fovy/2 );
+			return FrustumMatrix( -t * aspect,t * aspect,-t,t,znear,zfar );
 	}
-	return t;
-}
-*/
+};
 
 ostream &operator<<( ostream &o,const CVec2 &v );
 ostream &operator<<( ostream &o,const CVec3 &v );

@@ -96,7 +96,8 @@ void scene_init(){
 	shadowMapShader=(CShader*)App.ImportObject( "CShader", "shadowmap.glsl" );
 }
 
-CScene::CScene(){
+CScene::CScene():
+_renderNest(0){
 }
 
 CScene::~CScene(){
@@ -257,7 +258,7 @@ void CScene::RenderSpotLight( CLight *light,CCamera *camera ){
 	if( !tex ) tex=App.TextureUtil()->WhiteTexture();
 	App.Graphics()->SetTextureParam( "bb_LightTexture",tex );
 	
-	int sz=_shadowsEnabled ? light->ShadowBufferSize() : 0;
+	int sz=_shadowsEnabled && _renderNest==1 ? light->ShadowSize() : 0;
 	if( !sz ){
 		SetShaderMode( "spotlight" );
 		App.Graphics()->SetShader( light->Shader() );
@@ -269,7 +270,7 @@ void CScene::RenderSpotLight( CLight *light,CCamera *camera ){
 	const CMat4 &camMat=App.Graphics()->Mat4Param( "bb_CameraMatrix" );
 	float d=camMat.Translation().Distance( light->RenderMatrix().Translation() );
 	sz=range/d * sz;
-	if( sz>light->ShadowBufferSize() ) sz=light->ShadowBufferSize();
+	if( sz>light->ShadowSize() ) sz=light->ShadowSize();
 	SetShadowBufferSize( sz );
 	
 	CMat4 shadowProjectionMatrix=CMat4::FrustumMatrix( -1,1,-1,1,1,0 );
@@ -313,7 +314,7 @@ void CScene::RenderPointLight( CLight *light,CCamera *camera ){
 	App.Graphics()->SetFloatParam( "bb_ShadowNearClip",-1024 );
 	App.Graphics()->SetFloatParam( "bb_ShadowFarClip",1024 );
 
-	int sz=_shadowsEnabled ? light->ShadowBufferSize() : 0;
+	int sz=_shadowsEnabled && _renderNest==1 ? light->ShadowSize() : 0;
 	if( !sz ){
 		SetShaderMode( "pointlight" );
 		App.Graphics()->SetShader( light->Shader() );
@@ -325,7 +326,7 @@ void CScene::RenderPointLight( CLight *light,CCamera *camera ){
 	CMat4 camMat=App.Graphics()->Mat4Param( "bb_CameraMatrix" );
 	float d=camMat.Translation().Distance( light->RenderMatrix().Translation() );
 	sz=range/d * sz;
-	if( sz>light->ShadowBufferSize() ) sz=light->ShadowBufferSize();
+	if( sz>light->ShadowSize() ) sz=light->ShadowSize();
 	SetShadowBufferSize( sz );
 	
 	CHull rhull=light->RenderMatrix() * lightBox;
@@ -385,7 +386,7 @@ void CScene::RenderDistantLight( CLight *light,CCamera *camera ){
 	App.Graphics()->SetVec3Param( "bb_LightColor",light->Color() );
 	App.Graphics()->SetMat4Param( "bb_LightMatrix",light->RenderMatrix() );
 
-	int sz=_shadowsEnabled ? light->ShadowBufferSize() : 0;
+	int sz=_shadowsEnabled && _renderNest==1 ? light->ShadowSize() : 0;
 	if( !sz ){
 		SetShaderMode( "distantlight" );
 		App.Graphics()->SetShader( light->Shader() );
@@ -395,37 +396,46 @@ void CScene::RenderDistantLight( CLight *light,CCamera *camera ){
 	}
 	SetShadowBufferSize( sz );
 	
-	//2 passes
-//	float segs[]={1.0f,16.0f,256.0f};
-
-	//3 passes
-//	float segs[]={0.1f,4.0f,16.0f,256.0f};
+	const vector<float> &splits=light->ShadowSplits();
 	
-	//4 passes
-	float segs[]={1.0f,4.0f,16.0f,64.0f,256.0f};
-	
-	//8 passes
-//	float segs[]={1.0f,2.0f,4.0f,8.0f,16.0f,32.0f,64.0f,128.0f,256.0f };
-
 	CMat4 cameraLightMatrix=light->InverseRenderMatrix() * camMat;
+	
+	const CHull &frustum=camera->Frustum();
 
-	for( int i=0;i<sizeof(segs)/sizeof(float)-1;++i ){
+	for( int i=0;i<splits.size()-1;++i ){
+		float znear=splits[i],zfar=splits[i+1];
 
-		float nnear=segs[i];
-		float ffar=segs[i+1];
-
+		//Now handles off-centre frustums, eg: mirrors...
+		float lnear=frustum.planes[0].SolveX( 0,znear );
+		float rnear=frustum.planes[1].SolveX( 0,znear );
+		float bnear=frustum.planes[2].SolveY( 0,znear );
+		float tnear=frustum.planes[3].SolveY( 0,znear );
+		float lfar=frustum.planes[0].SolveX( 0,zfar );
+		float rfar=frustum.planes[1].SolveX( 0,zfar );
+		float bfar=frustum.planes[2].SolveY( 0,zfar );
+		float tfar=frustum.planes[3].SolveY( 0,zfar );
+		
 		CVec3 verts[]={
-		CVec3(-nnear,+nnear,nnear),CVec3(+nnear,+nnear,nnear),CVec3(+nnear,-nnear,nnear),CVec3(-nnear,-nnear,nnear),
-		CVec3(-ffar,+ffar,ffar),CVec3(+ffar,+ffar,ffar),CVec3(+ffar,-ffar,ffar),CVec3(-ffar,-ffar,ffar) };
+		CVec3(lnear,tnear,znear),CVec3(rnear,tnear,znear),
+		CVec3(rnear,bnear,znear),CVec3(lnear,bnear,znear),
+		CVec3(lfar,tfar,zfar),CVec3(rfar,tfar,zfar),
+		CVec3(rfar,bfar,zfar),CVec3(lfar,bfar,zfar) };
+		
+		/*
+		float znear=segs[i];
+		float zfar=segs[i+1];
+		CVec3 verts[]={
+		CVec3(-znear,+znear,znear),CVec3(+znear,+znear,znear),CVec3(+znear,-znear,znear),CVec3(-znear,-znear,znear),
+		CVec3(-zfar,+zfar,zfar),CVec3(+zfar,+zfar,zfar),CVec3(+zfar,-zfar,zfar),CVec3(-zfar,-zfar,zfar) };
+		 **/
 
-		float left=100000,right=-100000,bottom=100000,top=-100000,tnear=100000,tfar=-100000;
+		float left=100000,right=-100000,bottom=100000,top=-100000,nnear=100000,ffar=-100000;
 		for( int j=0;j<8;++j ){
 			CVec3 v=cameraLightMatrix * verts[j];
 			if( v.x<left ) left=v.x;if( v.x>right ) right=v.x;
 			if( v.y<bottom ) bottom=v.y;if( v.y>top ) top=v.y;
-			if( v.z<tnear ) tnear=v.z;if( v.z>tfar ) tfar=v.z;
+			if( v.z<nnear ) nnear=v.z;if( v.z>ffar ) ffar=v.z;
 		}
-
 		CMat4 shadowProjectionMatrix=CMat4::OrthoMatrix( left,right,bottom,top,-512,512 );
 
 		App.Graphics()->SetMat4Param( "bb_ShadowProjectionMatrix",shadowProjectionMatrix );
@@ -439,8 +449,8 @@ void CScene::RenderDistantLight( CLight *light,CCamera *camera ){
 		SetShaderMode( "shadowmap" );
 		App.Graphics()->SetShader( shadowMapShader );
 		App.Graphics()->SetMat4Param( "bb_ModelMatrix",camMat );
-		App.Graphics()->SetFloatParam( "bb_ShadowNearClip",nnear );
-		App.Graphics()->SetFloatParam( "bb_ShadowFarClip",ffar );
+		App.Graphics()->SetFloatParam( "bb_ShadowNearClip",znear );
+		App.Graphics()->SetFloatParam( "bb_ShadowFarClip",zfar );
 		RenderBox( lightBox );
 	}
 
@@ -452,6 +462,9 @@ void CScene::RenderDistantLight( CLight *light,CCamera *camera ){
 }
 
 void CScene::RenderCamera( CCamera *camera ){
+	++_renderNest;
+//	_renderNest=1;
+
 	for( vector<CSurface*>::iterator it=_surfaces.begin();it!=_surfaces.end();++it ){
 		CSurface *surface=*it;
 		surface->OnRenderCamera( camera );
@@ -479,6 +492,14 @@ void CScene::RenderCamera( CCamera *camera ){
 	
 	App.Graphics()->SetFloatParam( "bb_zNear",camera->NearZ() );
 	App.Graphics()->SetFloatParam( "bb_zFar",camera->FarZ() );
+	
+	const CHull &frustum=camera->Frustum();
+	float left=frustum.planes[0].SolveX( 0,1 );
+	float right=frustum.planes[1].SolveX( 0,1 );
+	float bottom=frustum.planes[2].SolveY( 0,1 );
+	float top=frustum.planes[3].SolveY( 0,1 );
+	App.Graphics()->SetVec2Param( "bb_FragScale",CVec2( (right-left),(top-bottom) ) );
+	App.Graphics()->SetVec2Param( "bb_FragOffset",CVec2( left,bottom ) );
 
 	App.Graphics()->SetColorBuffer( 1,materialBuffer );
 	App.Graphics()->SetColorBuffer( 2,normalBuffer );
@@ -532,4 +553,6 @@ void CScene::RenderCamera( CCamera *camera ){
 		App.Graphics()->SetColorBuffer( i,colorBuffers[i] );
 	}
 	App.Graphics()->SetDepthBuffer( depthBuffer );
+	
+	--_renderNest;
 }

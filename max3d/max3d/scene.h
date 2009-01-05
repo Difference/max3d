@@ -74,6 +74,7 @@ private:
 	int _shadowBufSize;
 	CRect _viewport;
 	bool _shadowsEnabled;
+	int _renderNest;
 
 	vector<CCamera*> _cameras;
 	vector<CLight*> _lights;

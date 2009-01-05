@@ -54,6 +54,8 @@ static const char *shaderHeader=
 "uniform mat4 bb_ViewProjectionMatrix;\n"
 "uniform vec2 bb_ViewportSize;\n"
 "uniform vec2 bb_ViewportScale;\n"
+"uniform vec2 bb_FragScale;\n"
+"uniform vec2 bb_FragOffset;\n"
 "uniform float bb_zNear;\n"
 "uniform float bb_zFar;\n"
 //Light vars

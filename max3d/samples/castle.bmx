@@ -5,8 +5,7 @@ Import Bmx3d.Max3d
 
 Max3dGraphics 1024,768
 
-'EnableShadows
-DisableShadows
+'DisableShadows
 
 SetAmbientColor .25,.25,.25'1,1,1'.01,.01,.01
 
@@ -55,6 +54,11 @@ DestroyEntity ground
 Local light=CreateDistantLight()
 TurnEntity light,0,45,0
 
+Local splits#[]=[1.0,16.0,256.0]
+SetLightShadowSplitsTable light,3,splits
+
+'SetLightShadowSplits light,3,1,256,.125
+
 Local castle=LoadModel( "CASTLE1.X",4,0 )
 MoveEntity castle,0,.5,0
 
@@ -65,11 +69,12 @@ Local camera=CreateCamera()
 SetEntityParent camera,player
 MoveEntity camera,0,1,0
 
+'Rem
 Local mirror=CreateMirror()
-MoveEntity mirror,0,1.3,8.5
-TurnEntity mirror,0,90,0
-SetMirrorSize mirror,12,12
-SetMirrorResolution mirror,512,512
+MoveEntity mirror,0,3.5,8.5
+SetMirrorSize mirror,4,2
+'SetMirrorResolution mirror,512,512
+'End Rem
 
 Local yvel#
 

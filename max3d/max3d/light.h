@@ -57,10 +57,15 @@ public:
 	void SetTexture( CTexture *texture );
 	CTexture *Texture(){ return _texture; }
 	
-	void SetShadowBufferSize( int size );
-	int ShadowBufferSize(){ return _shadowBufSize; }
+	void SetShadowSize( int size );
+	int ShadowSize(){ return _shadowSize; }
 
+	void SetShadowSplits( const vector<float> &splits );
+	const vector<float> &ShadowSplits(){ return _shadowSplits; }
+	
 	virtual void OnRenderWorld();
+	
+	static vector<float> ComputeShadowSplits( int count,float znear,float zfar,float blend );
 
 private:
 	CLight( CLight *light,CCopier *copier );
@@ -72,7 +77,8 @@ private:
 	CVec3 _color;
 	CShader *_shader;
 	CTexture *_texture;
-	int _shadowBufSize;
+	int _shadowSize;
+	vector<float> _shadowSplits;
 };
 
 #endif
