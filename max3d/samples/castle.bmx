@@ -5,7 +5,7 @@ Import Bmx3d.Max3d
 
 Max3dGraphics 1024,768
 
-DisableShadows
+'DisableShadows
 
 SetAmbientColor .25,.25,.25'1,1,1'.01,.01,.01
 

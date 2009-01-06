@@ -751,9 +751,11 @@ public:
 			"#define bb_InstanceID gl_InstanceID\n";
 		}else{
 			common+=
-//"#version 120\n"
 			"uniform int bb_InstanceID;\n";
 		}
+		common+=
+		"#extension GL_ARB_texture_rectangle : enable\n";
+
 		for( map<string,string>::iterator it=pmap.begin();it!=pmap.end();++it ){
 			int mode=ModeForName( it->first );
 			common+="#define BB_"+toupper( it->first )+" "+(1<<mode)+"\n";
