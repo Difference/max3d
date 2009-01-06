@@ -35,6 +35,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "resource.h"
 
+#define USE_GL_TEXTURE_RECTANGLE_ARB
+
 /// Abstract base class for vertex buffers
 class CVertexBuffer : public CResource{
 public:
@@ -235,6 +237,7 @@ enum{
 	TEXTURE_CLAMPT=0x8,
 	TEXTURE_RENDER=0x10,	//supports render-to
 	TEXTURE_STATIC=0x20,	//texture contents managed by driver
+	TEXTURE_RECTANGULAR=0x40,
 	TEXTURE_CLAMPST=TEXTURE_CLAMPS|TEXTURE_CLAMPT
 };
 

@@ -33,6 +33,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #ifndef STD_H
 #define STD_H
 
+#define USE_RECT_TEX
+
 //STL
 #include <set>
 #include <map>

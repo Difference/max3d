@@ -21,18 +21,18 @@ void main(){
 	//
 	//fragPos is view space fragment pos, and fragCoords is fragbuffer texcoords
 	//
-	vec2 fragCoords=gl_FragCoord.xy/bb_WindowSize;
+	vec2 fragCoords=gl_FragCoord.xy;
 	
-	float fragZ=texture2D( bb_DepthBuffer,fragCoords ).r;
+	float fragZ=texture2DRect( bb_DepthBuffer,fragCoords ).r;
 	fragZ=bb_zNear * bb_zFar / (fragZ * (bb_zNear-bb_zFar) + bb_zFar);
 	
 	vec3 fragPos=vec3( (fragCoords * bb_FragScale + bb_FragOffset) * fragZ,fragZ );
 	//
 
 	//fragment vals
-	vec3 diffuse=texture2D( bb_MaterialBuffer,fragCoords ).rgb;
-	vec3 specular=vec3( texture2D( bb_MaterialBuffer,fragCoords ).a );
-	vec3 normal=texture2D( bb_NormalBuffer,fragCoords ).rgb-0.5;
+	vec3 diffuse=texture2DRect( bb_MaterialBuffer,fragCoords ).rgb;
+	vec3 specular=vec3( texture2DRect( bb_MaterialBuffer,fragCoords ).a );
+	vec3 normal=texture2DRect( bb_NormalBuffer,fragCoords ).rgb-0.5;
 	normal=-normalize( bb_mat3(bb_ViewLightMatrix) * normal );
 	
 	//frag/eye pos in light space

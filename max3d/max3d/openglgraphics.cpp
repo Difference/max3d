@@ -394,7 +394,7 @@ public:
 		_height=height;
 		_format=format;
 		_flags=flags;
-		_gltarget=GL_TEXTURE_2D;
+		_gltarget=(flags & TEXTURE_RECTANGULAR) ? GL_TEXTURE_RECTANGLE_ARB : GL_TEXTURE_2D;
 		//
 		GenTexture();
 		//
@@ -475,7 +475,7 @@ public:
 			if( GLTexture *tex=_colorBuffers[i] ){
 				tex->Retain();
 				_glbufs[i]=GL_COLOR_ATTACHMENT0_EXT+i;
-				glFramebufferTexture2DEXT( GL_FRAMEBUFFER_EXT,_glbufs[i],GL_TEXTURE_2D,tex->_gltex,0 );
+				glFramebufferTexture2DEXT( GL_FRAMEBUFFER_EXT,_glbufs[i],tex->_gltarget,tex->_gltex,0 );
 			}else{
 				_glbufs[i]=GL_NONE;
 			}
@@ -483,7 +483,7 @@ public:
 		_depthBuffer=(GLTexture*)depthBuffer;
 		if( GLTexture *tex=_depthBuffer ){
 			tex->Retain();
-			glFramebufferTexture2DEXT( GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,GL_TEXTURE_2D,tex->_gltex,0 );
+			glFramebufferTexture2DEXT( GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,tex->_gltarget,tex->_gltex,0 );
 		}
 
 		glReadBuffer( GL_NONE );
@@ -588,6 +588,8 @@ public:
 		case GL_SAMPLER_CUBE:
 		case GL_SAMPLER_1D_SHADOW:
 		case GL_SAMPLER_2D_SHADOW:
+		case GL_SAMPLER_2D_RECT_ARB:
+		case GL_SAMPLER_2D_RECT_SHADOW_ARB:
 			if( GLTexture *t=(GLTexture*)_param->TextureValue() ){
 				glUniform1i( _glloc,_glunit );
 				glActiveTexture( GL_TEXTURE0+_glunit );
@@ -688,6 +690,8 @@ public:
 			case GL_SAMPLER_CUBE:
 			case GL_SAMPLER_1D_SHADOW:
 			case GL_SAMPLER_2D_SHADOW:
+			case GL_SAMPLER_2D_RECT_ARB:
+			case GL_SAMPLER_2D_RECT_SHADOW_ARB:
 				++unit;
 				break;
 			default:
@@ -781,8 +785,11 @@ _dirty(~0){
 	if( !GLEE_VERSION_2_0 ){
 		Error( "Max3d requires OpenGL 2.0 support" );
 	}
+	if( !GLEE_ARB_texture_rectangle ){
+		Error( "Max3d requires OpenGL ARB_texture_rectangle extension" );
+	}
 	if( !GLEE_EXT_framebuffer_object ){
-		Error( "Max3d requires OpenGL framebuffer object extension" );
+		Error( "Max3d requires OpenGL EXT_framebuffer_object extension" );
 	}
 	if( GLEE_EXT_draw_instanced ){
 		gpu_instancing=true;

@@ -70,6 +70,7 @@
     <File Name="max3d/max3d/scene.h"/>
     <File Name="max3d/max3d/scene.cpp"/>
     <File Name="max3d/max3d/model.glsl"/>
+    <File Name="max3d\max3d\clear.glsl"/>
   </VirtualDirectory>
   <Dependencies Name="Debug">
     <Project Name="assimp"/>

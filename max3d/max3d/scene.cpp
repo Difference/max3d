@@ -81,11 +81,10 @@ void scene_init(){
 	boxIB=App.Graphics()->CreateIndexBuffer( 36,"1i" );
 	boxIB->SetData( ip );
 	
-	//accumBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA16F,TEXTURE_CLAMPST|TEXTURE_RENDER );
-	accumBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_RENDER );
-	materialBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_RENDER );
-	normalBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_RENDER );
-	depthBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_DEPTH,TEXTURE_RENDER );
+	accumBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
+	materialBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
+	normalBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
+	depthBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_DEPTH,TEXTURE_CLAMPST|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
 
 	App.Graphics()->SetTextureParam( "bb_AccumBuffer",accumBuffer );
 	App.Graphics()->SetTextureParam( "bb_MaterialBuffer",materialBuffer );
@@ -404,7 +403,7 @@ void CScene::RenderDistantLight( CLight *light,CCamera *camera ){
 
 	for( int i=0;i<splits.size()-1;++i ){
 		float znear=splits[i],zfar=splits[i+1];
-
+		
 		//Now handles off-centre frustums, eg: mirrors...
 		float lnear=frustum.planes[0].SolveX( 0,znear );
 		float rnear=frustum.planes[1].SolveX( 0,znear );
@@ -498,7 +497,9 @@ void CScene::RenderCamera( CCamera *camera ){
 	float right=frustum.planes[1].SolveX( 0,1 );
 	float bottom=frustum.planes[2].SolveY( 0,1 );
 	float top=frustum.planes[3].SolveY( 0,1 );
-	App.Graphics()->SetVec2Param( "bb_FragScale",CVec2( (right-left),(top-bottom) ) );
+	float xscale=(right-left)/_viewport.width;
+	float yscale=(top-bottom)/_viewport.height;
+	App.Graphics()->SetVec2Param( "bb_FragScale",CVec2( xscale,yscale ) );
 	App.Graphics()->SetVec2Param( "bb_FragOffset",CVec2( left,bottom ) );
 
 	App.Graphics()->SetColorBuffer( 1,materialBuffer );

@@ -40,10 +40,11 @@ static const char *shaderHeader=
 //Constant vars
 "uniform vec2 bb_WindowSize;\n"
 "uniform vec2 bb_WindowScale;\n"
-"uniform sampler2D bb_AccumBuffer;\n"
-"uniform sampler2D bb_MaterialBuffer;\n"
-"uniform sampler2D bb_NormalBuffer;\n"
-"uniform sampler2D bb_DepthBuffer;\n"
+"uniform sampler2DRect bb_AccumBuffer;\n"
+"uniform sampler2DRect bb_MaterialBuffer;\n"
+"uniform sampler2DRect bb_NormalBuffer;\n"
+"uniform sampler2DRect bb_DepthBuffer;\n"
+"uniform sampler2DRect bb_QuadTexture;\n"
 "uniform sampler2D bb_ShadowBuffer;\n"
 //World vars
 "uniform vec3 bb_AmbientColor;\n"
