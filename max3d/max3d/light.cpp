@@ -80,15 +80,11 @@ void CLight::SetColor( const CVec3 &color ){
 }
 
 void CLight::SetShader( CShader *shader ){
-	if( shader ) shader->Retain();
-	if( _shader ) _shader->Release();
-	_shader=shader;
+	CResource::Assign( &_shader,shader );
 }
 
 void CLight::SetTexture( CTexture *texture ){
-	if( texture ) texture->Retain();
-	if( _texture ) _texture->Release();
-	_texture=texture;
+	CResource::Assign( &_texture,texture );
 }
 
 void CLight::SetShadowSize( int size ){

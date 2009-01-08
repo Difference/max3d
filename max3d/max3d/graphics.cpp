@@ -95,9 +95,7 @@ const float *CParam::FloatValue(){
 }
 
 void CParam::SetTextureValue( CTexture *value ){
-	if( value ) value->Retain();
-	if( _texture ) _texture->Release();
-	_texture=value;
+	CResource::Assign( &_texture,value );
 	Invalidate();
 }
 

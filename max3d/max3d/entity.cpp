@@ -216,21 +216,15 @@ CMat4 CEntity::InverseRenderMatrix(){
 
 //physics
 void CEntity::SetBody( CBody *body ){
-	if( body ) body->Retain();
-	if( _body ) _body->Release();
-	_body=body;
+	CResource::Assign( &_body,body );
 }
 
 void CEntity::SetJoint( CJoint *joint ){
-	if( joint ) joint->Retain();
-	if( _joint ) _joint->Release();
-	_joint=joint;
+	CResource::Assign( &_joint,joint );
 }
 
 void CEntity::SetAnimator( CAnimator *animator ){
-	if( animator ) animator->Retain();
-	if( _animator ) _animator->Release();
-	_animator=animator;
+	CResource::Assign( &_animator,animator );
 }
 
 //utility

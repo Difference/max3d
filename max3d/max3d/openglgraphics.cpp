@@ -832,16 +832,12 @@ void COpenGLGraphics::BeginScene(){
 }
 
 void COpenGLGraphics::SetColorBuffer( int index,CTexture *texture ){
-	if( texture ) texture->Retain();
-	if( _colorBuffers[index] ) _colorBuffers[index]->Release();
-	_colorBuffers[index]=texture;
+	CResource::Assign( &_colorBuffers[index],texture );
 	_dirty|=DIRTY_FRAMEBUFFER;
 }
 
 void COpenGLGraphics::SetDepthBuffer( CTexture *texture ){
-	if( texture ) texture->Retain();
-	if( _depthBuffer ) _depthBuffer->Release();
-	_depthBuffer=texture;
+	CResource::Assign( &_depthBuffer,texture );
 	_dirty|=DIRTY_FRAMEBUFFER;
 }
 
@@ -946,22 +942,18 @@ void COpenGLGraphics::SetCullMode( int mode ){
 }
 
 void COpenGLGraphics::SetShader( CShader *shader ){
-	if( shader ) shader->Retain();
-	if( _shader ) _shader->Release();
-	_shader=shader;
+	CResource::Assign( &_shader,shader );
 	_dirty|=DIRTY_SHADERPROG;
 }
 
 void COpenGLGraphics::SetVertexBuffer( CVertexBuffer *buffer ){
-	if( buffer ) buffer->Retain();
-	if( _vertexBuffer ) _vertexBuffer->Release();
-	if( _vertexBuffer=buffer ) ((GLVertexBuffer*)buffer)->Bind();
+	CResource::Assign( &_vertexBuffer,buffer );
+	if( buffer ) ((GLVertexBuffer*)buffer)->Bind();
 }
 
 void COpenGLGraphics::SetIndexBuffer( CIndexBuffer *buffer ){
-	if( buffer ) buffer->Retain();
-	if( _indexBuffer ) _indexBuffer->Release();
-	if( _indexBuffer=buffer ) ((GLIndexBuffer*)buffer)->Bind();
+	CResource::Assign( &_indexBuffer,buffer );
+	if( buffer ) ((GLIndexBuffer*)buffer)->Bind();
 }
 
 void COpenGLGraphics::SetClipPlane( int index,const float params[4] ){

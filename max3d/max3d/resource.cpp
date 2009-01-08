@@ -32,11 +32,24 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "std.h"
 
+#include "app.h"
 #include "resource.h"
 
-CResource::CResource():_refs(1){
-}
+vector<CResource*> CResource::_flush;
 
 CResource::~CResource(){
 	Assert( !_refs );
+}
+
+void CResource::FlushResources(){
+	vector<CResource*> out;
+	for( vector<CResource*>::iterator it=_flush.begin();it!=_flush.end();++it ){
+		CResource *resource=*it;
+		if( resource->Refs()>0 ){
+			out.push_back( resource );
+		}else{
+			delete resource;
+		}
+	}
+	out.swap( _flush );
 }

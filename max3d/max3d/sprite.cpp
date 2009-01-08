@@ -40,7 +40,8 @@ static map<CMaterial*,CSpriteSurface*> _matMap;
 CSprite::CSprite():_surface(0){
 }
 
-CSprite::CSprite( CSprite *sprite,CCopier *copier ):CEntity( sprite,copier ),
+CSprite::CSprite( CSprite *sprite,CCopier *copier ):
+CEntity( sprite,copier ),
 _surface( sprite->_surface ){
 	if( _surface ) _surface->Retain();
 }
@@ -62,21 +63,23 @@ void CSprite::SetMaterial( CMaterial *material ){
 			surface=it->second;
 		}
 	}
-	if( surface ) surface->Retain();
-	if( _surface ) _surface->Release();
-	_surface=surface;
+	CResource::Assign( &_surface,surface );
 }
 
 CMaterial *CSprite::Material(){
-	return _surface->Material();
+	return _surface ? _surface->Material() : 0;
 }
 
 void CSprite::OnRenderWorld(){
+//	return;
 	if( !_surface->Instances().size() ) App.Scene()->AddSurface( _surface );
 	_surface->Instances().push_back( this );
 }
 
-CSpriteSurface::CSpriteSurface():_capacity(0),_vertexBuffer(0),_indexBuffer(0){
+CSpriteSurface::CSpriteSurface():
+_capacity(0),
+_vertexBuffer(0),
+_indexBuffer(0){
 	SetShader( App.ShaderUtil()->SpriteShader() );
 }
 
@@ -144,6 +147,9 @@ void CSpriteSurface::OnRenderCamera( CCamera *camera ){
 }
 
 void CSpriteSurface::OnRenderInstances( const CHull &bounds ){
+//	cout<<_vertexBuffer<<", "<<_indexBuffer<<", "<<_instances.size()<<endl;
+//	return;
+	if( !_instances.size() ) return;
 	App.Graphics()->SetVertexBuffer( _vertexBuffer );
 	App.Graphics()->SetIndexBuffer( _indexBuffer );
 	App.Graphics()->Render( 3,0,_instances.size()*6,1 );

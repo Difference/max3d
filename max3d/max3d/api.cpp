@@ -96,6 +96,10 @@ _API CObject *m3dLoadMax3dObject( const char *path ){
 }
 
 //***** Resource API ******
+API void m3dFlushResources(){
+	CResource::FlushResources();
+}
+
 API void m3dRetainResource( CResource *obj ){
 	obj->Retain();
 }

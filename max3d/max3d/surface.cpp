@@ -43,15 +43,11 @@ CSurface::~CSurface(){
 }
 
 void CSurface::SetShader( CShader *shader ){
-	if( shader ) shader->Retain();
-	if( _shader ) _shader->Release();
-	_shader=shader;
+	CResource::Assign( &_shader,shader );
 }
 
 void CSurface::SetMaterial( CMaterial *material ){
-	if( material ) material->Retain();
-	if( _material ) _material->Release();
-	_material=material;
+	CResource::Assign( &_material,material );
 }
 
 void CSurface::OnRenderCamera( CCamera *camera ){

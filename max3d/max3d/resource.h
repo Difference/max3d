@@ -37,16 +37,28 @@ POSSIBILITY OF SUCH DAMAGE.
 
 class CResource : public CObject{
 public:
-	CResource();
+	CResource():_refs(1){
+		_flush.push_back( this ); 
+	}
 	~CResource();
 	
 	void Retain(){ ++_refs; }
-	void Release(){ if( !--_refs ) delete this; }
+	void Release(){ if( !--_refs ) _flush.push_back( this ); }
 
 	int Refs(){ return _refs; }
+	
+	template<class T>
+	static void Assign( T **variable,T *value ){
+		if( value ) value->Retain();
+		if( *variable ) (*variable)->Release();
+		*variable=value;
+	}
+	
+	static void FlushResources();
 
 private:
 	int _refs;
+	static vector<CResource*> _flush;
 };
 
 #endif
