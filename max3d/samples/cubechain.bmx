@@ -41,9 +41,9 @@ ResetModelTransform box
 CreateBallJoint box,box,pbody
 
 Local light=CreateSpotLight()
-MoveEntity light,0,0,-4
-SetLightRange light,20
-SetLightColor light,2,2,2
+MoveEntity light,0,4,-4
+TurnEntity light,0,45,0
+SetLightRange light,25
 
 Local camera=CreateCamera()
 CreateSphereBody camera,.5,1,-1
