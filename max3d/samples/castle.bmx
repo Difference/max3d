@@ -54,8 +54,8 @@ DestroyEntity ground
 Local light=CreateDistantLight()
 TurnEntity light,0,45,0
 
-Local splits#[]=[1.0,4.0,16.0,64.0,256.0]
-SetLightShadowSplitsTable light,5,splits
+Local splits#[]=[1.0,8.0,32.0]',256.0]
+SetLightShadowSplitsTable light,3,splits
 
 Local castle=LoadModel( "CASTLE1.X",4,0 )
 MoveEntity castle,0,.5,0
@@ -64,16 +64,15 @@ Local player=CreateCapsule( blue,.5,2,1,-1 )
 MoveEntity player,0,5,-10
 
 Local camera=CreateCamera()
-'setcamerafrustum camera,-.5,1.5,-1,1,1,256
 SetEntityParent camera,player
 MoveEntity camera,0,1,0
 
-Rem
+'Rem
 Local mirror=CreateMirror()
 MoveEntity mirror,0,3.5,8.5
 SetMirrorSize mirror,4,2
 SetMirrorResolution mirror,512,512
-End Rem
+'End Rem
 
 Local yvel#
 
@@ -108,7 +107,6 @@ While Not KeyHit( KEY_ESCAPE )
 	yvel=EntityY( player )-y
 	
 	RenderWorld
-	
 	Flip
 
 Wend
