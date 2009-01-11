@@ -48,8 +48,10 @@ void main(){
 
 	float cosAngle=lvec.z;
 	float angleAtten=max( (cosAngle-.7071)/(1.0-.7071),0.0 );
+
+	vec2 tcpos=(fpos.xy/fpos.z)/2.0+0.5;tcpos.y=1.0-tcpos.y;
 	
-	vec3 light=texture2D( bb_LightTexture,fpos.xy/fpos.z ).rgb * bb_LightColor * rangeAtten * angleAtten;
+	vec3 light=texture2D( bb_LightTexture,tcpos ).rgb * bb_LightColor * rangeAtten * angleAtten;
 
 	gl_FragColor=vec4( (diffuse+specular) * light ,1.0 );
 }

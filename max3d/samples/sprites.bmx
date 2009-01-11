@@ -7,7 +7,7 @@ Max3dGraphics 1024,768
 
 'DisableShadows
 
-SetAmbientColor .25,.25,.25'1,1,1'.01,.01,.01
+SetAmbientColor .1,.1,.1
 
 'collision types:
 '1=player
@@ -43,9 +43,10 @@ Local ground=CreateBox( mossy,25,1,25,2,0 )
 ScaleModelTexCoords ground,20,20
 
 Local light=CreateSpotLight()
-MoveEntity light,0,10,0
+MoveEntity light,0,25,0
 TurnEntity light,0,90,0
-SetLightRange light,20
+SetLightRange light,50
+setlightshadowsize light,0
 
 Local camera=CreateCamera()
 

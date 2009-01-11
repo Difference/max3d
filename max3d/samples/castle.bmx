@@ -54,8 +54,8 @@ DestroyEntity ground
 Local light=CreateDistantLight()
 TurnEntity light,0,45,0
 
-Local splits#[]=[1.0,8.0,32.0]',256.0]
-SetLightShadowSplitsTable light,3,splits
+Local splits#[]=[1.0,4.0,16.0,64.0,256.0]
+SetLightShadowSplitsTable light,5,splits
 
 Local castle=LoadModel( "CASTLE1.X",4,0 )
 MoveEntity castle,0,.5,0
