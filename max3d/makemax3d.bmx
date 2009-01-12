@@ -20,29 +20,55 @@ If mod_time
 	EndIf
 EndIf
 
-Const TYPE_VOID=0
-Const TYPE_INT=1
-Const TYPE_FLOAT=2
-Const TYPE_OBJECT=3
-Const TYPE_CSTRING=4
-Const TYPE_VOIDPOINTER=5
-Const TYPE_CONSTVOIDPOINTER=6
-
 Global bmx_decls$
 Global bmx_inits$
 
-Function Bmx_Func( ty,id$,argtys[],argids$[] )
+Global bmx_oodecls$
+Global bmx_ooinits$
 
-	Global ty_names$[]=["","%","#","%","$z",":Byte Ptr",":Byte Ptr"]
-	
+Const TYPE_VOID=0
+Const TYPE_INT=1
+Const TYPE_FLOAT=2
+Const TYPE_CSTRING=3
+Const TYPE_VOIDPOINTER=4
+Const TYPE_CONSTVOIDPOINTER=5
+Const TYPE_OBJECT=6
+
+Global ObjectTypes$[]=[..
+"Object",..
+" Resource",..
+"  Shader",..
+"  Texture",..
+"  Material",..
+"  Surface",..
+"   ModelSurface",..
+"   SpriteSurface",..
+"   MirrorSurface",..
+"   TerrainSurface",..
+" Entity",..
+"  Camera",..
+"  Light",..
+"  Model",..
+"  Sprite",..
+"  Mirror",..
+"  Terrain"]
+
+Function Bmx_TypeName$( ty )
+	Global ty_names$[]=["","%","#","$z",":Byte Ptr",":Byte Ptr"]
+	If ty<TYPE_OBJECT Return ty_names[ty]
+	Return "%"
+	Return ":T"+ObjectTypes[ty-TYPE_OBJECT].Trim()
+End Function
+
+Function Bmx_Func( ty,id$,argtys[],argids$[] )
 	Local tid$=id
 
 	If tid.StartsWith( "m3d" ) tid=tid[3..]
 	
-	Local decl$="Global "+tid+ty_names[ty]+"("
+	Local decl$="Global "+tid+Bmx_TypeName(ty)+"("
 	For Local i=0 Until argids.length
 		If i decl:+","
-		decl:+argids[i]+ty_names[argtys[i]]
+		decl:+argids[i]+Bmx_TypeName(argtys[i])
 	Next
 	decl:+")~n"
 	decl="Rem~nbbdoc: "+tid+"~nEnd Rem~n"+decl
@@ -79,7 +105,8 @@ Function ParseType( t$ Var )
 	Local tl$=t
 	Local ty$="bad!"
 	
-	Select Parse( t )
+	Local p$=Parse( t )
+	Select p
 	Case "void"
 		Local q$=t
 		Select Parse( t )
@@ -108,10 +135,11 @@ Function ParseType( t$ Var )
 	Default
 		Select Parse( t )
 		Case "*"
-			Return TYPE_OBJECT
+			For Local i=0 Until ObjectTypes.length
+				If p="C"+ObjectTypes[i].Trim() Return TYPE_OBJECT+i
+			Next
 		End Select
 	End Select
-
 	Print "ERROR:"+tl
 	End
 
@@ -185,6 +213,6 @@ End Extern
 
 SaveString max3d,bmx_path+"/mod/bmx3d.mod/max3d.mod/max3d.bmx"
 
-system bmx_path+"/bin/bmk makemods -a bmx3d"
+system "~q"+bmx_path+"/Bin/bmk~q makemods -a bmx3d"
 
 Print "Created module bmx3d"
