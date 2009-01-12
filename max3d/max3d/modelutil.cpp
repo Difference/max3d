@@ -39,46 +39,44 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <aiScene.h>
 #include <aiPostProcess.h>
 
-static CVec3 ccolor( const aiColor4D &color ){
-	return CVec3( color.r,color.g,color.b );
-}
-
-static string cstring( const aiString &str ){
-	return string( str.data,str.length );
-}
-
-static CMaterial *cmaterial( const aiMaterial *mat ){
+static CMaterial *loadMaterial( aiMaterial *mat ){
 	CMaterial *cmat=new CMaterial;
 	
 	aiColor4D color;
-	aiString path;
-
-	if( aiGetMaterialTexture( mat,aiTextureType_DIFFUSE,0,&path,0,0,0,0,0 )==AI_SUCCESS ){
-		cmat->SetTexture( "DiffuseMap",(CTexture*)App.ImportObject( "CTexture",cstring( path ) ) );
-	}else if( aiGetMaterialColor( mat,AI_MATKEY_COLOR_DIFFUSE,&color )==AI_SUCCESS ){
-		cmat->SetColor( "DiffuseColor",ccolor( color ) );
-	}
-
-	if( aiGetMaterialTexture( mat,aiTextureType_SPECULAR,0,&path,0,0,0,0,0 )==AI_SUCCESS ){
-		cmat->SetTexture( "SpecularMap",(CTexture*)App.ImportObject( "CTexture",cstring( path ) ) );
-	}else if( aiGetMaterialColor( mat,AI_MATKEY_COLOR_SPECULAR,&color )==AI_SUCCESS ){
-		cmat->SetColor( "SpecularColor",ccolor( color ) );
+	aiString name,path;
+	
+	if( mat->Get( AI_MATKEY_NAME,name )==AI_SUCCESS ){
+		cmat->SetName( name.data );
 	}
 	
-	if( aiGetMaterialTexture( mat,aiTextureType_EMISSIVE,0,&path,0,0,0,0,0 )==AI_SUCCESS ){
-		cmat->SetTexture( "EmissiveMap",(CTexture*)App.ImportObject( "CTexture",cstring( path ) ) );
-	}else if( aiGetMaterialColor( mat,AI_MATKEY_COLOR_EMISSIVE,&color )==AI_SUCCESS ){
-		cmat->SetColor( "EmissiveColor",ccolor( color ) );
+	//Diffuse color/texture
+	if( mat->Get( AI_MATKEY_TEXTURE_DIFFUSE(0),path )==AI_SUCCESS ){
+		if( !name.length ) cmat->SetName( path.data );
+		cmat->SetTexture( "DiffuseMap",(CTexture*)App.ImportObject( "CTexture",path.data ) );
+	}else if( mat->Get( AI_MATKEY_COLOR_DIFFUSE,color )==AI_SUCCESS ){
+		cmat->SetColor( "DiffuseColor",CVec3( color.r,color.g,color.b ) );
+	}
+
+	if( mat->Get( AI_MATKEY_TEXTURE_SPECULAR(0),path )==AI_SUCCESS ){
+		cmat->SetTexture( "SpecularMap",(CTexture*)App.ImportObject( "CTexture",path.data ) );
+	}else if( mat->Get( AI_MATKEY_COLOR_SPECULAR,color )==AI_SUCCESS ){
+		cmat->SetColor( "SpecularColor",CVec3( color.r,color.g,color.b ) );
 	}
 	
-	if( aiGetMaterialTexture( mat,aiTextureType_NORMALS,0,&path,0,0,0,0,0 )==AI_SUCCESS ){
-		cmat->SetTexture( "NormalMap",(CTexture*)App.ImportObject( "CTexture",cstring( path ) ) );
+	if( mat->Get( AI_MATKEY_TEXTURE_EMISSIVE(0),path )==AI_SUCCESS ){
+		cmat->SetTexture( "EmissiveMap",(CTexture*)App.ImportObject( "CTexture",path.data ) );
+	}else if( mat->Get( AI_MATKEY_COLOR_EMISSIVE,color )==AI_SUCCESS ){
+		cmat->SetColor( "EmissiveColor",CVec3( color.r,color.g,color.b ) );
+	}
+	
+	if( mat->Get( AI_MATKEY_TEXTURE_NORMALS(0),path )==AI_SUCCESS ){
+		cmat->SetTexture( "NormalMap",(CTexture*)App.ImportObject( "CTexture",path.data ) );
 	}
 
 	return cmat;
 }
 
-static CModelSurface *csurface( const aiMesh *mesh ){
+static CModelSurface *loadSurface( const aiMesh *mesh ){
 	CModelSurface *surf=new CModelSurface;
 
 	const CVec3 scale( .035,.035,.035 );
@@ -129,18 +127,20 @@ CBody *CModelUtil::CreateModelBody( CModel *model,int collType,float mass ){
 }
 
 CModel *CModelUtil::ImportModel( const string &path,int collType,float mass ){
-	Assimp::Importer importer;
-
+	
 	int flags=
-	aiProcess_GenNormals |
-	aiProcess_GenSmoothNormals |
 	aiProcess_Triangulate |
+	aiProcess_GenSmoothNormals |
 	aiProcess_CalcTangentSpace |
 	aiProcess_JoinIdenticalVertices |
-	aiProcess_ImproveCacheLocality |
 	aiProcess_RemoveRedundantMaterials |
 	aiProcess_PreTransformVertices |
+	aiProcess_ImproveCacheLocality |
+	aiProcess_SortByPType |
 	0;
+
+	Assimp::Importer importer;
+	importer.SetPropertyInteger( AI_CONFIG_PP_SBP_REMOVE,aiPrimitiveType_LINE|aiPrimitiveType_POINT ); 	
 
 	int i=path.find_last_of( '.' );
 	if( i!=string::npos ){
@@ -160,7 +160,7 @@ CModel *CModelUtil::ImportModel( const string &path,int collType,float mass ){
 	
 	for( int i=0;i<scene->mNumMaterials;++i ){
 		aiMaterial *mat=scene->mMaterials[i];
-		CMaterial *cmat=cmaterial( mat );
+		CMaterial *cmat=loadMaterial( mat );
 		mats.push_back( cmat );
 	}
 	
@@ -169,7 +169,7 @@ CModel *CModelUtil::ImportModel( const string &path,int collType,float mass ){
 	for( int i=0;i<scene->mNumMeshes;++i ){
 		aiMesh *mesh=scene->mMeshes[i];
 
-		CModelSurface *surf=csurface( mesh );
+		CModelSurface *surf=loadSurface( mesh );
 	
 		surf->SetMaterial( mats[mesh->mMaterialIndex] );
 	

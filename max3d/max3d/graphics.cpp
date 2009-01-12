@@ -34,10 +34,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "graphics.h"
 
-void CTexture::SetPath( string path ){
-	_path=path;
-}
-
 CGraphics::CGraphics():
 _depthBuffer(0),
 _vertexBuffer(0),

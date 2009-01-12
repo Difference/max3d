@@ -420,14 +420,6 @@ void CScene::RenderDistantLight( CLight *light,CCamera *camera ){
 		CVec3(lfar,tfar,zfar),CVec3(rfar,tfar,zfar),
 		CVec3(rfar,bfar,zfar),CVec3(lfar,bfar,zfar) };
 		
-		/*
-		float znear=segs[i];
-		float zfar=segs[i+1];
-		CVec3 verts[]={
-		CVec3(-znear,+znear,znear),CVec3(+znear,+znear,znear),CVec3(+znear,-znear,znear),CVec3(-znear,-znear,znear),
-		CVec3(-zfar,+zfar,zfar),CVec3(+zfar,+zfar,zfar),CVec3(+zfar,-zfar,zfar),CVec3(-zfar,-zfar,zfar) };
-		 **/
-
 		float left=100000,right=-100000,bottom=100000,top=-100000,nnear=100000,ffar=-100000;
 		for( int j=0;j<8;++j ){
 			CVec3 v=cameraLightMatrix * verts[j];
@@ -520,6 +512,10 @@ void CScene::RenderCamera( CCamera *camera ){
 	App.Graphics()->SetColorBuffer( 1,0 );
 	App.Graphics()->SetColorBuffer( 2,0 );
 	
+	//additive
+	SetShaderMode( "additive" );
+	RenderSurfaces( camera->RenderFrustum() );
+
 	//lighting
 	for( vector<CLight*>::const_iterator it=_lights.begin();it!=_lights.end();++it ){
 		_shadowBufSize=0;
@@ -535,10 +531,6 @@ void CScene::RenderCamera( CCamera *camera ){
 			Error( "Unrecognized light type" );
 		}
 	}
-
-	//additive
-	SetShaderMode( "additive" );
-	RenderSurfaces( camera->RenderFrustum() );
 
 	//copy to target
 	_viewport=camera->Viewport();

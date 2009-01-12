@@ -43,6 +43,10 @@ CMaterial::CMaterial(){
 	SetTexture( "NormalMap",App.TextureUtil()->FlatTexture() );
 }
 
+void CMaterial::SetName( string name ){
+	_name=name;
+}
+
 CMaterial::~CMaterial(){
 	for( map<CParam*,CTexture*>::iterator it=_textures.begin();it!=_textures.end();++it ){
 		it->second->Release();

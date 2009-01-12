@@ -82,6 +82,14 @@ API void m3dUseRadians(){
 	to_radians=1.0f;
 }
 
+API void m3dSetObjectImportPath( CObject *obj,const char *path ){
+	obj->SetImportPath( path );
+}
+
+API const char *m3dGetObjectImportPath( CObject *obj ){
+	return c_str( obj->ImportPath() );
+}
+
 //***** Object API *****
 _API const char *m3dMax3dObjectType( CObject *obj ){
 	return c_str( obj->TypeName() );
@@ -121,10 +129,6 @@ API CTexture *m3dCreateTexture( int width,int height,int format,int flags ){
 	return App.Graphics()->CreateTexture( width,height,format,flags );
 }
 
-API void m3dSetTexturePath( CTexture *texture,const char *path ){
-	texture->SetPath( path );
-}
-
 API void m3dSetTextureData( CTexture *texture,const void *data ){
 	texture->SetData( data );
 }
@@ -155,6 +159,14 @@ API CMaterial *m3dCreateMaterial(){
 	return new CMaterial;
 }
 
+API void m3dSetMaterialName( CMaterial *material,const char *name ){
+	material->SetName( name );
+}
+
+API const char *m3dGetMaterialName( CMaterial *material ){
+	return c_str( material->Name() );
+}
+
 API void m3dSetMaterialFloat( CMaterial *material,const char *name,float value ){
 	material->SetFloat( name,value );
 }
@@ -168,15 +180,18 @@ API void m3dSetMaterialTexture( CMaterial *material,const char *name,CTexture *t
 }
 
 //***** Surface API *****
-API CModelSurface *m3dCreateSurface(){
-	return new CModelSurface;
+API CModelSurface *m3dCreateSurface( CMaterial *material,CModel *model ){
+	CModelSurface *surface=new CModelSurface;
+	if( material ) surface->SetMaterial( material );
+	if( model ) model->AddSurface( surface );
+	return surface;
 }
 
 API void m3dSetSurfaceShader( CModelSurface *surface,CShader *shader ){
 	surface->SetShader( shader );
 }
 
-API CShader *m3dSurfaceShader( CModelSurface *surface ){
+API CShader *m3dGetSurfaceShader( CModelSurface *surface ){
 	return surface->Shader();
 }
 
@@ -184,7 +199,7 @@ API void m3dSetSurfaceMaterial( CModelSurface *surface,CMaterial *material ){
 	surface->SetMaterial( material );
 }
 
-API CMaterial *m3dSurfaceMaterial( CModelSurface *surface ){
+API CMaterial *m3dGetSurfaceMaterial( CModelSurface *surface ){
 	return surface->Material();
 }
 
@@ -291,8 +306,12 @@ API CModel *m3dCreateBox( CMaterial *material,float width,float height,float dep
 	return model;
 }
 
-API void m3dAddModelSurface( CModel *model,CModelSurface *surface ){
-	model->AddSurface( surface );
+API int m3dCountModelSurfaces( CModel *model ){
+	return model->Surfaces().size();
+}
+
+API CModelSurface *m3dGetModelSurface( CModel *model,int index ){
+	return model->Surfaces()[ index ];
 }
 
 API void m3dUpdateModelNormals( CModel *model ){

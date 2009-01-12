@@ -43,6 +43,7 @@ public:
 	~CModel();
 
 	void AddSurface( CModelSurface *surface );
+	void RemoveSurface( CModelSurface *surface );
 	const vector<CModelSurface*> &Surfaces(){ return _surfaces; }
 	
 	void Clear();

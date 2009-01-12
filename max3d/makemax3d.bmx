@@ -179,8 +179,12 @@ max3d=max3d.Replace( "{DEVDIR}",devDir )
 
 'Print max3d
 
+Extern 
+Function system( cmd$z )
+End Extern
+
 SaveString max3d,bmx_path+"/mod/bmx3d.mod/max3d.mod/max3d.bmx"
 
-system_ bmx_path+"/bin/bmk makemods -a bmx3d"
+system bmx_path+"/bin/bmk makemods -a bmx3d"
 
 Print "Created module bmx3d"

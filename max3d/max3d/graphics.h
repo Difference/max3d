@@ -81,9 +81,6 @@ public:
 	virtual void Set3dData( const void *data )=0;
 	virtual void SetCubeData( const void *data )=0;
 	
-	void SetPath( string path );
-	string Path(){ return _path; }
-
 	int Width(){ return _width; }
 	int Height(){ return _height; }
 	int Depth(){ return _depth; }
@@ -93,7 +90,6 @@ public:
 protected:
 	CTexture(){}
 
-	string _path;
 	int _width;
 	int _height;
 	int _depth;

@@ -61,6 +61,17 @@ void CModel::AddSurface( CModelSurface *surface ){
 	_surfaces.push_back( surface );
 }
 
+void CModel::RemoveSurface( CModelSurface *surface ){
+	vector<CModelSurface*>::iterator it=_surfaces.begin();
+	while( it!=_surfaces.end() ){
+		if( *it==surface ){
+			it=_surfaces.erase( it );
+		}else{
+			++it;
+		}
+	}
+}
+
 void CModel::Clear(){
 	for( vector<CModelSurface*>::iterator it=_surfaces.begin();it!=_surfaces.end();++it ){
 		(*it)->Release();

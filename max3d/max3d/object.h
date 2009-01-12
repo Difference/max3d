@@ -51,6 +51,9 @@ public:
 	virtual void OnRead( CStream *stream );
 	virtual void OnWrite( CStream *stream );
 	
+	void SetImportPath( string path );
+	string ImportPath(){ return _importPath; }
+	
 	CObject *Copy();
 	void Write( string path );
 	static CObject *Read( string path );
@@ -60,6 +63,9 @@ public:
 	static CObject *Create( string typeName );
 
 	static void RegisterType( string typeName,const type_info &info,CObjectCtor ctor );
+	
+private:
+	string _importPath;
 };
 
 /// Object copier

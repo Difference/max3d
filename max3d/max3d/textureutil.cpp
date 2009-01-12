@@ -40,21 +40,17 @@ CTextureUtil::CTextureUtil(){
 	
 	texData=0xff000000;
 	_blackTexture=App.Graphics()->CreateTexture( 1,1,FORMAT_RGBA8,TEXTURE_STATIC );
-	_blackTexture->SetPath( "<black>" );
 	_blackTexture->SetData( &texData );
 
 	texData=0xffffffff;
 	_whiteTexture=App.Graphics()->CreateTexture( 1,1,FORMAT_RGBA8,TEXTURE_STATIC );
-	_whiteTexture->SetPath( "<white>" );
 	_whiteTexture->SetData( &texData );
 	
 	texData=0xffff7f7f;
 	_flatTexture=App.Graphics()->CreateTexture( 1,1,FORMAT_RGBA8,TEXTURE_STATIC );
-	_flatTexture->SetPath( "<flat>" );
 	_flatTexture->SetData( &texData );
 	
 	texData=0x00000000;
 	_zeroTexture=App.Graphics()->CreateTexture( 1,1,FORMAT_RGBA8,TEXTURE_STATIC );
-	_zeroTexture->SetPath( "<zero>" );
 	_zeroTexture->SetData( &texData );
 }

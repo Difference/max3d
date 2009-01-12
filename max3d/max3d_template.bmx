@@ -56,13 +56,14 @@ Rem
 bbdoc: LoadTexture
 End Rem
 Function LoadTexture( path$ )
+	Print "Loading texture:"+path
 	Local flags=TEXTURE_FILTER|TEXTURE_MIPMAP|TEXTURE_STATIC
 	Local t:TPixmap=LoadPixmap( path )
 	If Not t Return
 	Local fmt=m3dPixelFormat( t )
 	Local tex=CreateTexture( t.width,t.height,fmt,flags )
 	If Not tex Return 0
-	SetTexturePath tex,path
+	SetObjectImportPath tex,path
 	SetTextureData tex,t.pixels
 	Return tex
 End Function
@@ -87,7 +88,7 @@ Function LoadCubeTexture( path$ )
 	Local fmt=m3dPixelFormat( t )
 	Local tex=CreateCubeTexture( size,fmt,flags )
 	If Not tex Return 0
-	SetTexturePath tex,path
+	SetObjectImportPath tex,path
 	SetCubeTextureData tex,t.pixels
 	Return tex
 End Function
@@ -96,10 +97,33 @@ Rem
 bbdoc: LoadMaterial
 End Rem
 Function LoadMaterial( path$ )
-	Local material=CreateMaterial()
-	Local diffuse=LoadTexture( path )
-	If diffuse SetMaterialTexture material,"DiffuseMap",diffuse
-	Return material
+
+	Local file$=StripExt( path )
+	Local extn$=ExtractExt( path )
+	
+	Local mat=CreateMaterial()
+	SetObjectImportPath mat,path
+	
+	Local exts$[]=[..
+	"DiffuseMap,,_d",..
+	"SpecularMap,Spec,_s",..
+	"NormalMap,Normal,_n,_local"]
+	
+	If file.EndsWith( "_d" ) file=file[..file.length-2]
+	
+	For Local i=0 Until exts.length
+		Local bits$[]=exts[i].Split(",")
+		For Local j=1 Until bits.length
+			Local p$=file+bits[j]+"."+extn
+			If FileType( p )<>FILETYPE_FILE Continue
+			Local tex=LoadTexture( p )
+			If Not tex Continue
+			SetMaterialTexture mat,bits[0],tex
+			Exit
+		Next
+	Next
+	
+	Return mat
 End Function
 
 Rem

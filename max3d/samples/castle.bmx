@@ -7,6 +7,8 @@ Max3dGraphics 1024,768
 
 'DisableShadows
 
+SetClearColor 0,.5,1
+
 SetAmbientColor .25,.25,.25'1,1,1'.01,.01,.01
 
 'collision types:
@@ -35,30 +37,33 @@ SetMaterialColor yellow,"DiffuseColor",1,1,0
 Local blue=CreateMaterial()
 SetMaterialColor blue,"DiffuseColor",0,0,1
 
-Local mossy=CreateMaterial()
-SetMaterialTexture mossy,"DiffuseMap",LoadTexture( "eurofan_d.png" )
-SetMaterialTexture mossy,"NormalMap",LoadTexture( "eurofan_local.png" )
-SetMaterialTexture mossy,"SpecularMap",LoadTexture( "eurofan_s.png" )
-Local ground=CreateBox( mossy,9.5,1,9.5,4,0 )
-HideEntity ground
-
-For Local x=-100 To 100 Step 10
-	For Local z=-100 To 100 Step 10
-		Local copy=CopyEntity( ground )
-		MoveEntity copy,x,0,z
-		If Abs(x)=100 Or Abs(z)=100 MoveEntity copy,0,1.5,0
-	Next
-Next
-DestroyEntity ground
+Local grass=LoadMaterial( "grass.jpg" )
+Local ground=CreateBox( grass,100,1,100,4,0 )
+ScaleModelTexCoords ground,20,20
 
 Local light=CreateDistantLight()
-TurnEntity light,0,45,0
+TurnEntity light,30,60,0
 
 Local splits#[]=[1.0,4.0,16.0,64.0,256.0]
 SetLightShadowSplitsTable light,5,splits
 
 Local castle=LoadModel( "CASTLE1.X",4,0 )
 MoveEntity castle,0,.5,0
+
+'Rem
+For Local i=0 Until CountModelSurfaces( castle )
+	Local surface=GetModelSurface( castle,i )
+	Local material=GetSurfaceMaterial( surface )
+	Select GetMaterialName( material )
+	Case "x3ds_mat_castlestone"
+		SetSurfaceMaterial surface,LoadMaterial( "stonefloor.jpg" )
+	Case "x3ds_mat_Material__3"
+	Case "x3ds_mat_shingle"
+	Case "x3ds_mat_Material__8"
+		SetSurfaceMaterial surface,LoadMaterial( "eurofan.png" )
+	End Select
+Next
+'End Rem
 
 Local player=CreateCapsule( blue,.5,2,1,-1 )
 MoveEntity player,0,5,-10
@@ -69,7 +74,7 @@ MoveEntity camera,0,1,0
 
 'Rem
 Local mirror=CreateMirror()
-MoveEntity mirror,0,3.5,8.5
+MoveEntity mirror,0,3.25,8.5
 SetMirrorSize mirror,4,2
 SetMirrorResolution mirror,512,512
 'End Rem

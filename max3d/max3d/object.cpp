@@ -46,6 +46,10 @@ CObject::CObject(){
 CObject::~CObject(){
 }
 
+void CObject::SetImportPath( string path ){
+	_importPath=path;
+}
+
 CObject *CObject::OnCopy( CCopier *copier ){
 	const type_info &info=typeid( *this );
 	Error( "Object of type "+string( info.name() )+" cannot be copied" );
