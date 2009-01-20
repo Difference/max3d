@@ -47,6 +47,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "sprite.h"
 #include "terrain.h"
 #include "mirror.h"
+#include "bsptree.h"
 
 #if _WIN32
 #define API __declspec(dllexport)
@@ -203,6 +204,10 @@ API CMaterial *m3dGetSurfaceMaterial( CModelSurface *surface ){
 	return surface->Material();
 }
 
+API void m3dClearSurface( CModelSurface *surface ){
+	surface->Clear();
+}
+
 API void m3dAddSurfaceVertex( CModelSurface *surface,float x,float y,float z,float s0,float t0 ){
 	CVertex vertex;
 	vertex.position=CVec3( x,y,z );
@@ -332,6 +337,10 @@ API void m3dResetModelTransform( CModel *model ){
 
 API void m3dFlipModel( CModel *model ){
 	model->Flip();
+}
+
+API void m3dSplitModelEdges( CModel *model,float maxlength ){
+	model->SplitEdges( maxlength );
 }
 
 //***** Pivot API *****
@@ -538,6 +547,38 @@ API void m3dUpdateWorld(){
 
 API void m3dRenderWorld(){
 	App.World()->Render();
+}
+
+//***** RenderPass API *****
+API void m3dAddRenderPass( CShader *shader,CMaterial *material ){
+	CRenderPass *pass=new CRenderPass;
+	pass->SetShader( shader );
+	pass->SetMaterial( material );
+	App.Scene()->AddRenderPass( pass );
+}
+
+//***** BSPTree API *****//
+
+_API CBSPTree *CreateModelBSP( CModel *model ){
+	return new CBSPTree( model );
+}
+
+_API int m3dCountBSPNodes( CBSPTree *tree ){
+	vector<CBSPNode*> nodes;
+	tree->Root()->EnumNodes( nodes );
+	return nodes.size();
+}
+
+_API int m3dCountBSPLeaves( CBSPTree *tree ){
+	vector<CBSPNode*> leaves;
+	tree->Root()->EnumLeaves( leaves );
+	return leaves.size();
+}
+
+_API CModel *CreateBSPModel( CBSPTree *tree ){
+	CModel *model=tree->BuildModel();
+	model->SetVisible( true );
+	return model;
 }
 
 }

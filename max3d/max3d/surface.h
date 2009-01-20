@@ -53,6 +53,8 @@ public:
 	virtual void OnClearInstances();
 
 protected:
+	CSurface( CSurface *surf,CCopier *copier );
+
 	CShader *_shader;
 	CMaterial *_material;
 };

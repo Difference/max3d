@@ -135,6 +135,7 @@ CModel *CModelUtil::ImportModel( const string &path,int collType,float mass ){
 	aiProcess_JoinIdenticalVertices |
 	aiProcess_RemoveRedundantMaterials |
 	aiProcess_PreTransformVertices |
+	aiProcess_FindDegenerates |
 	aiProcess_ImproveCacheLocality |
 	aiProcess_SortByPType |
 	0;

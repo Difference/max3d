@@ -37,6 +37,13 @@ POSSIBILITY OF SUCH DAMAGE.
 CSurface::CSurface():_shader(0),_material(0){
 }
 
+CSurface::CSurface( CSurface *surf,CCopier *copier ):
+_shader( surf->_shader ),
+_material( surf->_material ){
+	if( _shader ) _shader->Retain();
+	if( _material ) _material->Retain();
+}
+
 CSurface::~CSurface(){
 	if( _shader ) _shader->Release();
 	if( _material ) _material->Release();

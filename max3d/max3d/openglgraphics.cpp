@@ -841,8 +841,9 @@ void COpenGLGraphics::SetDepthBuffer( CTexture *texture ){
 	_dirty|=DIRTY_FRAMEBUFFER;
 }
 
-void COpenGLGraphics::SetViewport( int x,int y,int width,int height ){
-	glViewport( x,y,width,height );
+void COpenGLGraphics::SetViewport( const CRect &viewport ){
+	_viewport=viewport;
+	glViewport( (int)viewport.x,(int)viewport.y,(int)viewport.width,(int)viewport.height );
 }
 
 void COpenGLGraphics::SetShaderMode( int mode ){

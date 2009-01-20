@@ -54,7 +54,7 @@ public:
 	virtual void BeginScene();
 	virtual void SetColorBuffer( int index,CTexture *texture );
 	virtual void SetDepthBuffer( CTexture *texture );
-	virtual void SetViewport( int x,int y,int width,int height );
+	virtual void SetViewport( const CRect &viewport );
 	virtual void SetShaderMode( int mode );
 	virtual void SetWriteMask( int mask );
 	virtual void SetBlendFunc( int src,int dst );

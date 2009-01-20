@@ -47,6 +47,8 @@ public:
 	CShader *SpotLightShader(){ return _spotLightShader; }
 	CShader *PointLightShader(){ return _pointLightShader; }
 	CShader *DistantLightShader(){ return _distantLightShader; }
+	
+	CShader *CopyShader(){ return _copyShader; }
 
 private:
 	CShader *_modelShader;
@@ -57,6 +59,8 @@ private:
 	CShader *_spotLightShader;
 	CShader *_pointLightShader;
 	CShader *_distantLightShader;
+	
+	CShader *_copyShader;
 };
 
 #endif

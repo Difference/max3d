@@ -3,6 +3,8 @@ Strict
 
 Import Bmx3d.Max3d
 
+Incbin "fogshader.glsl"
+
 Max3dGraphics 1024,768
 
 'DisableShadows
@@ -10,6 +12,15 @@ Max3dGraphics 1024,768
 SetClearColor 0,.5,1
 
 SetAmbientColor .25,.25,.25'1,1,1'.01,.01,.01
+
+Local fogShader=CreateShader( LoadString( "incbin::fogshader.glsl" ) )
+Local fogMaterial=CreateMaterial()
+
+SetMaterialFloat fogMaterial,"FogStart",25
+SetMaterialFloat fogMaterial,"FogEnd",50
+SetMaterialColor fogMaterial,"FogColor",.5,.75,1
+
+AddRenderPass fogShader,fogMaterial
 
 'collision types:
 '1=player

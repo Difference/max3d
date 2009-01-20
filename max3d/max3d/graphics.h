@@ -173,7 +173,7 @@ public:
 	virtual void BeginScene()=0;
 	virtual void SetColorBuffer( int index,CTexture *texture )=0;
 	virtual void SetDepthBuffer( CTexture *texture )=0;
-	virtual void SetViewport( int x,int y,int width,int height )=0;
+	virtual void SetViewport( const CRect &viewport )=0;
 	virtual void SetShaderMode( int mode )=0;
 	virtual void SetWriteMask( int mask )=0;
 	virtual void SetBlendFunc( int src,int dst )=0;
@@ -218,6 +218,7 @@ protected:
 	string _shaderHeader;
 	CTexture *_colorBuffers[4];
 	CTexture *_depthBuffer;
+	CRect _viewport;
 	CVertexBuffer *_vertexBuffer;
 	CIndexBuffer *_indexBuffer;
 	CShader *_shader;

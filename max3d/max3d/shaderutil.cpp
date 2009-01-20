@@ -44,4 +44,6 @@ CShaderUtil::CShaderUtil(){
 	_spotLightShader=(CShader*)App.ImportObject( "CShader","spotlight.glsl" );
 	_pointLightShader=(CShader*)App.ImportObject( "CShader","pointlight.glsl" );
 	_distantLightShader=(CShader*)App.ImportObject( "CShader","distantlight.glsl" );
+	
+	_copyShader=(CShader*)App.ImportObject( "CShader","copy.glsl" );
 }

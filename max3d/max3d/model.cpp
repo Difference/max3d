@@ -40,6 +40,14 @@ enum{
 	DIRTY_BUFFERS=2
 };
 
+CVertex CVertex::Blend( const CVertex &v,float t )const{
+	CVertex tv;
+	tv.position=position.Blend( v.position,t );
+	tv.normal=normal.Blend( v.normal,t ).Normalize();
+	tv.texcoords[0]=texcoords[0].Blend( v.texcoords[0],t );
+	return tv;
+}
+
 CModel::CModel(){
 }
 
@@ -112,6 +120,12 @@ void CModel::ResetTransform(){
 	SetMatrix( CMat4() );
 }
 
+void CModel::SplitEdges( float length ){
+	for( vector<CModelSurface*>::iterator it=_surfaces.begin();it!=_surfaces.end();++it ){
+		(*it)->SplitEdges( length );
+	}
+}
+
 void CModel::Optimize(){
 	for( vector<CModelSurface*>::iterator it=_surfaces.begin();it!=_surfaces.end();++it ){
 		(*it)->Optimize();
@@ -131,6 +145,14 @@ _vertexBuffer(0),
 _indexBuffer(0),
 _dirty(~0){
 	SetShader( App.ShaderUtil()->ModelShader() );
+}
+
+CModelSurface::CModelSurface( CModelSurface *surf,CCopier *copier ):CSurface( surf,copier ),
+_vertices( surf->_vertices ),
+_triangles( surf->_triangles ),
+_vertexBuffer(0),
+_indexBuffer(0),
+_dirty(~0){
 }
 
 CModelSurface::~CModelSurface(){
@@ -166,6 +188,16 @@ void CModelSurface::Clear(){
 	_dirty|=DIRTY_BOUNDS|DIRTY_BUFFERS;
 }
 
+void CModelSurface::ClearVertices(){
+	_vertices.clear();
+	_dirty|=DIRTY_BOUNDS|DIRTY_BUFFERS;
+}
+
+void CModelSurface::ClearTriangles(){
+	_triangles.clear();
+	_dirty|=DIRTY_BOUNDS|DIRTY_BUFFERS;
+}
+
 void CModelSurface::Flip(){
 	for( vector<CVertex>::iterator it=_vertices.begin();it!=_vertices.end();++it ){
 		CVertex &v=*it;
@@ -188,7 +220,7 @@ void CModelSurface::UpdateNormals(){
 		const CVec3 &v0=_vertices[i0].position;
 		const CVec3 &v1=_vertices[i1].position;
 		const CVec3 &v2=_vertices[i2].position;
-		CVec3 normal=CPlane( v0,v1,v2 ).n;
+		CVec3 normal=CPlane::TrianglePlane( v0,v1,v2 ).n;
 		norms[i0]+=normal;
 		norms[i1]+=normal;
 		norms[i2]+=normal;
@@ -247,6 +279,40 @@ void CModelSurface::Transform( const CMat4 &matrix,const CMat4 &itMatrix ){
 		v.position=matrix * v.position;
 		v.normal=(itMatrix * CVec4( v.normal,0.0f ) ).xyz();
 		v.tangent=CVec4( (itMatrix * CVec4( v.tangent.xyz(),0.0f ) ).xyz(),v.tangent.w );
+	}
+}
+
+void CModelSurface::SplitEdges( float length ){
+	for( int j=0;j<_triangles.size();++j ){
+		//find longest edge
+		CTriangle &t=_triangles[j];
+		int maxi;
+		float maxd=-1;
+		for( int i=0;i<3;++i ){
+			int i2=i<2 ? i+1 : 0;
+			const CVertex &v0=_vertices[t.vertices[i]];
+			const CVertex &v1=_vertices[t.vertices[i2]];
+			float d=v0.position.Distance( v1.position );
+			if( d>maxd ){
+				maxi=i;
+				maxd=d;
+			}
+		}
+		if( maxd>=length ){
+			int i=maxi;
+			int i2=i<2 ? i+1 : 0;
+			int i3=i2<2 ? i2+1 : 0;
+			const CVertex &v0=_vertices[t.vertices[i]];
+			const CVertex &v1=_vertices[t.vertices[i2]];
+			int iv=_vertices.size();
+			CVertex sv=v0.Blend( v1,.5f );
+			CTriangle st( iv,t.vertices[i2],t.vertices[i3] );
+			t.vertices[i2]=iv;
+			_vertices.push_back( sv );
+			_triangles.push_back( st );
+			_dirty|=DIRTY_BUFFERS;
+			--j;
+		}
 	}
 }
 
@@ -341,8 +407,15 @@ void CModelSurface::RenderInstances( int first,int count ){
 	}
 }
 
+#include "GLee.h"
+
 void CModelSurface::OnRenderInstances( const CHull &bounds ){
+	if( !_triangles.size() ) return;
+	
 	if( !_instances.size() ) return;
+	
+//	glPolygonMode( GL_FRONT_AND_BACK,GL_LINE );
+//	glLineWidth( 2 );
 	
 	App.Graphics()->SetVertexBuffer( VertexBuffer() );
 	App.Graphics()->SetIndexBuffer( IndexBuffer() );
@@ -366,6 +439,8 @@ void CModelSurface::OnRenderInstances( const CHull &bounds ){
 			RenderInstances( _instances.size()-n,n );
 		}
 	}
+
+//	glPolygonMode( GL_FRONT_AND_BACK,GL_FILL );
 }
 
 void CModelSurface::OnClearInstances(){

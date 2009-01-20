@@ -71,6 +71,11 @@
     <File Name="max3d/max3d/scene.cpp"/>
     <File Name="max3d/max3d/model.glsl"/>
     <File Name="max3d\max3d\clear.glsl"/>
+    <File Name="max3d\max3d\bsptree.h"/>
+    <File Name="max3d\max3d\bsptree.cpp"/>
+    <File Name="max3d\max3d\renderpass.h"/>
+    <File Name="max3d\max3d\renderpass.cpp"/>
+    <File Name="max3d\max3d\copy.glsl"/>
   </VirtualDirectory>
   <Dependencies Name="Debug">
     <Project Name="assimp"/>
@@ -93,6 +98,10 @@
     <Project Name="assimp"/>
   </Dependencies>
   <Dependencies Name="Win32 Debug">
+    <Project Name="assimp"/>
+    <Project Name="ode"/>
+  </Dependencies>
+  <Dependencies Name="Macos Release">
     <Project Name="assimp"/>
     <Project Name="ode"/>
   </Dependencies>
@@ -119,6 +128,7 @@
       <CustomBuild Enabled="no">
         <CleanCommand/>
         <BuildCommand/>
+        <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
@@ -151,6 +161,7 @@
       <CustomBuild Enabled="no">
         <CleanCommand/>
         <BuildCommand/>
+        <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
@@ -183,6 +194,7 @@
       <CustomBuild Enabled="no">
         <CleanCommand/>
         <BuildCommand/>
+        <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
@@ -215,6 +227,7 @@
       <CustomBuild Enabled="no">
         <CleanCommand/>
         <BuildCommand/>
+        <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
@@ -247,6 +260,7 @@
       <CustomBuild Enabled="no">
         <CleanCommand/>
         <BuildCommand/>
+        <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
@@ -258,7 +272,7 @@
       </AdditionalRules>
     </Configuration>
     <Configuration Name="Win32 Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library">
-      <General OutputFile="$(IntermediateDirectory)/$(ProjectName).dll" IntermediateDirectory="./Release" Command="c:/dev/max3d/samples/b3dtest.exe" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName).dll" IntermediateDirectory="./Release" Command="c:/bmx3d/max3d/samples/castle.exe" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
       <Compiler Required="yes" Options="-O2 -fno-strict-aliasing">
         <IncludePath Value="."/>
         <IncludePath Value="./opende/include"/>
@@ -279,6 +293,7 @@
       <CustomBuild Enabled="no">
         <CleanCommand/>
         <BuildCommand/>
+        <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
@@ -290,10 +305,6 @@
       </AdditionalRules>
     </Configuration>
   </Settings>
-  <Dependencies Name="Macos Release">
-    <Project Name="assimp"/>
-    <Project Name="ode"/>
-  </Dependencies>
   <Dependencies Name="Win32 Release">
     <Project Name="assimp"/>
     <Project Name="ode"/>

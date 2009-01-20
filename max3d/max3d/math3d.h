@@ -54,16 +54,90 @@ struct CRect{
 struct CVec2{
 	float x,y;
 	
-	CVec2():x(0),y(0){
-	}
-	CVec2( float x,float y ):x(x),y(y){
-	}
+	CVec2():x(0),y(0){}
+	CVec2( float x,float y ):x(x),y(y){}
 
 	float &operator[]( int i ){
-		return *(&x+i);
+		return *(&x+i); 
 	}
+	
 	float operator[]( int i )const{
 		return *(&x+i);
+	}
+	
+	CVec2 operator-()const{
+		return CVec2( -x,-y );
+	}
+	CVec2 operator+( float t )const{
+		return CVec2( x+t,y+t );
+	}
+	CVec2 operator-( float t )const{
+		return CVec2( x-t,y-t );
+	}
+	CVec2 operator*( float t )const{
+		return CVec2( x*t,y*t );
+	}
+	CVec2 operator/( float t )const{
+		return CVec2( x/t,y/t );
+	}
+	CVec2 operator+( const CVec2 &t )const{
+		return CVec2( x+t.x,y+t.y );
+	}
+	CVec2 operator-( const CVec2 &t )const{
+		return CVec2( x-t.x,y-t.y );
+	}
+	CVec2 operator*( const CVec2 &t )const{
+		return CVec2( x*t.x,y*t.y );
+	}
+	CVec2 operator/( const CVec2 &t )const{
+		return CVec2( x/t.x,y/t.y );
+	}
+	
+	CVec2 &operator+=( const CVec2 &v ){
+		x+=v.x;y+=v.y;return *this;
+	}
+	CVec2 &operator-=( const CVec2 &v ){
+		x-=v.x;y-=v.y;return *this;
+	}
+	CVec2 &operator*=( const CVec2 &v ){
+		x*=v.x;y*=v.y;return *this;
+	}
+	CVec2 &operator/=( const CVec2 &v ){
+		x/=v.x;y/=v.y;return *this;
+	}
+	CVec2 &operator*=( float t ){
+		x*=t;y*=t;return *this;
+	}
+	CVec2 &operator/=( float t ){
+		x/=t;y/=t;return *this;
+	}
+	bool operator==( const CVec2 &v )const{
+		return (x==v.x && y==v.y);
+	}
+	
+	float Dot( const CVec2 &t )const{ 
+		return x*t.x+y*t.y;
+	}
+	float Length()const{
+		return sqrtf( x*x+y*y );
+	}
+	float Distance( const CVec2 &t )const{
+		return (*this-t).Length();
+	}
+	CVec2 Normalize()const{
+		return *this/Length();
+	}
+	CVec2 Blend( const CVec2 &t,float alpha )const{
+		return (t-*this)*alpha+*this;
+	}
+	
+	void Write( CStream *stream ){
+		stream->WriteData( &x,8 );
+	}
+	static CVec2 Read( CStream *stream ){
+		CVec2 v;
+		stream->ReadData( &v.x,8 );
+		return v;
 	}
 };
 
@@ -253,11 +327,16 @@ struct CPlane{
 	
 	CPlane():d(0){
 	}
+
 	CPlane( const CVec3 &n,float d ):n(n),d(d){
 	}
-	CPlane( const CVec3 &v0,const CVec3 &v1,const CVec3 &v2 ){
-		n=(v2-v1).Cross(v0-v1).Normalize();
-		d=-n.Dot( v0 );
+	
+	CPlane operator-()const{
+		return CPlane( -n,-d );
+	}
+	
+	bool operator==( const CPlane &p )const{
+		return n==p.n && d==p.d;
 	}
 	
 	float SolveX( float y,float z )const{
@@ -275,10 +354,19 @@ struct CPlane{
 	float Distance( const CVec3 &v )const{
 		return n.Dot( v )+d;
 	}
+
 	CPlane Normalize()const{
 		float t=1/n.Length();
 		return CPlane( n*t,d*t );
 	}
+	
+	static CPlane TrianglePlane( const CVec3 &v0,const CVec3 &v1,const CVec3 &v2 ){
+		CPlane p;
+		p.n=(v2-v1).Cross(v0-v1).Normalize();
+		p.d=-p.n.Dot( v0 );
+		return p;
+	}
+	
 };
 
 struct CBox{
