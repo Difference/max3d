@@ -4,11 +4,10 @@
 //@vertex
 
 void main(){
-	gl_Position=bb_ModelViewProjectionMatrix * bb_Vertex;
+	gl_Position=bb_Vertex;
 }
 
 //@fragment
-
 uniform vec4 bb_ClearColor;
 
 void main(){

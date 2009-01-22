@@ -64,9 +64,13 @@ void scene_init(){
 	App.Graphics()->SetVec2Param( "bb_WindowScale",CVec2( 1.0f/w,1.0f/h ) );
 	
 //	float vbdata[]={ 0,0,1,0,1,1,0,1 };
-	float vbdata[]={ -1,-1,-1,1,1,1,1,-1 };
+	float vbdata[]={ 
+		-1,-1,.999f,
+		-1,1,.999f,
+		1,1,.999f,
+		1,-1,.999f };
 	int ibdata[]={0,1,2,0,2,3 };
-	quadVB=App.Graphics()->CreateVertexBuffer( 4,"2f" );
+	quadVB=App.Graphics()->CreateVertexBuffer( 4,"3f" );
 	quadVB->SetData( vbdata );
 	quadIB=App.Graphics()->CreateIndexBuffer( 6,"1i" );
 	quadIB->SetData( ibdata );
@@ -140,7 +144,7 @@ void CScene::SetShaderMode( string mode ){
 		App.Graphics()->SetColorBuffer( 0,accumBuffer );
 		App.Graphics()->SetDepthBuffer( depthBuffer );
 		App.Graphics()->SetViewport( _viewport );
-		App.Graphics()->SetWriteMask( WRITEMASK_RED|WRITEMASK_GREEN|WRITEMASK_BLUE|WRITEMASK_DEPTH );
+		App.Graphics()->SetWriteMask( WRITEMASK_RED|WRITEMASK_GREEN|WRITEMASK_BLUE|WRITEMASK_ALPHA|WRITEMASK_DEPTH );
 		App.Graphics()->SetBlendFunc( BLENDFUNC_ONE,BLENDFUNC_ZERO );
 		App.Graphics()->SetDepthFunc( DEPTHFUNC_LE );
 		App.Graphics()->SetCullMode( CULLMODE_BACK );
@@ -148,10 +152,10 @@ void CScene::SetShaderMode( string mode ){
 		App.Graphics()->SetColorBuffer( 0,accumBuffer );
 		App.Graphics()->SetDepthBuffer( depthBuffer );
 		App.Graphics()->SetViewport( _viewport );
-		App.Graphics()->SetWriteMask( WRITEMASK_RED|WRITEMASK_GREEN|WRITEMASK_BLUE );
+		App.Graphics()->SetWriteMask( WRITEMASK_RED|WRITEMASK_GREEN|WRITEMASK_BLUE|WRITEMASK_ALPHA );
 		App.Graphics()->SetBlendFunc( BLENDFUNC_ONE,BLENDFUNC_ZERO );
 		App.Graphics()->SetDepthFunc( DEPTHFUNC_LE );
-		App.Graphics()->SetCullMode( CULLMODE_FRONT );
+		App.Graphics()->SetCullMode( CULLMODE_BACK );
 	}else if( mode=="shadow" ){
 		App.Graphics()->SetColorBuffer( 0,0 );
 		App.Graphics()->SetDepthBuffer( shadowBuffer );
@@ -525,8 +529,7 @@ void CScene::RenderCamera( CCamera *camera ){
 	//'skybox' for now...
 	SetShaderMode( "clear" );
 	App.Graphics()->SetShader( clearShader );
-	App.Graphics()->SetMat4Param( "bb_ModelMatrix",CMat4() );
-	RenderBox( CBox( CVec3(-128),CVec3(128) ) );
+	RenderQuad();
 
 	App.Graphics()->SetColorBuffer( 1,0 );
 	App.Graphics()->SetColorBuffer( 2,0 );

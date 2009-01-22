@@ -185,8 +185,8 @@
     <File Name="assimp/code/ComputeUVMappingProcess.h"/>
     <File Name="assimp/code/TargetAnimation.h"/>
     <File Name="assimp/code/TargetAnimation.cpp"/>
-    <File Name="assimp\code\TerragenLoader.h"/>
-    <File Name="assimp\code\TerragenLoader.cpp"/>
+    <File Name="assimp/code/TerragenLoader.h"/>
+    <File Name="assimp/code/TerragenLoader.cpp"/>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
   <Settings Type="Static Library">

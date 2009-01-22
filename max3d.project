@@ -70,12 +70,12 @@
     <File Name="max3d/max3d/scene.h"/>
     <File Name="max3d/max3d/scene.cpp"/>
     <File Name="max3d/max3d/model.glsl"/>
-    <File Name="max3d\max3d\clear.glsl"/>
-    <File Name="max3d\max3d\bsptree.h"/>
-    <File Name="max3d\max3d\bsptree.cpp"/>
-    <File Name="max3d\max3d\renderpass.h"/>
-    <File Name="max3d\max3d\renderpass.cpp"/>
-    <File Name="max3d\max3d\copy.glsl"/>
+    <File Name="max3d/max3d/clear.glsl"/>
+    <File Name="max3d/max3d/bsptree.h"/>
+    <File Name="max3d/max3d/bsptree.cpp"/>
+    <File Name="max3d/max3d/renderpass.h"/>
+    <File Name="max3d/max3d/renderpass.cpp"/>
+    <File Name="max3d/max3d/copy.glsl"/>
   </VirtualDirectory>
   <Dependencies Name="Debug">
     <Project Name="assimp"/>
@@ -98,10 +98,6 @@
     <Project Name="assimp"/>
   </Dependencies>
   <Dependencies Name="Win32 Debug">
-    <Project Name="assimp"/>
-    <Project Name="ode"/>
-  </Dependencies>
-  <Dependencies Name="Macos Release">
     <Project Name="assimp"/>
     <Project Name="ode"/>
   </Dependencies>
@@ -306,6 +302,10 @@
     </Configuration>
   </Settings>
   <Dependencies Name="Win32 Release">
+    <Project Name="assimp"/>
+    <Project Name="ode"/>
+  </Dependencies>
+  <Dependencies Name="Macos Release">
     <Project Name="assimp"/>
     <Project Name="ode"/>
   </Dependencies>

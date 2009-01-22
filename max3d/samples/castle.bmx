@@ -5,11 +5,13 @@ Import Bmx3d.Max3d
 
 Max3dGraphics 1024,768
 
-'DisableShadows
+?MacOS
+DisableShadows
+?
 
 SetClearColor .25,.5,1
 
-SetAmbientColor .25,.25,.25'1,1,1'.01,.01,.01
+SetAmbientColor .25,.25,.25
 
 'Set up fog
 Local fogShader=CreateShader( LoadString( "linearfog.glsl" ) )
@@ -21,7 +23,9 @@ AddRenderPass fogShader,fogMaterial
 
 Local godShader=CreateShader( LoadString( "godrays.glsl" ) )
 Local godMaterial=CreateMaterial()
-AddRenderPass godShader,godMaterial
+?Not MacOS
+AddRenderPass godShader,godMaterial	'A bit much for poor Mac...
+?
 
 'collision types:
 '1=player
@@ -90,12 +94,12 @@ Local camera=CreateCamera()
 SetEntityParent camera,player
 MoveEntity camera,0,1,0
 
-'Rem
+Rem
 Local mirror=CreateMirror()
 MoveEntity mirror,0,3.75,8.5
 'SetMirrorSize mirror,8,4'4,2
 'SetMirrorResolution mirror,512,512
-'End Rem
+End Rem
 
 Local yvel#
 

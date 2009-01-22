@@ -41,7 +41,7 @@ void main(){
 		texCoords-=deltaTexCoords;
 		
 		vec4 sample=vec4( 0.0 );
-		if( texture2DRect( bb_DepthBuffer,texCoords ).r==1.0f ){
+		if( texture2DRect( bb_DepthBuffer,texCoords ).r==1.0 ){
 			sample=vec4( 0.2,0.2,0.0,0.0 );
 		}
 		
