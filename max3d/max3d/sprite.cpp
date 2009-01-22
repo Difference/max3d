@@ -71,7 +71,6 @@ CMaterial *CSprite::Material(){
 }
 
 void CSprite::OnRenderWorld(){
-//	return;
 	if( !_surface->Instances().size() ) App.Scene()->AddSurface( _surface );
 	_surface->Instances().push_back( this );
 }
@@ -133,11 +132,11 @@ void CSpriteSurface::OnRenderCamera( CCamera *camera ){
 		_indexBuffer->Unlock();
 	}
 	const CVec3 v0(-1,1,0),v1(1,1,0),v2(1,-1,0),v3(-1,-1,0);
-	const CMat4 &viewMat=camera->InverseRenderMatrix();
+	CMat4 viewMat=camera->InverseRenderMatrix();
 	float *vp=(float*)_vertexBuffer->Lock();
 	for( int i=0;i<n;++i ){
 		CVec3 t=viewMat * _instances[i]->RenderMatrix().Translation();
-		*(CVec3*)vp=t+v0;
+		*(CVec3*)(vp)=t+v0;
 		*(CVec3*)(vp+12)=t+v1;
 		*(CVec3*)(vp+24)=t+v2;
 		*(CVec3*)(vp+36)=t+v3;
@@ -147,8 +146,6 @@ void CSpriteSurface::OnRenderCamera( CCamera *camera ){
 }
 
 void CSpriteSurface::OnRenderInstances( const CHull &bounds ){
-//	cout<<_vertexBuffer<<", "<<_indexBuffer<<", "<<_instances.size()<<endl;
-//	return;
 	if( !_instances.size() ) return;
 	App.Graphics()->SetVertexBuffer( _vertexBuffer );
 	App.Graphics()->SetIndexBuffer( _indexBuffer );

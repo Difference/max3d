@@ -140,7 +140,7 @@ void CScene::SetShaderMode( string mode ){
 		App.Graphics()->SetColorBuffer( 0,accumBuffer );
 		App.Graphics()->SetDepthBuffer( depthBuffer );
 		App.Graphics()->SetViewport( _viewport );
-		App.Graphics()->SetWriteMask( WRITEMASK_RED|WRITEMASK_GREEN|WRITEMASK_BLUE|WRITEMASK_ALPHA|WRITEMASK_DEPTH );
+		App.Graphics()->SetWriteMask( WRITEMASK_RED|WRITEMASK_GREEN|WRITEMASK_BLUE|WRITEMASK_DEPTH );
 		App.Graphics()->SetBlendFunc( BLENDFUNC_ONE,BLENDFUNC_ZERO );
 		App.Graphics()->SetDepthFunc( DEPTHFUNC_LE );
 		App.Graphics()->SetCullMode( CULLMODE_BACK );
@@ -148,7 +148,7 @@ void CScene::SetShaderMode( string mode ){
 		App.Graphics()->SetColorBuffer( 0,accumBuffer );
 		App.Graphics()->SetDepthBuffer( depthBuffer );
 		App.Graphics()->SetViewport( _viewport );
-		App.Graphics()->SetWriteMask( WRITEMASK_RED|WRITEMASK_GREEN|WRITEMASK_BLUE|WRITEMASK_ALPHA|WRITEMASK_DEPTH );
+		App.Graphics()->SetWriteMask( WRITEMASK_RED|WRITEMASK_GREEN|WRITEMASK_BLUE );
 		App.Graphics()->SetBlendFunc( BLENDFUNC_ONE,BLENDFUNC_ZERO );
 		App.Graphics()->SetDepthFunc( DEPTHFUNC_LE );
 		App.Graphics()->SetCullMode( CULLMODE_FRONT );
@@ -276,7 +276,7 @@ void CScene::RenderSpotLight( CLight *light,CCamera *camera ){
 	}
 	const CMat4 &camMat=App.Graphics()->Mat4Param( "bb_CameraMatrix" );
 	float d=camMat.Translation().Distance( light->RenderMatrix().Translation() );
-	sz=range/d * sz;
+	sz=int( range/d * sz );
 	if( sz>light->ShadowSize() ) sz=light->ShadowSize();
 	SetShadowBufferSize( sz );
 	
@@ -332,7 +332,7 @@ void CScene::RenderPointLight( CLight *light,CCamera *camera ){
 	}
 	CMat4 camMat=App.Graphics()->Mat4Param( "bb_CameraMatrix" );
 	float d=camMat.Translation().Distance( light->RenderMatrix().Translation() );
-	sz=range/d * sz;
+	sz=int( range/d * sz );
 	if( sz>light->ShadowSize() ) sz=light->ShadowSize();
 	SetShadowBufferSize( sz );
 	
@@ -428,6 +428,12 @@ void CScene::RenderDistantLight( CLight *light,CCamera *camera ){
 		CVec3(lfar,tfar,zfar),CVec3(rfar,tfar,zfar),
 		CVec3(rfar,bfar,zfar),CVec3(lfar,bfar,zfar) };
 		
+		CBox box=CBox::Empty();
+		for( int j=0;j<8;++j ){
+			box.Update( cameraLightMatrix * verts[j] );
+		}
+		CMat4 shadowProjectionMatrix=CMat4::OrthoMatrix( box.a.x,box.b.x,box.a.y,box.b.y,-512,512 );
+		/*
 		float left=100000,right=-100000,bottom=100000,top=-100000,nnear=100000,ffar=-100000;
 		for( int j=0;j<8;++j ){
 			CVec3 v=cameraLightMatrix * verts[j];
@@ -436,7 +442,7 @@ void CScene::RenderDistantLight( CLight *light,CCamera *camera ){
 			if( v.z<nnear ) nnear=v.z;if( v.z>ffar ) ffar=v.z;
 		}
 		CMat4 shadowProjectionMatrix=CMat4::OrthoMatrix( left,right,bottom,top,-512,512 );
-
+		*/
 		App.Graphics()->SetMat4Param( "bb_ShadowProjectionMatrix",shadowProjectionMatrix );
 
 		//render models to shadowmap
@@ -463,6 +469,11 @@ void CScene::RenderDistantLight( CLight *light,CCamera *camera ){
 void CScene::RenderCamera( CCamera *camera ){
 	++_renderNest;
 //	_renderNest=1;
+
+	for( vector<CSurface*>::iterator it=_surfaces.begin();it!=_surfaces.end();++it ){
+		CSurface *surface=*it;
+		surface->OnRenderScene( camera );
+	}
 
 	for( vector<CSurface*>::iterator it=_surfaces.begin();it!=_surfaces.end();++it ){
 		CSurface *surface=*it;
@@ -573,16 +584,6 @@ void CScene::RenderCamera( CCamera *camera ){
 	if( !_passes.size() ){
 		passes.back()->Release();
 	}
-/*
-	//copy to target
-	_viewport=camera->Viewport();
-	SetShaderMode( "postprocess" );
-	App.Graphics()->SetColorBuffer( 0,colorBuffers[0] );
-	App.Graphics()->SetDepthBuffer( 0 );
-	App.Graphics()->SetShader( quadShader );
-	App.Graphics()->SetTextureParam( "bb_QuadTexture",accumBuffer );
-	RenderQuad();
-*/
 
 	//pop graphics target state
 	for( int i=0;i<4;++i ){

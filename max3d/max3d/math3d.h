@@ -208,6 +208,13 @@ struct CVec3{
 		return (x==v.x && y==v.y && z==v.z);
 	}
 	
+	CVec2 &xy(){
+		return (CVec2&)*this;
+	}
+	const CVec2 &xy()const{
+		return (CVec2&)*this;
+	}
+	
 	float Dot( const CVec3 &t )const{ 
 		return x*t.x+y*t.y+z*t.z;
 	}
@@ -295,7 +302,13 @@ struct CVec4{
 	bool operator==( const CVec4 &v )const{
 		return (x==v.x && y==v.y && z==v.z && w==v.w);
 	}
-	
+
+	CVec2 &xy(){
+		return (CVec2&)*this;
+	}
+	const CVec2 &xy()const{
+		return (CVec2&)*this;
+	}
 	CVec3 &xyz(){
 		return (CVec3&)*this;
 	}
@@ -556,6 +569,20 @@ struct CQuat{
 		float xx=v.x*v.x,yy=v.y*v.y;
 		return CVec3( 2*(xz-wy),2*(yz+wx),1-2*(xx+yy) );
 	}	
+	
+	float Yaw()const{
+		float x2=v.x*v.x,y2=v.y*v.y;
+		return atan2f( 2*v.y*w-2*v.z*v.x,1-2*y2-2*x2 );
+	}
+	
+	float Pitch()const{
+		return -asinf( 2*v.z*v.y+2*v.x*w );
+	}
+	
+	float Roll()const{
+		float x2=v.x*v.x,z2=v.z*v.z;
+		return -atan2f( 2*v.z*w-2*v.y*v.x,1-2*z2-2*x2 );
+	}
 
 	CVec3 YawPitchRoll()const{
 		CVec3 r;
@@ -800,6 +827,11 @@ struct CMat4{
 		r.j.y=s.y;
 		r.k.z=s.z;
 		return r;
+	}
+	
+	static CMat4 TRSMatrix( const CVec3 &trans,const CQuat &rot,const CVec3 &scale ){
+		//TODO: Optimize me!
+		return TranslationMatrix( trans ) * RotationMatrix( rot ) * ScaleMatrix( scale );
 	}
 
 	static CMat4 YawMatrix( float q ){

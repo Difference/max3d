@@ -57,6 +57,9 @@ void CSurface::SetMaterial( CMaterial *material ){
 	CResource::Assign( &_material,material );
 }
 
+void CSurface::OnRenderScene( CCamera *camera ){
+}
+
 void CSurface::OnRenderCamera( CCamera *camera ){
 }
 

@@ -227,16 +227,7 @@ void CEntity::SetAnimator( CAnimator *animator ){
 	CResource::Assign( &_animator,animator );
 }
 
-//utility
-void CEntity::Move( const CVec3 &v ){
-	SetTranslation( Translation() + CMat4::RotationMatrix( Rotation() ) * v );
-//	SetTranslation( Translation()+Rotation()*v );	//doesn't quite work - check out CQuat*CVec3
-}
-
-void CEntity::Turn( const CQuat &q ){
-	SetRotation( Rotation() * q );
-}
-
+//ugly stuff...
 void CEntity::SetMatrixModified( bool modified ){
 	if( modified ){
 		_flags|=MATRIX_MODIFIED;

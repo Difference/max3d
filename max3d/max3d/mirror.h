@@ -52,7 +52,7 @@ private:
 
 	CSurface *Surface();
 	CTexture *Texture();
-	void OnRenderCamera( CCamera *camera );	//forwarded from surface
+	void OnRenderScene( CCamera *camera );	//forwarded from surface
 	
 	int _dirty;
 	float _width,_height;
@@ -67,7 +67,7 @@ class CMirrorSurface : public CModelSurface{
 public:
 	CMirrorSurface( CMirror *mirror );
 	
-	virtual void OnRenderCamera( CCamera *camera );
+	virtual void OnRenderScene( CCamera *camera );
 
 private:
 	CMirror *_mirror;

@@ -616,7 +616,7 @@ public:
 	GLShaderProg():_glprog(0),_instanceIdLoc(-1){
 	}
 
-	GLShaderProg *Create( string source ){
+	GLShaderProg *Create( string source,vector<CParam*> &params ){
 
 		string segs[3];
 		SplitShaderSegs( source,segs );
@@ -700,9 +700,13 @@ public:
 			
 //			cout<<"Param="<<name<<" id="<<CParam::IdForName( name )<<endl;
 
-			GLParam *p=new GLParam( CParam::ForName( name ),size,type,glGetUniformLocation( _glprog,name ),unit );
+			CParam *p=CParam::ForName( name );
+			
+			params.push_back( p );
+			
+			GLParam *glp=new GLParam( p,size,type,glGetUniformLocation( _glprog,name ),unit );
 
-			_glparams.push_back( p );
+			_glparams.push_back( glp );
 		}
 		CheckGL();
 		return this;
@@ -769,7 +773,8 @@ public:
 		for( map<string,string>::iterator it=pmap.begin();it!=pmap.end();++it ){
 			int mode=ModeForName( it->first );
 			string modeDef="#define BB_MODE BB_"+toupper( it->first )+"\n";
-			_shaders[mode]=(new GLShaderProg)->Create( common+modeDef+header+it->second );
+			GLShaderProg *prog=(new GLShaderProg)->Create( common+modeDef+header+it->second,_params );
+			_shaders[mode]=prog;
 			_modeMask|=(1<<mode);
 		}
 		return this;

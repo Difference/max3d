@@ -86,10 +86,6 @@ public:
 	void SetAnimator( CAnimator *animator );
 	CAnimator *Animator(){ return _animator; }
 	
-	//utility
-	void Move( const CVec3 &v );
-	void Turn( const CQuat &q );
-
 	//scary stuff for bodies...
 	void SetMatrixModified( bool modified );
 	bool MatrixModified();

@@ -38,7 +38,7 @@ POSSIBILITY OF SUCH DAMAGE.
 CCamera::CCamera(){
 	SetViewport( CRect( 0,0,App.Graphics()->WindowWidth(),App.Graphics()->WindowHeight() ) );
 	float aspect=float( App.Graphics()->WindowWidth() )/float( App.Graphics()->WindowHeight() );
-	SetProjectionMatrix( CMat4::PerspectiveMatrix( PI/2,aspect,1,256 ) );
+	SetProjectionMatrix( CMat4::PerspectiveMatrix( PI/2,aspect,.15f,256.0f ) );
 }
 
 CCamera::CCamera( CCamera *camera,CCopier *copier ):

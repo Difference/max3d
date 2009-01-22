@@ -242,24 +242,23 @@ API void m3dSetEntityParent( CEntity *entity,CEntity *parent ){
 	entity->SetParent( parent );
 }
 
+API CEntity *m3dEntityParent( CEntity *entity ){
+	return entity->Parent();
+}
+
+API float m3dEntityMatrixElement( CEntity *entity,int row,int column ){
+	return entity->Matrix()[row][column];
+}
+
+// Translation stuff...
 API void m3dSetEntityTranslation( CEntity *entity,float x,float y,float z ){
-	entity->SetTranslation( CVec3( x,y,z ) );
-}
-
-API void m3dSetEntityRotation( CEntity *entity,float yaw,float pitch,float roll ){
-	entity->SetRotation( CQuat::YawPitchRollQuat( CVec3( yaw,pitch,roll ) * to_radians ) );
-}
-
-API void m3dSetEntityScale( CEntity *entity,float x,float y,float z ){
-	entity->SetScale( CVec3( x,y,z ) );
+	CVec3 v( x,y,z );
+	entity->SetTranslation( v );
 }
 
 API void m3dMoveEntity( CEntity *entity,float x,float y,float z ){
-	entity->Move( CVec3( x,y,z ) );
-}
-
-API void m3dTurnEntity( CEntity *entity,float yaw,float pitch,float roll ){
-	entity->Turn( CQuat::YawPitchRollQuat( CVec3( yaw,pitch,roll ) * to_radians ) );
+	CVec3 v( x,y,z );
+	entity->SetTranslation( entity->Translation() + CMat4::RotationMatrix( entity->Rotation() ) * v );
 }
 
 API float m3dEntityX( CEntity *entity ){
@@ -272,6 +271,35 @@ API float m3dEntityY( CEntity *entity ){
 
 API float m3dEntityZ( CEntity *entity ){
 	return entity->Translation().z;
+}
+
+// Rotation stuff...
+API void m3dSetEntityRotation( CEntity *entity,float yaw,float pitch,float roll ){
+	CQuat rot=CQuat::YawPitchRollQuat( CVec3( yaw,pitch,roll ) * to_radians );
+	entity->SetRotation( rot );
+}
+
+API void m3dTurnEntity( CEntity *entity,float yaw,float pitch,float roll ){
+	CQuat rot=CQuat::YawPitchRollQuat( CVec3( yaw,pitch,roll ) * to_radians );
+	entity->SetRotation( entity->Rotation() * rot );
+}
+
+API float m3dEntityYaw( CEntity *entity ){
+	return entity->Rotation().Yaw()/to_radians;
+}
+
+API float m3dEntityPitch( CEntity *entity ){
+	return entity->Rotation().Pitch()/to_radians;
+}
+
+API float m3dEntityRoll( CEntity *entity ){
+	return entity->Rotation().Roll()/to_radians;
+}
+
+// Scale stuff
+API void m3dSetEntityScale( CEntity *entity,float x,float y,float z ){
+	CVec3 v( x,y,z );
+	entity->SetScale( v );
 }
 
 //***** Model API *****
@@ -371,6 +399,32 @@ API void m3dSetCameraFrustum( CCamera *camera,float left,float right,float botto
 
 API void m3dSetCameraPerspective( CCamera *camera,float fovy,float aspect,float zNear,float zFar ){
 	camera->SetProjectionMatrix( CMat4::PerspectiveMatrix( fovy * to_radians,aspect,zNear,zFar ) );
+}
+
+static CVec3 projected;
+
+API int m3dCameraProject( CCamera *camera,float x,float y,float z ){
+	CVec4 t=camera->ProjectionMatrix() * camera->InverseMatrix() * CVec4( x,y,z,1 );
+	
+	projected=t.xyz()/t.w;
+	
+	projected=projected/2.0f+.5f;
+	
+	projected.xy()*=CVec2( camera->Viewport().width,camera->Viewport().height );
+	
+	return projected.z>0;
+}
+
+API float m3dProjectedX(){
+	return projected.x;
+}
+
+API float m3dProjectedY(){
+	return projected.y;
+}
+
+API float m3dProjectedZ(){
+	return projected.z;
 }
 
 //***** Light API *****

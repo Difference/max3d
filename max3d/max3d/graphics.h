@@ -37,6 +37,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #define USE_GL_TEXTURE_RECTANGLE_ARB
 
+class CParam;
+
 /// Abstract base class for vertex buffers
 class CVertexBuffer : public CResource{
 public:
@@ -101,13 +103,16 @@ protected:
 class CShader : public CResource{
 public:
 	int ModeMask(){ return _modeMask; }
-
+	
+	const vector<CParam*> &Params(){ return _params; }
+	
 	static int ModeForName( string name );
 
 protected:
 	CShader(){}
 
 	int _modeMask;
+	vector<CParam*> _params;
 };
 
 /// Function to return computed float values for shader params
