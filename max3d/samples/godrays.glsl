@@ -17,8 +17,10 @@ void main(){
 }
 
 //@fragment
+uniform vec3 Color;
 uniform float Exposure;
-uniform float LightPosX,LightPosY;
+uniform float LightPosX;
+uniform float LightPosY;
 
 const int NUM_SAMPLES=100;
 
@@ -42,7 +44,7 @@ void main(){
 		
 		vec4 sample=vec4( 0.0 );
 		if( texture2DRect( bb_DepthBuffer,texCoords ).r==1.0 ){
-			sample=vec4( 0.2,0.2,0.0,0.0 );
+			sample=vec4( Color,1.0 );
 		}
 		
 		sample*=illumDecay*weight;
