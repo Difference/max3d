@@ -45,6 +45,10 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <fstream>
 #include <iostream>
 #include <queue>
+#include <typeinfo>
+
+#include <string.h>
+#include <stdlib.h>
 
 using namespace std;
 

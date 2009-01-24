@@ -63,14 +63,6 @@ static void CheckGL(){
     Error( string("GL Error: ")+str );
 }
 
-static string ShaderInfoLog( int what ){
-	char buf[1024];
-	buf[0]=0;
-	glGetShaderInfoLog( what,1023,0,buf );
-	buf[1023]=0;
-	return buf;
-}
-
 static void SplitShaderSegs( const string &source,string segs[3] ){
 	istringstream in( source );
 	string t;
@@ -111,6 +103,14 @@ static map<string,string> SplitShaderModes( const string &source ){
 	return pmap;
 }
 
+static string ShaderInfoLog( GLuint what ){
+	char buf[1024];
+	buf[0]=0;
+	glGetShaderInfoLog( what,1023,0,buf );
+	buf[1023]=0;
+	return buf;
+}
+
 static GLuint CompileShader( int target,const string &source ){
 	char *cstr=strdup( source.c_str() );
 	GLuint shader=glCreateShader( target );
@@ -131,6 +131,44 @@ static GLuint CompileShader( int target,const string &source ){
 		Error( "" );
 	}
 	return shader;
+}
+
+static string ProgramInfoLog( GLuint what ){
+	char buf[1024];
+	buf[0]=0;
+	glGetProgramInfoLog( what,1023,0,buf );
+	buf[1023]=0;
+	return buf;
+}
+
+static GLuint LinkProgram( GLuint vs,GLuint fs ){
+	GLuint prog=glCreateProgram();
+	glAttachShader( prog,vs );
+	glAttachShader( prog,fs );
+	glBindAttribLocation( prog,0,"Attrib0" );
+	glBindAttribLocation( prog,1,"Attrib1" );
+	glBindAttribLocation( prog,2,"Attrib2" );
+	glBindAttribLocation( prog,3,"Attrib3" );
+	glBindAttribLocation( prog,4,"Attrib4" );
+	glBindAttribLocation( prog,5,"Attrib5" );
+	glBindAttribLocation( prog,6,"Attrib6" );
+	glBindAttribLocation( prog,7,"Attrib7" );
+	glBindAttribLocation( prog,0,"bb_Vertex" );
+	glBindAttribLocation( prog,1,"bb_Normal" );
+	glBindAttribLocation( prog,2,"bb_Tangent" );
+	glBindAttribLocation( prog,3,"bb_TexCoords0" );
+	glBindAttribLocation( prog,4,"bb_TexCoords1" );
+	glBindAttribLocation( prog,5,"bb_Weights" );
+	glBindAttribLocation( prog,6,"bb_Bones" );
+	glLinkProgram( prog );
+	int status;
+	glGetProgramiv( prog,GL_LINK_STATUS,&status );
+	if( status!=GL_TRUE ){
+		cout<<"SHADER LINK ERROR"<<endl;
+		cout<<ProgramInfoLog( prog )<<endl;
+		Error( "" );
+	}
+	return prog;
 }
 
 // VertexBuffer implementation
@@ -630,29 +668,7 @@ public:
 		GLuint vs=CompileShader( GL_VERTEX_SHADER,vert );
 		GLuint fs=CompileShader( GL_FRAGMENT_SHADER,frag );
 
-		_glprog=glCreateProgram();
-
-		glAttachShader( _glprog,vs );
-		glAttachShader( _glprog,fs );
-
-		glBindAttribLocation( _glprog,0,"Attrib0" );
-		glBindAttribLocation( _glprog,1,"Attrib1" );
-		glBindAttribLocation( _glprog,2,"Attrib2" );
-		glBindAttribLocation( _glprog,3,"Attrib3" );
-		glBindAttribLocation( _glprog,4,"Attrib4" );
-		glBindAttribLocation( _glprog,5,"Attrib5" );
-		glBindAttribLocation( _glprog,6,"Attrib6" );
-		glBindAttribLocation( _glprog,7,"Attrib7" );
-
-		glBindAttribLocation( _glprog,0,"bb_Vertex" );
-		glBindAttribLocation( _glprog,1,"bb_Normal" );
-		glBindAttribLocation( _glprog,2,"bb_Tangent" );
-		glBindAttribLocation( _glprog,3,"bb_TexCoords0" );
-		glBindAttribLocation( _glprog,4,"bb_TexCoords1" );
-		glBindAttribLocation( _glprog,5,"bb_Weights" );
-		glBindAttribLocation( _glprog,6,"bb_Bones" );
-
-		glLinkProgram( _glprog );
+		_glprog=LinkProgram( vs,fs );
 
 		glDeleteShader( vs );
 		glDeleteShader( fs );

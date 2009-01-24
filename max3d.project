@@ -93,10 +93,6 @@
     <Project Name="assimp"/>
     <Project Name="ode"/>
   </Dependencies>
-  <Dependencies Name="Linux Release">
-    <Project Name="ode"/>
-    <Project Name="assimp"/>
-  </Dependencies>
   <Dependencies Name="Win32 Debug">
     <Project Name="assimp"/>
     <Project Name="ode"/>
@@ -308,5 +304,9 @@
   <Dependencies Name="Win32 Release">
     <Project Name="assimp"/>
     <Project Name="ode"/>
+  </Dependencies>
+  <Dependencies Name="Linux Release">
+    <Project Name="ode"/>
+    <Project Name="assimp"/>
   </Dependencies>
 </CodeLite_Project>

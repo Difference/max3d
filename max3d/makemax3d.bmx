@@ -213,6 +213,6 @@ End Extern
 
 SaveString max3d,bmx_path+"/mod/bmx3d.mod/max3d.mod/max3d.bmx"
 
-system "~q"+bmx_path+"/Bin/bmk~q makemods -a bmx3d"
+system "~q"+bmx_path+"/bin/bmk~q makemods -a bmx3d"
 
 Print "Created module bmx3d"

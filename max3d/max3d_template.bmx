@@ -151,17 +151,21 @@ Function m3dImporter( classz:Byte Ptr,pathz:Byte Ptr )
 	Local path$=String.FromCString( pathz )
 	
 	If FileType( path )=FILETYPE_NONE
-		Local file$=StripDir( path ),tpath$
-		For Local dir$=EachIn Max3dImportDirs
-			tpath=dir+"/"+file
-			If FileType( tpath )=FILETYPE_FILE Exit
-			tpath=""
-		Next
-		If Not tpath
-			Print "Max3d Error: Unable to locate object of type '"+class+"' at:"+path
-			Return
+		If FileType( path.ToLower() )<>FILETYPE_NONE
+			path=path.ToLower()
+		Else
+			Local file$=StripDir( path ),tpath$
+			For Local dir$=EachIn Max3dImportDirs
+				tpath=dir+"/"+file
+				If FileType( tpath )=FILETYPE_FILE Exit
+				tpath=""
+			Next
+			If Not tpath
+				Print "Max3d Error: Unable to locate object of type '"+class+"' at:"+path
+				Return
+			EndIf
+			path=tpath
 		EndIf
-		path=tpath
 	EndIf
 	
 	Select class

@@ -3,11 +3,7 @@ Strict
 
 Import Bmx3d.Max3d
 
-Max3dGraphics 1024,768
-
-?MacOS
-DisableShadows
-?
+Max3dGraphics 1024,768,32,60
 
 SetClearColor .25,.5,1
 
@@ -24,6 +20,11 @@ AddRenderPass fogShader,fogMaterial
 Local godShader=CreateShader( LoadString( "godrays.glsl" ) )
 Local godMaterial=CreateMaterial()
 SetMaterialColor godMaterial,"Color",.2,.2,0
+
+?MacOS
+DisableShadows
+?
+
 ?Not MacOS
 AddRenderPass godShader,godMaterial	'A bit much for poor Mac...
 ?
@@ -62,8 +63,11 @@ Local light=CreateDistantLight()
 Local lightYaw#=45,lightPitch#=45,lightRoll#
 TurnEntity light,lightYaw,lightPitch,lightRoll
 
-Local splits#[]=[.1,4.0,16.0,64.0,256.0]
-SetLightShadowSplitsTable light,5,splits
+'Local splits#[]=[.1,4.0,16.0,64.0,256.0]
+'SetLightShadowSplitsTable light,5,splits
+
+Local splits#[]=[.1,15.0,50.0]
+SetLightShadowSplitsTable light,3,splits
 
 Local castle=LoadModel( "CASTLE1.X",4,0 )
 MoveEntity castle,0,.5,0
