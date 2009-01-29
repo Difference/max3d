@@ -105,9 +105,9 @@ Function LoadMaterial( path$ )
 	SetObjectImportPath mat,path
 	
 	Local exts$[]=[..
-	"DiffuseMap,,_d",..
-	"SpecularMap,Spec,_s",..
-	"NormalMap,Normal,_n,_local"]
+	"DiffuseTexture,,_d",..
+	"SpecularTexture,Spec,_s",..
+	"NormalTexture,Normal,_n,_local"]
 	
 	If file.EndsWith( "_d" ) file=file[..file.length-2]
 	

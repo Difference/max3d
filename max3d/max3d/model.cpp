@@ -277,8 +277,8 @@ void CModelSurface::Transform( const CMat4 &matrix,const CMat4 &itMatrix ){
 	for( vector<CVertex>::iterator it=_vertices.begin();it!=_vertices.end();++it ){
 		CVertex &v=*it;
 		v.position=matrix * v.position;
-		v.normal=(itMatrix * CVec4( v.normal,0.0f ) ).xyz();
-		v.tangent=CVec4( (itMatrix * CVec4( v.tangent.xyz(),0.0f ) ).xyz(),v.tangent.w );
+		v.normal=(itMatrix * CVec4( v.normal,0.0f ) ).xyz().Normalize();
+		v.tangent=CVec4( (itMatrix * CVec4( v.tangent.xyz(),0.0f ) ).xyz().Normalize(),v.tangent.w );
 	}
 }
 

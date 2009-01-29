@@ -3,7 +3,7 @@ Strict
 
 Import Bmx3d.Max3d
 
-Max3dGraphics 1024,768,32,60
+Max3dGraphics 1024,768,0,60'32,60
 
 SetClearColor .25,.5,1
 
@@ -12,22 +12,19 @@ SetAmbientColor .25,.25,.25
 'Set up fog
 Local fogShader=CreateShader( LoadString( "linearfog.glsl" ) )
 Local fogMaterial=CreateMaterial()
-SetMaterialFloat fogMaterial,"FogStart",25
-SetMaterialFloat fogMaterial,"FogEnd",50
+SetMaterialFloat fogMaterial,"FogStart",48
+SetMaterialFloat fogMaterial,"FogEnd",64
 SetMaterialColor fogMaterial,"FogColor",.25,.5,1	'same as clear color...
 AddRenderPass fogShader,fogMaterial
 
 Local godShader=CreateShader( LoadString( "godrays.glsl" ) )
 Local godMaterial=CreateMaterial()
 SetMaterialColor godMaterial,"Color",.2,.2,0
+AddRenderPass godShader,godMaterial
 
-?MacOS
-DisableShadows
-?
-
-?Not MacOS
-AddRenderPass godShader,godMaterial	'A bit much for poor Mac...
-?
+'Local lineShader=CreateShader( LoadString( "outline.glsl" ) )
+'Local lineMaterial=CreateMaterial()
+'AddRenderPass lineShader,lineMaterial
 
 'collision types:
 '1=player
@@ -63,13 +60,13 @@ Local light=CreateDistantLight()
 Local lightYaw#=45,lightPitch#=45,lightRoll#
 TurnEntity light,lightYaw,lightPitch,lightRoll
 
-'Local splits#[]=[.1,4.0,16.0,64.0,256.0]
-'SetLightShadowSplitsTable light,5,splits
+Local splits#[]=[.1,4.0,16.0,64.0]
+SetLightShadowSplitsTable light,4,splits
 
-Local splits#[]=[.1,15.0,50.0]
-SetLightShadowSplitsTable light,3,splits
-
-Local castle=LoadModel( "CASTLE1.X",4,0 )
+Local castle=LoadModel( "CASTLE1.X",0,0 )
+SetEntityScale castle,.035,.035,.035
+ResetModelTransform castle
+CreateModelBody castle,castle,4,0
 MoveEntity castle,0,.5,0
 
 Local bluspark=CreateMaterial()
@@ -161,8 +158,5 @@ While Not KeyHit( KEY_ESCAPE )
 	
 	RenderWorld
 	Flip
-	
-'	CameraProject camera,EntityX( mirror ),EntityY( mirror ),EntityZ( mirror )
-'	Print ProjectedX()+","+ProjectedY()+","+ProjectedZ()
 	
 Wend
