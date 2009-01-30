@@ -19,7 +19,7 @@ AddRenderPass fogShader,fogMaterial
 
 Local godShader=CreateShader( LoadString( "godrays.glsl" ) )
 Local godMaterial=CreateMaterial()
-SetMaterialColor godMaterial,"Color",.2,.2,0
+SetMaterialColor godMaterial,"GodRaysColor",1,1,0
 AddRenderPass godShader,godMaterial
 
 'Local lineShader=CreateShader( LoadString( "outline.glsl" ) )
@@ -64,10 +64,11 @@ Local splits#[]=[.1,4.0,16.0,64.0]
 SetLightShadowSplitsTable light,4,splits
 
 Local castle=LoadModel( "CASTLE1.X",0,0 )
+'Local castle=LoadModel( "elvenhouse.b3d",0,0 )
 SetEntityScale castle,.035,.035,.035
 ResetModelTransform castle
 CreateModelBody castle,castle,4,0
-MoveEntity castle,0,.5,0
+MoveEntity castle,0,.5,15
 
 Local bluspark=CreateMaterial()
 SetMaterialColor bluspark,"SpriteColor",1,1,1
@@ -147,13 +148,13 @@ While Not KeyHit( KEY_ESCAPE )
 		Local dx#=x-512,dy#=y-384
 		Local d#=Sqr( dx*dx+dy*dy )/384.0
 		If d>1 d=1
-		SetMaterialFloat godMaterial,"Exposure",(1-d)*.0034
-		SetMaterialFloat godMaterial,"LightPosX",ProjectedX()
-		SetMaterialFloat godMaterial,"LightPosY",ProjectedY()
+		SetMaterialFloat godMaterial,"GodRaysExposure",(1-d)*.25
+		SetMaterialFloat godMaterial,"GodRaysLightX",ProjectedX()
+		SetMaterialFloat godMaterial,"GodRaysLightY",ProjectedY()
 	Else
-		SetMaterialFloat godMaterial,"Exposure",0
-		SetMaterialFloat godMaterial,"LightPosX",0
-		SetMaterialFloat godMaterial,"LightPosX",0
+		SetMaterialFloat godMaterial,"GodRaysExposure",0
+		SetMaterialFloat godMaterial,"GodRaysLightX",0
+		SetMaterialFloat godMaterial,"GodRaysLightY",0
 	EndIf
 	
 	RenderWorld

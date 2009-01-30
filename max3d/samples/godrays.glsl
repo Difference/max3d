@@ -17,40 +17,25 @@ void main(){
 }
 
 //@fragment
-uniform vec3 Color;
-uniform float Exposure;
-uniform float LightPosX;
-uniform float LightPosY;
+uniform vec3 GodRaysColor;
+uniform float GodRaysExposure;
+uniform float GodRaysLightX,GodRaysLightY;
 
 const int NUM_SAMPLES=100;
 
-const float decay=1.0;
-const float density=0.84;
-const float weight=5.65;	
-
 void main(){
 
-	vec2 LightPos=vec2( LightPosX,LightPosY );
-
 	vec2 texCoords=gl_FragCoord.xy;
-	vec2 deltaTexCoords=texCoords-LightPos;
-	deltaTexCoords*=1.0/float(NUM_SAMPLES)*density;
-	float illumDecay=1.0;
+	vec2 lightPos=vec2( GodRaysLightX,GodRaysLightY );
+	vec2 deltaTexCoords=(texCoords-lightPos)/float( NUM_SAMPLES );
 	
-	vec4 color=vec4( 0.0 );
-	
+	vec3 color=vec3( 0.0 );
+
 	for( int i=0;i<NUM_SAMPLES;++i ){
 		texCoords-=deltaTexCoords;
-		
-		vec4 sample=vec4( 0.0 );
-		if( texture2DRect( bb_DepthBuffer,texCoords ).r==1.0 ){
-			sample=vec4( Color,1.0 );
-		}
-		
-		sample*=illumDecay*weight;
-		color+=sample;
-		illumDecay*=decay;
+		color+=GodRaysColor * floor( texture2DRect( bb_DepthBuffer,texCoords ).r );
 	}
-	
-	gl_FragColor=texture2DRect( bb_ColorBuffer,gl_FragCoord.xy ) + color*Exposure;
+
+	gl_FragColor=texture2DRect( bb_ColorBuffer,gl_FragCoord.xy ) + vec4( color/float( NUM_SAMPLES ) * GodRaysExposure,0.0 );
 }
+
