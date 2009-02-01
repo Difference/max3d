@@ -9,7 +9,7 @@
       <Project Name="max3d" ConfigName="Macos Debug"/>
       <Project Name="assimp" ConfigName="Debug"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Macos Release" Selected="no">
+    <WorkspaceConfiguration Name="Macos Release" Selected="yes">
       <Project Name="ode" ConfigName="Release"/>
       <Project Name="max3d" ConfigName="Macos Release"/>
       <Project Name="assimp" ConfigName="Release"/>
@@ -24,7 +24,7 @@
       <Project Name="max3d" ConfigName="Linux Debug"/>
       <Project Name="assimp" ConfigName="Debug"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Win32 Release" Selected="yes">
+    <WorkspaceConfiguration Name="Win32 Release" Selected="no">
       <Project Name="ode" ConfigName="Release"/>
       <Project Name="max3d" ConfigName="Win32 Release"/>
       <Project Name="assimp" ConfigName="Release"/>

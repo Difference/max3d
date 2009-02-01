@@ -297,15 +297,15 @@
       </AdditionalRules>
     </Configuration>
   </Settings>
-  <Dependencies Name="Macos Release">
-    <Project Name="assimp"/>
-    <Project Name="ode"/>
-  </Dependencies>
   <Dependencies Name="Linux Release">
     <Project Name="ode"/>
     <Project Name="assimp"/>
   </Dependencies>
   <Dependencies Name="Win32 Release">
+    <Project Name="assimp"/>
+    <Project Name="ode"/>
+  </Dependencies>
+  <Dependencies Name="Macos Release">
     <Project Name="assimp"/>
     <Project Name="ode"/>
   </Dependencies>

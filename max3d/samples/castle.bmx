@@ -20,7 +20,9 @@ AddRenderPass fogShader,fogMaterial
 Local godShader=CreateShader( LoadString( "godrays.glsl" ) )
 Local godMaterial=CreateMaterial()
 SetMaterialColor godMaterial,"GodRaysColor",1,1,0
+?Not MacOS
 AddRenderPass godShader,godMaterial
+?
 
 'Local lineShader=CreateShader( LoadString( "outline.glsl" ) )
 'Local lineMaterial=CreateMaterial()

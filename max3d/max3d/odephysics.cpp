@@ -176,9 +176,9 @@ COdeBody *COdeBody::Create( dGeomID geom,int collType,float mass ){
 
 		switch( dGeomGetClass( _odeGeom ) ){
 		case dCapsuleClass:
+			break;
 		case dCylinderClass:{
-			//PitchMatrix( -HALFPI ), 'coz ODE capsule lie on the Z axis
-			static const float r[]={ 1,0,0,0, 0,0,1,0, 0,-1,0,0 };
+			static const float r[]={ 1,0,0,0, 0,0,1,0, 0,-1,0,0 };	//PitchMatrix( -HALFPI );
 			dGeomSetOffsetRotation( _odeGeom,r );
 			break;
 			}

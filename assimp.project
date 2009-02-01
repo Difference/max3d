@@ -176,29 +176,29 @@
     <File Name="assimp/code/TerragenLoader.cpp"/>
     <File Name="assimp/code/IRRShared.cpp"/>
     <File Name="assimp/code/IRRShared.h"/>
-    <File Name="assimp\contrib\irrXML\irrXML.h"/>
-    <File Name="assimp\contrib\irrXML\CXMLReaderImpl.h"/>
-    <File Name="assimp\contrib\irrXML\heapsort.h"/>
-    <File Name="assimp\contrib\irrXML\irrArray.h"/>
-    <File Name="assimp\contrib\irrXML\irrString.h"/>
-    <File Name="assimp\contrib\irrXML\irrTypes.h"/>
-    <File Name="assimp\contrib\irrXML\irrXML.cpp"/>
-    <File Name="assimp\contrib\zlib\zutil.h"/>
-    <File Name="assimp\contrib\zlib\adler32.c"/>
-    <File Name="assimp\contrib\zlib\crc32.c"/>
-    <File Name="assimp\contrib\zlib\crc32.h"/>
-    <File Name="assimp\contrib\zlib\inffast.c"/>
-    <File Name="assimp\contrib\zlib\inffast.h"/>
-    <File Name="assimp\contrib\zlib\inffixed.h"/>
-    <File Name="assimp\contrib\zlib\inflate.c"/>
-    <File Name="assimp\contrib\zlib\inflate.h"/>
-    <File Name="assimp\contrib\zlib\inftrees.c"/>
-    <File Name="assimp\contrib\zlib\inftrees.h"/>
-    <File Name="assimp\contrib\zlib\README"/>
-    <File Name="assimp\contrib\zlib\zconf.h"/>
-    <File Name="assimp\contrib\zlib\zconf.in.h"/>
-    <File Name="assimp\contrib\zlib\zlib.h"/>
-    <File Name="assimp\contrib\zlib\zutil.c"/>
+    <File Name="assimp/contrib/irrXML/irrXML.h"/>
+    <File Name="assimp/contrib/irrXML/CXMLReaderImpl.h"/>
+    <File Name="assimp/contrib/irrXML/heapsort.h"/>
+    <File Name="assimp/contrib/irrXML/irrArray.h"/>
+    <File Name="assimp/contrib/irrXML/irrString.h"/>
+    <File Name="assimp/contrib/irrXML/irrTypes.h"/>
+    <File Name="assimp/contrib/irrXML/irrXML.cpp"/>
+    <File Name="assimp/contrib/zlib/zutil.h"/>
+    <File Name="assimp/contrib/zlib/adler32.c"/>
+    <File Name="assimp/contrib/zlib/crc32.c"/>
+    <File Name="assimp/contrib/zlib/crc32.h"/>
+    <File Name="assimp/contrib/zlib/inffast.c"/>
+    <File Name="assimp/contrib/zlib/inffast.h"/>
+    <File Name="assimp/contrib/zlib/inffixed.h"/>
+    <File Name="assimp/contrib/zlib/inflate.c"/>
+    <File Name="assimp/contrib/zlib/inflate.h"/>
+    <File Name="assimp/contrib/zlib/inftrees.c"/>
+    <File Name="assimp/contrib/zlib/inftrees.h"/>
+    <File Name="assimp/contrib/zlib/README"/>
+    <File Name="assimp/contrib/zlib/zconf.h"/>
+    <File Name="assimp/contrib/zlib/zconf.in.h"/>
+    <File Name="assimp/contrib/zlib/zlib.h"/>
+    <File Name="assimp/contrib/zlib/zutil.c"/>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
   <Settings Type="Static Library">
@@ -210,24 +210,24 @@
       </Compiler>
       <Linker Required="yes" Options=""/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
-        <PostConnectCommands></PostConnectCommands>
-        <StartupCommands></StartupCommands>
+        <PostConnectCommands/>
+        <StartupCommands/>
       </Debugger>
       <ResourceCompiler Required="no" Options=""/>
       <PreBuild/>
       <PostBuild/>
       <CustomBuild Enabled="no">
-        <CleanCommand></CleanCommand>
-        <BuildCommand></BuildCommand>
-        <PreprocessFileCommand></PreprocessFileCommand>
-        <SingleFileCommand></SingleFileCommand>
-        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
-        <WorkingDirectory></WorkingDirectory>
+        <WorkingDirectory/>
       </CustomBuild>
       <AdditionalRules>
-        <CustomPostBuild></CustomPostBuild>
-        <CustomPreBuild></CustomPreBuild>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
       </AdditionalRules>
     </Configuration>
     <Configuration Name="Release" CompilerType="gnu gcc" DebuggerType="GNU gdb debugger" Type="Static Library">
@@ -238,26 +238,24 @@
       </Compiler>
       <Linker Required="yes" Options=""/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
-        <PostConnectCommands></PostConnectCommands>
-        <StartupCommands></StartupCommands>
+        <PostConnectCommands/>
+        <StartupCommands/>
       </Debugger>
       <ResourceCompiler Required="no" Options=""/>
       <PreBuild/>
       <PostBuild/>
       <CustomBuild Enabled="no">
-        <CleanCommand></CleanCommand>
-        <BuildCommand></BuildCommand>
-        <PreprocessFileCommand></PreprocessFileCommand>
-        <SingleFileCommand></SingleFileCommand>
-        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
-        <WorkingDirectory></WorkingDirectory>
+        <WorkingDirectory/>
       </CustomBuild>
       <AdditionalRules>
-        <CustomPostBuild></CustomPostBuild>
-        <CustomPreBuild>
-
-</CustomPreBuild>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
       </AdditionalRules>
     </Configuration>
   </Settings>
