@@ -15,13 +15,13 @@ Local fogMaterial=CreateMaterial()
 SetMaterialFloat fogMaterial,"FogStart",48
 SetMaterialFloat fogMaterial,"FogEnd",64
 SetMaterialColor fogMaterial,"FogColor",.25,.5,1	'same as clear color...
-AddRenderPass fogShader,fogMaterial
+'AddRenderPass fogShader,fogMaterial
 
 Local godShader=CreateShader( LoadString( "godrays.glsl" ) )
 Local godMaterial=CreateMaterial()
 SetMaterialColor godMaterial,"GodRaysColor",1,1,0
 ?Not MacOS
-AddRenderPass godShader,godMaterial
+'AddRenderPass godShader,godMaterial
 ?
 
 'Local lineShader=CreateShader( LoadString( "outline.glsl" ) )
@@ -65,19 +65,19 @@ TurnEntity light,lightYaw,lightPitch,lightRoll
 Local splits#[]=[.1,4.0,16.0,64.0]
 SetLightShadowSplitsTable light,4,splits
 
+Local cow=LoadModel( "WusonBlitz.b3d",0,0 )
+MoveEntity cow,0,3,0
+
+Rem
 Local castle=LoadModel( "CASTLE1.X",0,0 )
 'Local castle=LoadModel( "elvenhouse.b3d",0,0 )
 SetEntityScale castle,.035,.035,.035
 ResetModelTransform castle
 CreateModelBody castle,castle,4,0
 MoveEntity castle,0,.5,15
+End Rem
 
-Local bluspark=CreateMaterial()
-SetMaterialColor bluspark,"SpriteColor",1,1,1
-SetMaterialTexture bluspark,"SpriteTexture",LoadTexture( "bluspark.bmp" )
-Local sprite=CreateSprite( bluspark )
-
-'Rem
+Rem
 For Local i=0 Until CountModelSurfaces( castle )
 	Local surface=GetModelSurface( castle,i )
 	Local material=GetSurfaceMaterial( surface )
@@ -90,7 +90,7 @@ For Local i=0 Until CountModelSurfaces( castle )
 		SetSurfaceMaterial surface,LoadMaterial( "eurofan.png" )
 	End Select
 Next
-'End Rem
+End Rem
 
 Local player=CreateCapsule( blue,.5,2,1,-1 )
 MoveEntity player,0,5,-10
@@ -98,6 +98,11 @@ MoveEntity player,0,5,-10
 Local camera=CreateCamera()
 SetEntityParent camera,player
 MoveEntity camera,0,1,0
+
+Local bluspark=CreateMaterial()
+SetMaterialColor bluspark,"SpriteColor",1,1,1
+SetMaterialTexture bluspark,"SpriteTexture",LoadTexture( "bluspark.bmp" )
+Local sprite=CreateSprite( bluspark )
 
 Rem
 Local mirror=CreateMirror()
@@ -150,7 +155,7 @@ While Not KeyHit( KEY_ESCAPE )
 		Local dx#=x-512,dy#=y-384
 		Local d#=Sqr( dx*dx+dy*dy )/384.0
 		If d>1 d=1
-		SetMaterialFloat godMaterial,"GodRaysExposure",(1-d)*.25
+		SetMaterialFloat godMaterial,"GodRaysExposure",(1-d)*.5
 		SetMaterialFloat godMaterial,"GodRaysLightX",ProjectedX()
 		SetMaterialFloat godMaterial,"GodRaysLightY",ProjectedY()
 	Else
