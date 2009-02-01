@@ -176,14 +176,16 @@ COdeBody *COdeBody::Create( dGeomID geom,int collType,float mass ){
 
 		switch( dGeomGetClass( _odeGeom ) ){
 		case dCapsuleClass:
+#ifdef ODE_CAPSULE_CAN_SET_AXIS
+			dGeomCapsuleSetAxis( _odeGeom,1 );
 			break;
+#endif
 		case dCylinderClass:{
 			static const float r[]={ 1,0,0,0, 0,0,1,0, 0,-1,0,0 };	//PitchMatrix( -HALFPI );
 			dGeomSetOffsetRotation( _odeGeom,r );
 			break;
 			}
 		}
-
 	}else{
 		_odeBody=0;
 		switch( dGeomGetClass( _odeGeom ) ){
