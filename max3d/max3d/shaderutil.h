@@ -49,6 +49,8 @@ public:
 	CShader *DistantLightShader(){ return _distantLightShader; }
 	
 	CShader *CopyShader(){ return _copyShader; }
+	CShader *HalveShader(){ return _halveShader; }
+	CShader *Blur15Shader(){ return _blur15Shader; }
 
 private:
 	CShader *_modelShader;
@@ -61,6 +63,8 @@ private:
 	CShader *_distantLightShader;
 	
 	CShader *_copyShader;
+	CShader *_halveShader;
+	CShader *_blur15Shader;
 };
 
 #endif

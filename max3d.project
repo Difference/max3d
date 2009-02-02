@@ -76,6 +76,7 @@
     <File Name="max3d/max3d/renderpass.h"/>
     <File Name="max3d/max3d/renderpass.cpp"/>
     <File Name="max3d/max3d/copy.glsl"/>
+    <File Name="max3d\max3d\blur.glsl"/>
   </VirtualDirectory>
   <Dependencies Name="Debug">
     <Project Name="assimp"/>

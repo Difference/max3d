@@ -60,6 +60,8 @@ public:
 	bool ShadowsEnabled(){ return _shadowsEnabled; }
 	
 	void RenderCamera( CCamera *camera );
+	
+	void RenderQuad( const CRect &rect,CShader *shader,CMaterial *material );
 
 private:
 	void SetShaderMode( string mode );

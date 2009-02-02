@@ -15,14 +15,19 @@ Local fogMaterial=CreateMaterial()
 SetMaterialFloat fogMaterial,"FogStart",48
 SetMaterialFloat fogMaterial,"FogEnd",64
 SetMaterialColor fogMaterial,"FogColor",.25,.5,1	'same as clear color...
-'AddRenderPass fogShader,fogMaterial
+AddRenderPass fogShader,fogMaterial
 
 Local godShader=CreateShader( LoadString( "godrays.glsl" ) )
 Local godMaterial=CreateMaterial()
 SetMaterialColor godMaterial,"GodRaysColor",1,1,0
 ?Not MacOS
-'AddRenderPass godShader,godMaterial
+AddRenderPass godShader,godMaterial
 ?
+
+Local blurShader=CreateShader( LoadString( "blur.glsl" ) )
+Local blurMaterial=CreateMaterial()
+SetMaterialFloat blurMaterial,"BlurStrength",1'.5
+AddRenderPass blurShader,blurMaterial
 
 'Local lineShader=CreateShader( LoadString( "outline.glsl" ) )
 'Local lineMaterial=CreateMaterial()
@@ -62,22 +67,16 @@ Local light=CreateDistantLight()
 Local lightYaw#=45,lightPitch#=45,lightRoll#
 TurnEntity light,lightYaw,lightPitch,lightRoll
 
-Local splits#[]=[.1,4.0,16.0,64.0]
+Local splits#[]=[0.0,4.0,16.0,64.0]
 SetLightShadowSplitsTable light,4,splits
 
-Local cow=LoadModel( "WusonBlitz.b3d",0,0 )
-MoveEntity cow,0,3,0
-
-Rem
 Local castle=LoadModel( "CASTLE1.X",0,0 )
 'Local castle=LoadModel( "elvenhouse.b3d",0,0 )
 SetEntityScale castle,.035,.035,.035
 ResetModelTransform castle
 CreateModelBody castle,castle,4,0
-MoveEntity castle,0,.5,15
-End Rem
+MoveEntity castle,0,.5,0
 
-Rem
 For Local i=0 Until CountModelSurfaces( castle )
 	Local surface=GetModelSurface( castle,i )
 	Local material=GetSurfaceMaterial( surface )
@@ -90,14 +89,23 @@ For Local i=0 Until CountModelSurfaces( castle )
 		SetSurfaceMaterial surface,LoadMaterial( "eurofan.png" )
 	End Select
 Next
-End Rem
 
 Local player=CreateCapsule( blue,.5,2,1,-1 )
 MoveEntity player,0,5,-10
 
 Local camera=CreateCamera()
+SetCameraPerspective camera,90,1.333,.1,256
+SetCameraViewport camera,0,0,1024,768
 SetEntityParent camera,player
 MoveEntity camera,0,1,0
+
+Rem
+Local camera2=CreateCamera()
+SetCameraViewport camera2,512-64,768-128,128,128
+SetEntityParent camera2,player
+MoveEntity camera2,0,20,0
+TurnEntity camera2,0,90,0
+End Rem
 
 Local bluspark=CreateMaterial()
 SetMaterialColor bluspark,"SpriteColor",1,1,1
@@ -165,6 +173,7 @@ While Not KeyHit( KEY_ESCAPE )
 	EndIf
 	
 	RenderWorld
+	
 	Flip
 	
 Wend

@@ -212,6 +212,7 @@ public:
 	void AppendShaderHeader( string header ){ _shaderHeader+=header; }
 	CTexture *ColorBuffer( int index ){ return _colorBuffers[index]; }
 	CTexture *DepthBuffer(){ return _depthBuffer; }
+	const CRect &Viewport(){ return _viewport; }
 	CVertexBuffer *VertexBuffer(){ return _vertexBuffer; }
 	CIndexBuffer *IndexBuffer(){ return _indexBuffer; }
 	CShader *Shader(){ return _shader; }

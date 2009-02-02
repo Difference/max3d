@@ -46,6 +46,7 @@ static CIndexBuffer *boxIB;
 
 static CTexture *accumBuffer;		//for single renderpass
 static CTexture *accumBuffer2;		//for multiple renderpasses
+static CTexture *accumBuffer3;		//for more renderpasses
 static CTexture *normalBuffer;
 static CTexture *materialBuffer;
 static CTexture *depthBuffer;
@@ -65,12 +66,12 @@ void scene_init(){
 	
 //	float vbdata[]={ 0,0,1,0,1,1,0,1 };
 	float vbdata[]={ 
-		-1,-1,.999f,
-		-1,1,.999f,
-		1,1,.999f,
-		1,-1,.999f };
+		-1,-1,.999f,0,0,
+		-1,1,.999f,0,1,
+		1,1,.999f,1,1,
+		1,-1,.999f,1,0 };
 	int ibdata[]={0,1,2,0,2,3 };
-	quadVB=App.Graphics()->CreateVertexBuffer( 4,"3f" );
+	quadVB=App.Graphics()->CreateVertexBuffer( 4,"3f0f0f2f" );
 	quadVB->SetData( vbdata );
 	quadIB=App.Graphics()->CreateIndexBuffer( 6,"1i" );
 	quadIB->SetData( ibdata );
@@ -88,8 +89,9 @@ void scene_init(){
 	boxIB=App.Graphics()->CreateIndexBuffer( 36,"1i" );
 	boxIB->SetData( ip );
 	
-	accumBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
-	accumBuffer2=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
+	accumBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_FILTER|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
+	accumBuffer2=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_FILTER|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
+	accumBuffer3=App.Graphics()->CreateTexture( w/4,h/4,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_FILTER|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
 	materialBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
 	normalBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
 	depthBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_DEPTH,TEXTURE_CLAMPST|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
@@ -200,12 +202,19 @@ void CScene::SetShaderMode( string mode ){
 }
 
 void CScene::RenderQuad(){
+	CRect vp=App.Graphics()->Viewport();
+	float quadVBData[]={
+		-1,-1,.999f,0,0,
+		-1,1,.999f,0,vp.height,
+		1,1,.999f,vp.width,vp.height,
+		1,-1,.999f,vp.width,0 };
+	quadVB->SetData( quadVBData );
 	App.Graphics()->SetVertexBuffer( quadVB );
 	App.Graphics()->SetIndexBuffer( quadIB );
 	App.Graphics()->Render( 3,0,6,1 );
 }
 
-void CScene::RenderBox( const CBox & box ){
+void CScene::RenderBox( const CBox &box ){
 	CVec3 vp[8];
 	for( int i=0;i<8;++i ) vp[i]=box.Corner(i);
 	boxVB->SetData( vp );
@@ -437,16 +446,7 @@ void CScene::RenderDistantLight( CLight *light,CCamera *camera ){
 			box.Update( cameraLightMatrix * verts[j] );
 		}
 		CMat4 shadowProjectionMatrix=CMat4::OrthoMatrix( box.a.x,box.b.x,box.a.y,box.b.y,-512,512 );
-		/*
-		float left=100000,right=-100000,bottom=100000,top=-100000,nnear=100000,ffar=-100000;
-		for( int j=0;j<8;++j ){
-			CVec3 v=cameraLightMatrix * verts[j];
-			if( v.x<left ) left=v.x;if( v.x>right ) right=v.x;
-			if( v.y<bottom ) bottom=v.y;if( v.y>top ) top=v.y;
-			if( v.z<nnear ) nnear=v.z;if( v.z>ffar ) ffar=v.z;
-		}
-		CMat4 shadowProjectionMatrix=CMat4::OrthoMatrix( left,right,bottom,top,-512,512 );
-		*/
+
 		App.Graphics()->SetMat4Param( "bb_ShadowProjectionMatrix",shadowProjectionMatrix );
 
 		//render models to shadowmap
@@ -564,19 +564,56 @@ void CScene::RenderCamera( CCamera *camera ){
 	SetShaderMode( "postprocess" );
 	CTexture *colorBuf=accumBuffer;
 	for( int i=0;i<passes.size();++i ){
+
 		CRenderPass *pass=passes[i];
+	
+		CShader *shader=pass->Shader();
+		for( vector<CParam*>::const_iterator it=shader->Params().begin();it!=shader->Params().end();++it ){
+			CParam *p=*it;
+			if( p->Name()=="bb_BlurBuffer" ){
+				
+				CTexture *colorBuf2=(colorBuf==accumBuffer) ? accumBuffer2 : accumBuffer;
+				
+				App.Graphics()->SetShader( App.ShaderUtil()->HalveShader() );
+
+				App.Graphics()->SetTextureParam( "bb_ColorBuffer",colorBuf );
+				App.Graphics()->SetColorBuffer( 0,colorBuf2 );
+				App.Graphics()->SetViewport( CRect( 0,0,_viewport.width/2,_viewport.height/2 ) );
+				RenderQuad();
+				
+				App.Graphics()->SetTextureParam( "bb_ColorBuffer",colorBuf2 );
+				App.Graphics()->SetColorBuffer( 0,accumBuffer3 );
+				App.Graphics()->SetViewport( CRect( 0,0,_viewport.width/4,_viewport.height/4 ) );
+				RenderQuad();
+				
+				App.Graphics()->SetShader( App.ShaderUtil()->Blur15Shader() );
+				
+				App.Graphics()->SetVec2Param( "BlurScale",CVec2( 1.0f,0.0f ) );
+				App.Graphics()->SetTextureParam( "bb_ColorBuffer",accumBuffer3 );
+				App.Graphics()->SetColorBuffer( 0,colorBuf2 );
+				App.Graphics()->SetViewport( CRect( 0,0,_viewport.width/4,_viewport.height/4 ) );
+				RenderQuad();
+				
+				App.Graphics()->SetVec2Param( "BlurScale",CVec2( 0.0f,1.0f ) );
+				App.Graphics()->SetTextureParam( "bb_ColorBuffer",colorBuf2 );
+				App.Graphics()->SetColorBuffer( 0,accumBuffer3 );
+				App.Graphics()->SetViewport( CRect( 0,0,_viewport.width/4,_viewport.height/4 ) );
+				RenderQuad();
+				
+				App.Graphics()->SetTextureParam( "bb_BlurBuffer",accumBuffer3 );
+				break;
+			}
+		}
 		
 		App.Graphics()->SetTextureParam( "bb_ColorBuffer",colorBuf );
-		
+
 		if( i==passes.size()-1 ){
 			//last pass!
 			colorBuf=colorBuffers[0];
 			_viewport=camera->Viewport();
 			App.Graphics()->SetViewport( _viewport );
 		}else{
-			//toggle
 			colorBuf=(colorBuf==accumBuffer) ? accumBuffer2 : accumBuffer;
-			colorBuf=accumBuffer;
 		}
 		
 		App.Graphics()->SetColorBuffer( 0,colorBuf );
@@ -584,6 +621,7 @@ void CScene::RenderCamera( CCamera *camera ){
 		if( pass->Material() ) pass->Material()->Bind();
 		RenderQuad();
 	}
+
 	if( !_passes.size() ){
 		passes.back()->Release();
 	}
@@ -595,4 +633,11 @@ void CScene::RenderCamera( CCamera *camera ){
 	App.Graphics()->SetDepthBuffer( depthBuffer );
 	
 	--_renderNest;
+}
+
+void CScene::RenderQuad( const CRect &rect,CShader *shader,CMaterial *material ){
+	SetShaderMode( "postprocess" );
+	App.Graphics()->SetShader( shader );
+	if( material ) material->Bind();
+	RenderQuad();
 }

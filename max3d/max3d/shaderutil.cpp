@@ -46,4 +46,6 @@ CShaderUtil::CShaderUtil(){
 	_distantLightShader=(CShader*)App.ImportObject( "CShader","distantlight.glsl" );
 	
 	_copyShader=(CShader*)App.ImportObject( "CShader","copy.glsl" );
+	_halveShader=(CShader*)App.ImportObject( "CShader","halve.glsl" );
+	_blur15Shader=(CShader*)App.ImportObject( "CShader","blur15.glsl" );
 }

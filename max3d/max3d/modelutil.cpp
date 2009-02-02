@@ -80,53 +80,14 @@ static CModelSurface *loadSurface( const aiMesh *mesh ){
 	CModelSurface *surf=new CModelSurface;
 	
 	aiVector3D *mv=mesh->mVertices;
-	aiVector3D *mc=mesh->mTextureCoords[0];
-	
-	if( !mc ) cout<<"No tex coords!"<<endl;
-	
-	cout<<"Here! mc="<<mc<<endl;
-
-	for( int i=0;i<mesh->mNumVertices;++i ){
-		CVertex v;
-		v.position=*(CVec3*)mv++;
-		if( mc ){
-			cout<<mc->x<<","<<mc->y<<endl;
-			memcpy( &v.texcoords[0],mc++,8 );
-		}
-		surf->AddVertex( v );
-	}
-
-	aiFace *face=mesh->mFaces;
-	for( int i=0;i<mesh->mNumFaces;++i ){
-		surf->AddTriangle( face->mIndices[0],face->mIndices[1],face->mIndices[2] );
-		++face;
-	}
-	
-	surf->UpdateNormals();
-	surf->UpdateTangents();
-
-	return surf;
-	/*
-	aiVector3D *mv=mesh->mVertices;
 	aiVector3D *mn=mesh->mNormals;
-	aiVector3D *mt=mesh->mTangents;
-	aiVector3D *mb=mesh->mBitangents;
 	aiVector3D *mc=mesh->mTextureCoords[0];
-
+	
 	for( int i=0;i<mesh->mNumVertices;++i ){
-		float tw=1.0;
-		if( mn && mt && mb ){
-			CVec3 norm=*(CVec3*)mn;
-			CVec3 tang=*(CVec3*)mt;
-			CVec3 bitang=*(CVec3*)mb;
-			if( norm.Dot( tang.Cross(bitang) )<0.0f ) tw=-1.0f;
-		}
-		
 		CVertex v;
 		v.position=*(CVec3*)mv++;
-		if( mn ) v.normal=*(CVec3*)mn++;
-		if( mt ) v.tangent=CVec4( *(CVec3*)mt++,tw );
-		if( mc ) v.texcoords[0]=*(CVec2*)mc++;
+		if( mn ) memcpy( &v.normal,mn++,12 );
+		if( mc ) memcpy( &v.texcoords[0],mc++,8 );
 		surf->AddVertex( v );
 	}
 
@@ -136,11 +97,10 @@ static CModelSurface *loadSurface( const aiMesh *mesh ){
 		++face;
 	}
 	
-	surf->UpdateNormals();
-	surf->UpdateTangents();
+	if( !mn ) surf->UpdateNormals();
+	if( mc ) surf->UpdateTangents();
 
 	return surf;
-	*/
 }
 
 CBody *CModelUtil::CreateModelBody( CModel *model,int collType,float mass ){
@@ -157,16 +117,8 @@ CModel *CModelUtil::ImportModel( const string &path,int collType,float mass ){
 	
 	int flags=
 	aiProcess_Triangulate |
-	aiProcess_PreTransformVertices |
-	aiProcess_FindDegenerates |
-	aiProcess_SortByPType |
-	aiProcess_ConvertToLeftHanded |
-	0;
-/*
-	int flags=
-	aiProcess_Triangulate |
-	aiProcess_GenSmoothNormals |
-	aiProcess_CalcTangentSpace |
+//	aiProcess_GenSmoothNormals |			//leave these to max3d for now...
+//	aiProcess_CalcTangentSpace |
 	aiProcess_JoinIdenticalVertices |
 	aiProcess_RemoveRedundantMaterials |
 	aiProcess_PreTransformVertices |
@@ -175,7 +127,7 @@ CModel *CModelUtil::ImportModel( const string &path,int collType,float mass ){
 	aiProcess_SortByPType |
 	aiProcess_ConvertToLeftHanded |
 	0;
-*/
+
 	Assimp::Importer importer;
 	importer.SetPropertyInteger( AI_CONFIG_PP_SBP_REMOVE,aiPrimitiveType_LINE|aiPrimitiveType_POINT ); 	
 
@@ -186,8 +138,6 @@ CModel *CModelUtil::ImportModel( const string &path,int collType,float mass ){
 	if( !scene ) return 0;
 
 	vector<CMaterial*> mats;
-	
-	cout<<"numMats="<<scene->mNumMaterials<<endl;
 	
 	for( int i=0;i<scene->mNumMaterials;++i ){
 		aiMaterial *mat=scene->mMaterials[i];
