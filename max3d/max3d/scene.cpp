@@ -579,11 +579,13 @@ void CScene::RenderCamera( CCamera *camera ){
 				App.Graphics()->SetTextureParam( "bb_ColorBuffer",colorBuf );
 				App.Graphics()->SetColorBuffer( 0,colorBuf2 );
 				App.Graphics()->SetViewport( CRect( 0,0,_viewport.width/2,_viewport.height/2 ) );
+				App.Graphics()->SetVec2Param( "bb_ViewportSize",CVec2( _viewport.width/2,_viewport.height/2 ) );
 				RenderQuad();
 				
 				App.Graphics()->SetTextureParam( "bb_ColorBuffer",colorBuf2 );
 				App.Graphics()->SetColorBuffer( 0,accumBuffer3 );
 				App.Graphics()->SetViewport( CRect( 0,0,_viewport.width/4,_viewport.height/4 ) );
+				App.Graphics()->SetVec2Param( "bb_ViewportSize",CVec2( _viewport.width/4,_viewport.height/4 ) );
 				RenderQuad();
 				
 				App.Graphics()->SetShader( App.ShaderUtil()->Blur15Shader() );
@@ -601,6 +603,7 @@ void CScene::RenderCamera( CCamera *camera ){
 				RenderQuad();
 				
 				App.Graphics()->SetTextureParam( "bb_BlurBuffer",accumBuffer3 );
+				App.Graphics()->SetVec2Param( "bb_ViewportSize",CVec2( _viewport.width,_viewport.height ) );
 				break;
 			}
 		}

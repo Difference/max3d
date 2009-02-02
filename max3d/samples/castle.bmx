@@ -3,7 +3,7 @@ Strict
 
 Import Bmx3d.Max3d
 
-Max3dGraphics 1024,768,0,60'32,60
+Max3dGraphics 1024,768,0,60
 
 SetClearColor .25,.5,1
 
@@ -26,7 +26,7 @@ AddRenderPass godShader,godMaterial
 
 Local blurShader=CreateShader( LoadString( "blur.glsl" ) )
 Local blurMaterial=CreateMaterial()
-SetMaterialFloat blurMaterial,"BlurStrength",1'.5
+SetMaterialFloat blurMaterial,"BlurStrength",0
 AddRenderPass blurShader,blurMaterial
 
 'Local lineShader=CreateShader( LoadString( "outline.glsl" ) )
