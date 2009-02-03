@@ -158,6 +158,14 @@ void CScene::SetShaderMode( string mode ){
 		App.Graphics()->SetBlendFunc( BLENDFUNC_ONE,BLENDFUNC_ZERO );
 		App.Graphics()->SetDepthFunc( DEPTHFUNC_LE );
 		App.Graphics()->SetCullMode( CULLMODE_BACK );
+	}else if( mode=="background" ){
+//		App.Graphics()->SetColorBuffer( 0,accumBuffer );
+//		App.Graphics()->SetDepthBuffer( depthBuffer );
+		App.Graphics()->SetViewport( _viewport );
+		App.Graphics()->SetWriteMask( WRITEMASK_RED|WRITEMASK_GREEN|WRITEMASK_BLUE|WRITEMASK_ALPHA );
+		App.Graphics()->SetBlendFunc( BLENDFUNC_ONE,BLENDFUNC_ZERO );
+		App.Graphics()->SetDepthFunc( DEPTHFUNC_LE );
+		App.Graphics()->SetCullMode( CULLMODE_BACK );
 	}else if( mode=="shadow" ){
 		App.Graphics()->SetColorBuffer( 0,0 );
 		App.Graphics()->SetDepthBuffer( shadowBuffer );
@@ -191,8 +199,8 @@ void CScene::SetShaderMode( string mode ){
 		App.Graphics()->SetDepthFunc( DEPTHFUNC_LE );
 		App.Graphics()->SetCullMode( CULLMODE_BACK );
 	}else if( mode=="postprocess" ){
-		App.Graphics()->SetColorBuffer( 0,0 );
-		App.Graphics()->SetDepthBuffer( 0 );
+//		App.Graphics()->SetColorBuffer( 0,0 );
+//		App.Graphics()->SetDepthBuffer( 0 );
 		App.Graphics()->SetViewport( _viewport );
 		App.Graphics()->SetWriteMask( WRITEMASK_RED|WRITEMASK_GREEN|WRITEMASK_BLUE );
 		App.Graphics()->SetBlendFunc( BLENDFUNC_ONE,BLENDFUNC_ZERO );
@@ -526,6 +534,8 @@ void CScene::RenderCamera( CCamera *camera ){
 	App.Graphics()->Clear();
 	RenderSurfaces( camera->RenderFrustum() );
 	
+	App.Graphics()->SetDepthBuffer( 0 );
+	
 	//'skybox' for now...
 	SetShaderMode( "clear" );
 	App.Graphics()->SetShader( clearShader );
@@ -554,6 +564,16 @@ void CScene::RenderCamera( CCamera *camera ){
 		}
 	}
 	
+	//Skybox
+	CTexture *colorBuf=accumBuffer;
+
+	//Flip colorBuf
+	App.Graphics()->SetTextureParam( "bb_ColorBuffer",colorBuf );
+	colorBuf=(colorBuf==accumBuffer) ? accumBuffer2 : accumBuffer;
+	SetShaderMode( "background" );
+	App.Graphics()->SetColorBuffer( 0,colorBuf );
+	RenderSurfaces( camera->RenderFrustum() );
+	
 	//execute render passes
 	vector<CRenderPass*> passes=_passes;
 	if( !passes.size() ){
@@ -561,8 +581,9 @@ void CScene::RenderCamera( CCamera *camera ){
 		pass->SetShader( App.ShaderUtil()->CopyShader() );
 		passes.push_back( pass );
 	}
+
 	SetShaderMode( "postprocess" );
-	CTexture *colorBuf=accumBuffer;
+	
 	for( int i=0;i<passes.size();++i ){
 
 		CRenderPass *pass=passes[i];

@@ -169,7 +169,13 @@ CModel *CModelUtil::ImportModel( const string &path,int collType,float mass ){
 }
 
 CModel *CModelUtil::CreateSphere( CMaterial *material,float radius,int collType,float mass ){
-	int segs=8;
+//	int segs=8;
+	int segs=int( radius );
+	if( segs<8 ){
+		segs=8;
+	}else if( segs>64 ){
+		segs=64;
+	}
 	CModelSurface *surf=new CModelSurface;
 	surf->SetMaterial( material );
 	int segs2=segs*2;

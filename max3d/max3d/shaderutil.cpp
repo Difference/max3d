@@ -40,6 +40,7 @@ CShaderUtil::CShaderUtil(){
 	_spriteShader=(CShader*)App.ImportObject( "CShader","sprite.glsl" );
 	_terrainShader=(CShader*)App.ImportObject( "CShader","terrain.glsl" );
 	_mirrorShader=(CShader*)App.ImportObject( "CShader","mirror.glsl" );
+	_backgroundShader=(CShader*)App.ImportObject( "CShader","background.glsl" );
 	
 	_spotLightShader=(CShader*)App.ImportObject( "CShader","spotlight.glsl" );
 	_pointLightShader=(CShader*)App.ImportObject( "CShader","pointlight.glsl" );

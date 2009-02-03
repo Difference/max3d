@@ -105,6 +105,13 @@ void CModel::UpdateTangents(){
 	}
 }
 
+void CModel::TransformSurfaces( const CMat4 &matrix ){
+	CMat4 itMatrix=(-matrix).Transpose();
+	for( vector<CModelSurface*>::iterator it=_surfaces.begin();it!=_surfaces.end();++it ){
+		(*it)->Transform( matrix,itMatrix );
+	}
+}
+
 void CModel::ScaleTexCoords( float s_scale,float t_scale ){
 	for( vector<CModelSurface*>::iterator it=_surfaces.begin();it!=_surfaces.end();++it ){
 		(*it)->ScaleTexCoords( s_scale,t_scale );
@@ -112,11 +119,7 @@ void CModel::ScaleTexCoords( float s_scale,float t_scale ){
 }
 
 void CModel::ResetTransform(){
-	CMat4 matrix=Matrix();
-	CMat4 itMatrix=(-matrix).Transpose();
-	for( vector<CModelSurface*>::iterator it=_surfaces.begin();it!=_surfaces.end();++it ){
-		(*it)->Transform( matrix,itMatrix );
-	}
+	TransformSurfaces( Matrix() );
 	SetMatrix( CMat4() );
 }
 
