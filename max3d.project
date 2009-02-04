@@ -103,10 +103,6 @@
     <Project Name="assimp"/>
     <Project Name="ode"/>
   </Dependencies>
-  <Dependencies Name="Win32 Release">
-    <Project Name="assimp"/>
-    <Project Name="ode"/>
-  </Dependencies>
   <Dependencies Name="Win32 Debug">
     <Project Name="assimp"/>
     <Project Name="ode"/>
@@ -125,24 +121,24 @@
         <Library Value="libode.a"/>
       </Linker>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
-        <PostConnectCommands></PostConnectCommands>
-        <StartupCommands></StartupCommands>
+        <PostConnectCommands/>
+        <StartupCommands/>
       </Debugger>
       <ResourceCompiler Required="no" Options=""/>
       <PreBuild/>
       <PostBuild/>
       <CustomBuild Enabled="no">
-        <CleanCommand></CleanCommand>
-        <BuildCommand></BuildCommand>
-        <PreprocessFileCommand></PreprocessFileCommand>
-        <SingleFileCommand></SingleFileCommand>
-        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
-        <WorkingDirectory></WorkingDirectory>
+        <WorkingDirectory/>
       </CustomBuild>
       <AdditionalRules>
-        <CustomPostBuild></CustomPostBuild>
-        <CustomPreBuild></CustomPreBuild>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
       </AdditionalRules>
     </Configuration>
     <Configuration Name="Linux Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library">
@@ -158,24 +154,24 @@
         <Library Value="libode.a"/>
       </Linker>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
-        <PostConnectCommands></PostConnectCommands>
-        <StartupCommands></StartupCommands>
+        <PostConnectCommands/>
+        <StartupCommands/>
       </Debugger>
       <ResourceCompiler Required="no" Options=""/>
       <PreBuild/>
       <PostBuild/>
       <CustomBuild Enabled="no">
-        <CleanCommand></CleanCommand>
-        <BuildCommand></BuildCommand>
-        <PreprocessFileCommand></PreprocessFileCommand>
-        <SingleFileCommand></SingleFileCommand>
-        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
-        <WorkingDirectory></WorkingDirectory>
+        <WorkingDirectory/>
       </CustomBuild>
       <AdditionalRules>
-        <CustomPostBuild></CustomPostBuild>
-        <CustomPreBuild></CustomPreBuild>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
       </AdditionalRules>
     </Configuration>
     <Configuration Name="Macos Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library">
@@ -191,24 +187,24 @@
         <Library Value="libode.a"/>
       </Linker>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
-        <PostConnectCommands></PostConnectCommands>
-        <StartupCommands></StartupCommands>
+        <PostConnectCommands/>
+        <StartupCommands/>
       </Debugger>
       <ResourceCompiler Required="no" Options=""/>
       <PreBuild/>
       <PostBuild/>
       <CustomBuild Enabled="no">
-        <CleanCommand></CleanCommand>
-        <BuildCommand></BuildCommand>
-        <PreprocessFileCommand></PreprocessFileCommand>
-        <SingleFileCommand></SingleFileCommand>
-        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
-        <WorkingDirectory></WorkingDirectory>
+        <WorkingDirectory/>
       </CustomBuild>
       <AdditionalRules>
-        <CustomPostBuild></CustomPostBuild>
-        <CustomPreBuild></CustomPreBuild>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
       </AdditionalRules>
     </Configuration>
     <Configuration Name="Macos Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library">
@@ -224,24 +220,24 @@
         <Library Value="libode.a"/>
       </Linker>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
-        <PostConnectCommands></PostConnectCommands>
-        <StartupCommands></StartupCommands>
+        <PostConnectCommands/>
+        <StartupCommands/>
       </Debugger>
       <ResourceCompiler Required="no" Options=""/>
       <PreBuild/>
       <PostBuild/>
       <CustomBuild Enabled="no">
-        <CleanCommand></CleanCommand>
-        <BuildCommand></BuildCommand>
-        <PreprocessFileCommand></PreprocessFileCommand>
-        <SingleFileCommand></SingleFileCommand>
-        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
-        <WorkingDirectory></WorkingDirectory>
+        <WorkingDirectory/>
       </CustomBuild>
       <AdditionalRules>
-        <CustomPostBuild></CustomPostBuild>
-        <CustomPreBuild></CustomPreBuild>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
       </AdditionalRules>
     </Configuration>
     <Configuration Name="Win32 Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library">
@@ -257,26 +253,24 @@
         <Library Value="libode.a"/>
       </Linker>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
-        <PostConnectCommands></PostConnectCommands>
-        <StartupCommands></StartupCommands>
+        <PostConnectCommands/>
+        <StartupCommands/>
       </Debugger>
       <ResourceCompiler Required="no" Options=""/>
       <PreBuild/>
       <PostBuild/>
       <CustomBuild Enabled="no">
-        <CleanCommand></CleanCommand>
-        <BuildCommand></BuildCommand>
-        <PreprocessFileCommand></PreprocessFileCommand>
-        <SingleFileCommand></SingleFileCommand>
-        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
-        <WorkingDirectory></WorkingDirectory>
+        <WorkingDirectory/>
       </CustomBuild>
       <AdditionalRules>
-        <CustomPostBuild></CustomPostBuild>
-        <CustomPreBuild>
-
-</CustomPreBuild>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
       </AdditionalRules>
     </Configuration>
     <Configuration Name="Win32 Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library">
@@ -292,27 +286,29 @@
         <Library Value="libode.a"/>
       </Linker>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
-        <PostConnectCommands></PostConnectCommands>
-        <StartupCommands></StartupCommands>
+        <PostConnectCommands/>
+        <StartupCommands/>
       </Debugger>
       <ResourceCompiler Required="no" Options=""/>
       <PreBuild/>
       <PostBuild/>
       <CustomBuild Enabled="no">
-        <CleanCommand></CleanCommand>
-        <BuildCommand></BuildCommand>
-        <PreprocessFileCommand></PreprocessFileCommand>
-        <SingleFileCommand></SingleFileCommand>
-        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
-        <WorkingDirectory></WorkingDirectory>
+        <WorkingDirectory/>
       </CustomBuild>
       <AdditionalRules>
-        <CustomPostBuild></CustomPostBuild>
-        <CustomPreBuild>
-
-</CustomPreBuild>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
       </AdditionalRules>
     </Configuration>
   </Settings>
+  <Dependencies Name="Win32 Release">
+    <Project Name="assimp"/>
+    <Project Name="ode"/>
+  </Dependencies>
 </CodeLite_Project>

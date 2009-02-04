@@ -24,9 +24,7 @@ void main(){
 
 	for( int i=0;i<15;++i ){
 		vec2 tc=min( texCoords+BlurScale*float(i-7),bb_ViewportSize );
-		vec3 c=texture2DRect( bb_ColorBuffer,tc ).rgb;
-		if( BlurScale.x==1.0 ) c=max( c-1.0,0.0 );
-		color.rgb+=c * blurFactors[i];//texture2DRect( bb_ColorBuffer,tc ) * blurFactors[i];
+		color+=texture2DRect( bb_ColorBuffer,tc ) * blurFactors[i];
 	}
 
 	gl_FragColor=color;

@@ -10,18 +10,21 @@ SetClearColor .25,.5,1
 SetAmbientColor .25,.25,.25
 
 'fog
-Local fogShader=CreateShader( LoadString( "linearfog.glsl" ) )
-Local fogMaterial=CreateMaterial()
-SetMaterialFloat fogMaterial,"FogStart",48
-SetMaterialFloat fogMaterial,"FogEnd",64
-SetMaterialColor fogMaterial,"FogColor",.25,.5,1	'same as clear color...
-AddRenderPass fogShader,fogMaterial
+Local fogMat=CreateMaterial()
+SetMaterialFloat fogMat,"FogStart",48
+SetMaterialFloat fogMat,"FogEnd",64
+SetMaterialColor fogMat,"FogColor",.25,.5,1	'same as clear color...
+AddRenderPass LoadShader( "linearfog.glsl" ),fogMat
 
 'god rays
-Local godShader=CreateShader( LoadString( "godrays.glsl" ) )
-Local godMaterial=CreateMaterial()
-SetMaterialColor godMaterial,"GodRaysColor",1,1,0
-AddRenderPass godShader,godMaterial
+Local godMat=CreateMaterial()
+SetMaterialColor godMat,"GodRaysColor",1,1,0
+AddRenderPass LoadShader( "godrays.glsl" ),godMat
+
+'blur
+Local blurMat=CreateMaterial()
+SetMaterialFloat blurMat,"BlurStrength",1'.5
+'AddRenderPass LoadShader( "blur.glsl" ),blurMat
 
 'collision types:
 '1=player
@@ -143,13 +146,13 @@ While Not KeyHit( KEY_ESCAPE )
 		Local dx#=x-512,dy#=y-384
 		Local d#=Sqr( dx*dx+dy*dy )/384.0
 		If d>1 d=1
-		SetMaterialFloat godMaterial,"GodRaysExposure",(1-d)*.5
-		SetMaterialFloat godMaterial,"GodRaysLightX",ProjectedX()
-		SetMaterialFloat godMaterial,"GodRaysLightY",ProjectedY()
+		SetMaterialFloat godMat,"GodRaysExposure",(1-d)*.5
+		SetMaterialFloat godMat,"GodRaysLightX",ProjectedX()
+		SetMaterialFloat godMat,"GodRaysLightY",ProjectedY()
 	Else
-		SetMaterialFloat godMaterial,"GodRaysExposure",0
-		SetMaterialFloat godMaterial,"GodRaysLightX",0
-		SetMaterialFloat godMaterial,"GodRaysLightY",0
+		SetMaterialFloat godMat,"GodRaysExposure",0
+		SetMaterialFloat godMat,"GodRaysLightX",0
+		SetMaterialFloat godMat,"GodRaysLightY",0
 	EndIf
 	
 	RenderWorld
