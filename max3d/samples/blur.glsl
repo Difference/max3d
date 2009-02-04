@@ -7,7 +7,6 @@ varying vec2 texCoords;
 //@vertex
 void main(){
 	gl_Position=bb_Vertex;
-	texCoords=bb_TexCoords0.st;
 }
 
 //@fragment
@@ -17,9 +16,9 @@ uniform sampler2DRect bb_BlurBuffer;
 
 void main(){
 
-	vec4 fragColor=texture2DRect( bb_ColorBuffer,texCoords );
+	vec4 fragColor=texture2DRect( bb_ColorBuffer,gl_FragCoord.xy );
 	
-	vec4 blurColor=texture2DRect( bb_BlurBuffer,texCoords/4.0 );
+	vec4 blurColor=texture2DRect( bb_BlurBuffer,gl_FragCoord.xy/4.0 );
 	
 	gl_FragColor=mix( fragColor,blurColor,BlurStrength );
 }
