@@ -5,52 +5,23 @@ Import Bmx3d.Max3d
 
 Max3dGraphics 1024,768,0,60,1
 
-SetClearColor .75,.5,1
+SetClearColor .25,.5,1
 
 SetAmbientColor .25,.25,.25
 
-'skybox
-Local skymat=CreateMaterial()
-SetMaterialFloat skymat,"FogStart",56
-SetmaterialFloat skymat,"FogEnd",64
-SetMaterialTexture skymat,"BackgroundTexture",LoadTexture( "dayfair.jpg" )
-
-Local skybox=CreateSphere( skymat,64,0,0 )
-Local surf=GetModelSurface( skybox,0 )
-SetSurfaceShader surf,BackgroundShader()
-FlipModel skybox
-ScaleModelTexCoords skybox,.5,2
-
-'Set up fog
-Rem
+'fog
 Local fogShader=CreateShader( LoadString( "linearfog.glsl" ) )
 Local fogMaterial=CreateMaterial()
 SetMaterialFloat fogMaterial,"FogStart",48
 SetMaterialFloat fogMaterial,"FogEnd",64
 SetMaterialColor fogMaterial,"FogColor",.25,.5,1	'same as clear color...
 AddRenderPass fogShader,fogMaterial
-End Rem
 
-'Rem
+'god rays
 Local godShader=CreateShader( LoadString( "godrays.glsl" ) )
 Local godMaterial=CreateMaterial()
 SetMaterialColor godMaterial,"GodRaysColor",1,1,0
 AddRenderPass godShader,godMaterial
-'End Rem
-
-Rem
-Local blurShader=CreateShader( LoadString( "blur.glsl" ) )
-Local blurMaterial=CreateMaterial()
-SetMaterialFloat blurMaterial,"BlurStrength",0
-'AddRenderPass blurShader,blurMaterial
-
-'Local lineShader=CreateShader( LoadString( "outline.glsl" ) )
-'Local lineMaterial=CreateMaterial()
-'AddRenderPass lineShader,lineMaterial
-End Rem
-Local toneShader=LoadShader( "tonemap.glsl" )
-Local toneMaterial=CreateMaterial()
-AddRenderPass toneShader,toneMaterial
 
 'collision types:
 '1=player
@@ -118,25 +89,10 @@ SetCameraViewport camera,0,0,1024,768
 SetEntityParent camera,player
 MoveEntity camera,0,1,0
 
-Rem
-Local camera2=CreateCamera()
-SetCameraViewport camera2,512-64,768-128,128,128
-SetEntityParent camera2,player
-MoveEntity camera2,0,20,0
-TurnEntity camera2,0,90,0
-End Rem
-
 Local bluspark=CreateMaterial()
 SetMaterialColor bluspark,"SpriteColor",1,1,1
 SetMaterialTexture bluspark,"SpriteTexture",LoadTexture( "bluspark.bmp" )
 Local sprite=CreateSprite( bluspark )
-
-Rem
-Local mirror=CreateMirror()
-MoveEntity mirror,0,3.75,8.5
-'SetMirrorSize mirror,8,4'4,2
-'SetMirrorResolution mirror,512,512
-End Rem
 
 Local yvel#
 
@@ -174,9 +130,6 @@ While Not KeyHit( KEY_ESCAPE )
 	Local cy#=EntityMatrixElement( camera,3,1 )
 	Local cz#=EntityMatrixElement( camera,3,2 )
 	
-	SetEntityTranslation skybox,cx,cy,cz
-	SetEntityRotation skybox,60,0,0
-	
 	SetEntityTranslation sprite,cx,cy,cz
 	SetEntityRotation sprite,lightYaw,lightPitch,lightRoll
 	MoveEntity sprite,0,0,-20
@@ -185,7 +138,6 @@ While Not KeyHit( KEY_ESCAPE )
 	Local sy#=EntityMatrixElement( sprite,3,1 )
 	Local sz#=EntityMatrixElement( sprite,3,2 )
 
-'Rem	
 	If CameraProject( camera,sx,sy,sz )
 		Local x#=ProjectedX(),y#=ProjectedY()
 		Local dx#=x-512,dy#=y-384
@@ -199,7 +151,6 @@ While Not KeyHit( KEY_ESCAPE )
 		SetMaterialFloat godMaterial,"GodRaysLightX",0
 		SetMaterialFloat godMaterial,"GodRaysLightY",0
 	EndIf
-'End Rem
 	
 	RenderWorld
 	
