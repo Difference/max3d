@@ -43,7 +43,6 @@ public:
 	CShader *SpriteShader(){ return _spriteShader; }
 	CShader *TerrainShader(){ return _terrainShader; }
 	CShader *MirrorShader(){ return _mirrorShader; }
-	CShader *BackgroundShader(){ return _backgroundShader; }
 	
 	CShader *SpotLightShader(){ return _spotLightShader; }
 	CShader *PointLightShader(){ return _pointLightShader; }
@@ -58,7 +57,6 @@ private:
 	CShader *_spriteShader;
 	CShader *_terrainShader;
 	CShader *_mirrorShader;
-	CShader *_backgroundShader;
 
 	CShader *_spotLightShader;
 	CShader *_pointLightShader;

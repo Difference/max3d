@@ -42,12 +42,19 @@ POSSIBILITY OF SUCH DAMAGE.
 
 typedef CObject *(*TObjectImporter)( const char *type,const char *path );
 
+enum{
+	APP_USEHDR=1
+};
+
 class CApp{
 public:
 	CApp();
 
 	//Startup
-	void Init( TObjectImporter importer );
+	void Init( TObjectImporter importer,int flags );
+	
+	//return app flags
+	int Flags(){ return _flags; }
 
 	//graphics driver
 	CGraphics *Graphics(){ return _graphics; }
@@ -72,6 +79,7 @@ public:
 	
 private:
 	TObjectImporter _importer;
+	int _flags;
 	CGraphics *_graphics;
 	CScene *_scene;
 	CWorld *_world;

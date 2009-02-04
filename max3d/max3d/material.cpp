@@ -37,9 +37,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 CMaterial::CMaterial(){
 	SetColor( "DiffuseColor",CVec3(1) );
+	SetColor( "EmissiveColor",CVec3(0) );
 	SetTexture( "DiffuseTexture",App.TextureUtil()->WhiteTexture() );
+	SetTexture( "EmissiveTexture",App.TextureUtil()->WhiteTexture() );
 	SetTexture( "SpecularTexture",App.TextureUtil()->BlackTexture() );
-	SetTexture( "EmissiveTexture",App.TextureUtil()->BlackTexture() );
 	SetTexture( "NormalTexture",App.TextureUtil()->FlatTexture() );
 }
 

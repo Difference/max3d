@@ -64,7 +64,6 @@ void scene_init(){
 	App.Graphics()->SetVec2Param( "bb_WindowSize",CVec2( w,h ) );
 	App.Graphics()->SetVec2Param( "bb_WindowScale",CVec2( 1.0f/w,1.0f/h ) );
 	
-//	float vbdata[]={ 0,0,1,0,1,1,0,1 };
 	float vbdata[]={ 
 		-1,-1,.999f,0,0,
 		-1,1,.999f,0,1,
@@ -75,8 +74,6 @@ void scene_init(){
 	quadVB->SetData( vbdata );
 	quadIB=App.Graphics()->CreateIndexBuffer( 6,"1i" );
 	quadIB->SetData( ibdata );
-
-//	quadShader=(CShader*)App.ImportObject( "CShader","quad.glsl" );
 
 	boxVB=App.Graphics()->CreateVertexBuffer( 8,"3f" );
 	int ip[]={
@@ -89,9 +86,13 @@ void scene_init(){
 	boxIB=App.Graphics()->CreateIndexBuffer( 36,"1i" );
 	boxIB->SetData( ip );
 	
-	accumBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_FILTER|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
-	accumBuffer2=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_FILTER|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
-	accumBuffer3=App.Graphics()->CreateTexture( w/4,h/4,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_FILTER|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
+	int fmt=FORMAT_RGBA8;
+	if( App.Flags() & APP_USEHDR ) fmt=FORMAT_RGBA16F;
+	
+	accumBuffer=App.Graphics()->CreateTexture( w,h,fmt,TEXTURE_CLAMPST|TEXTURE_FILTER|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
+	accumBuffer2=App.Graphics()->CreateTexture( w,h,fmt,TEXTURE_CLAMPST|TEXTURE_FILTER|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
+	accumBuffer3=App.Graphics()->CreateTexture( w/4,h/4,fmt,TEXTURE_CLAMPST|TEXTURE_FILTER|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
+	
 	materialBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
 	normalBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
 	depthBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_DEPTH,TEXTURE_CLAMPST|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
@@ -153,14 +154,6 @@ void CScene::SetShaderMode( string mode ){
 	}else if( mode=="clear" ){
 		App.Graphics()->SetColorBuffer( 0,accumBuffer );
 		App.Graphics()->SetDepthBuffer( depthBuffer );
-		App.Graphics()->SetViewport( _viewport );
-		App.Graphics()->SetWriteMask( WRITEMASK_RED|WRITEMASK_GREEN|WRITEMASK_BLUE|WRITEMASK_ALPHA );
-		App.Graphics()->SetBlendFunc( BLENDFUNC_ONE,BLENDFUNC_ZERO );
-		App.Graphics()->SetDepthFunc( DEPTHFUNC_LE );
-		App.Graphics()->SetCullMode( CULLMODE_BACK );
-	}else if( mode=="background" ){
-//		App.Graphics()->SetColorBuffer( 0,accumBuffer );
-//		App.Graphics()->SetDepthBuffer( depthBuffer );
 		App.Graphics()->SetViewport( _viewport );
 		App.Graphics()->SetWriteMask( WRITEMASK_RED|WRITEMASK_GREEN|WRITEMASK_BLUE|WRITEMASK_ALPHA );
 		App.Graphics()->SetBlendFunc( BLENDFUNC_ONE,BLENDFUNC_ZERO );
@@ -564,16 +557,6 @@ void CScene::RenderCamera( CCamera *camera ){
 		}
 	}
 	
-	//Skybox
-	CTexture *colorBuf=accumBuffer;
-
-	//Flip colorBuf
-	App.Graphics()->SetTextureParam( "bb_ColorBuffer",colorBuf );
-	colorBuf=(colorBuf==accumBuffer) ? accumBuffer2 : accumBuffer;
-	SetShaderMode( "background" );
-	App.Graphics()->SetColorBuffer( 0,colorBuf );
-	RenderSurfaces( camera->RenderFrustum() );
-	
 	//execute render passes
 	vector<CRenderPass*> passes=_passes;
 	if( !passes.size() ){
@@ -584,6 +567,8 @@ void CScene::RenderCamera( CCamera *camera ){
 
 	SetShaderMode( "postprocess" );
 	
+	CTexture *colorBuf=accumBuffer;
+
 	for( int i=0;i<passes.size();++i ){
 
 		CRenderPass *pass=passes[i];

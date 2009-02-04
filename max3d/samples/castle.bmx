@@ -3,15 +3,15 @@ Strict
 
 Import Bmx3d.Max3d
 
-Max3dGraphics 1024,768,0,60
+Max3dGraphics 1024,768,0,60,1
 
-SetClearColor .25,.5,1
+SetClearColor .75,.5,1
 
 SetAmbientColor .25,.25,.25
 
 'skybox
 Local skymat=CreateMaterial()
-SetMaterialFloat skymat,"FogStart",32
+SetMaterialFloat skymat,"FogStart",56
 SetmaterialFloat skymat,"FogEnd",64
 SetMaterialTexture skymat,"BackgroundTexture",LoadTexture( "dayfair.jpg" )
 
@@ -48,6 +48,9 @@ SetMaterialFloat blurMaterial,"BlurStrength",0
 'Local lineMaterial=CreateMaterial()
 'AddRenderPass lineShader,lineMaterial
 End Rem
+Local toneShader=LoadShader( "tonemap.glsl" )
+Local toneMaterial=CreateMaterial()
+AddRenderPass toneShader,toneMaterial
 
 'collision types:
 '1=player

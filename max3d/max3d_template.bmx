@@ -38,9 +38,9 @@ Global Max3dImportDirs$[]=["{DEVDIR}/max3d/max3d"]
 Rem
 bbdoc: Max3dGraphics
 End Rem
-Function Max3dGraphics( w,h,d=0,r=60 )
+Function Max3dGraphics( w,h,d=0,r=60,flags=0 )
 	GLGraphics w,h,d,r,GRAPHICS_BACKBUFFER
-	OpenMax3d
+	OpenMax3d flags
 End Function
 
 Rem
@@ -57,7 +57,7 @@ bbdoc: LoadTexture
 End Rem
 Function LoadTexture( path$ )
 	Print "Loading texture:"+path
-	Local flags=TEXTURE_FILTER|TEXTURE_MIPMAP|TEXTURE_STATIC
+	Local flags=TEXTURE_FILTER|TEXTURE_MIPMAP|TEXTURE_STATIC'TEXTURE_FILTER|TEXTURE_MIPMAP|TEXTURE_STATIC
 	Local t:TPixmap=LoadPixmap( path )
 	If Not t Return
 	Local fmt=m3dPixelFormat( t )
@@ -224,7 +224,7 @@ Function m3dProc:Byte Ptr( t$ )
 	End
 End Function
 
-Function OpenMax3d()
+Function OpenMax3d( flags )
 	If m3dLib Return
 	
 	Local lib$="{DEVDIR}/"
@@ -250,5 +250,5 @@ Function OpenMax3d()
 	
 	{INITS}
 	
-	InitMax3d m3dImporter
+	InitMax3d m3dImporter,flags
 End Function

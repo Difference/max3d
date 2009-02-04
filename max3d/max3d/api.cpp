@@ -71,8 +71,8 @@ extern "C"{	//these will need to be CDECL too for lua...
 //
 
 /// Initalize Max3d - must be called before any other commands
-API void m3dInitMax3D( void *importer ){
-	App.Init( (TObjectImporter)importer );
+API void m3dInitMax3D( void *importer,int flags ){
+	App.Init( (TObjectImporter)importer,flags );
 }
 
 API void m3dUseDegrees(){
@@ -153,10 +153,6 @@ API void m3dSetCubeTextureData( CTexture *texture,const void *data ){
 //***** Shader API *****
 API CShader *m3dCreateShader( const char *source ){
 	return App.Graphics()->CreateShader( source );
-}
-
-API CShader *m3dBackgroundShader(){
-	return App.ShaderUtil()->BackgroundShader();
 }
 
 //***** Material API *****

@@ -39,6 +39,7 @@ uniform sampler2D DiffuseTexture;
 
 #if BB_MODE==BB_AMBIENT
 uniform vec3 DiffuseColor;
+uniform vec3 EmissiveColor;
 uniform sampler2D EmissiveTexture;
 uniform sampler2D SpecularTexture;
 uniform sampler2D NormalTexture;
@@ -54,7 +55,7 @@ void main(){
 #if BB_MODE==BB_AMBIENT
 	vec3 diffuse=DiffuseColor * texel.rgb;
 	
-	vec3 emissive=texture2D( EmissiveTexture,texCoords0 ).rgb;
+	vec3 emissive=EmissiveColor * texture2D( EmissiveTexture,texCoords0 ).rgb;
 
 	float specular=texture2D( SpecularTexture,texCoords0 ).r;
 	
