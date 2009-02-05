@@ -78,8 +78,7 @@ AddRenderPass LoadShader( "linearfog.glsl" ),mat
 
 mat=CreateMaterial()
 SetMaterialTexture mat,"SkyTexture",LoadTexture( "spacebox.jpg" )
-Local shader=LoadShader( "skyhemi.glsl" )
-AddRenderPass LoadShader( "skyhemi.glsl" ),mat
+AddRenderPass LoadShader( "skysphere.glsl" ),mat
 
 Local yvel#
 
