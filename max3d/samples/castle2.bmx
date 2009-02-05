@@ -70,8 +70,8 @@ SetEntityParent camera,player
 MoveEntity camera,0,1,0
 
 Local mat=CreateMaterial()
-SetMaterialFloat mat,"SkyStart",48
-SetMaterialFloat mat,"SkyEnd",64
+SetMaterialFloat mat,"SkyStart",64
+SetMaterialFloat mat,"SkyEnd",96
 SetMaterialTexture mat,"SkyTexture",LoadTexture( "spacebox.jpg" )
 AddRenderPass LoadShader( "skysphere.glsl" ),mat
 

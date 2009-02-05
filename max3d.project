@@ -303,11 +303,11 @@
       </AdditionalRules>
     </Configuration>
   </Settings>
-  <Dependencies Name="Win32 Release">
+  <Dependencies Name="Macos Release">
     <Project Name="assimp"/>
     <Project Name="ode"/>
   </Dependencies>
-  <Dependencies Name="Macos Release">
+  <Dependencies Name="Win32 Release">
     <Project Name="assimp"/>
     <Project Name="ode"/>
   </Dependencies>
