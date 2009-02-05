@@ -192,8 +192,8 @@ void CScene::SetShaderMode( string mode ){
 		App.Graphics()->SetDepthFunc( DEPTHFUNC_LE );
 		App.Graphics()->SetCullMode( CULLMODE_BACK );
 	}else if( mode=="postprocess" ){
-//		App.Graphics()->SetColorBuffer( 0,0 );
-//		App.Graphics()->SetDepthBuffer( 0 );
+		App.Graphics()->SetColorBuffer( 0,0 );
+		App.Graphics()->SetDepthBuffer( 0 );
 		App.Graphics()->SetViewport( _viewport );
 		App.Graphics()->SetWriteMask( WRITEMASK_RED|WRITEMASK_GREEN|WRITEMASK_BLUE );
 		App.Graphics()->SetBlendFunc( BLENDFUNC_ONE,BLENDFUNC_ZERO );
@@ -473,25 +473,24 @@ void CScene::RenderDistantLight( CLight *light,CCamera *camera ){
 
 void CScene::RenderCamera( CCamera *camera ){
 	++_renderNest;
-//	_renderNest=1;
 
 	for( vector<CSurface*>::iterator it=_surfaces.begin();it!=_surfaces.end();++it ){
 		CSurface *surface=*it;
 		surface->OnRenderScene( camera );
 	}
 
+	//push graphics target state
+	CTexture *bufStates[5];
+	for( int i=0;i<4;++i ){
+		bufStates[i]=App.Graphics()->ColorBuffer( i );
+	}
+	bufStates[4]=App.Graphics()->DepthBuffer();
+	
 	for( vector<CSurface*>::iterator it=_surfaces.begin();it!=_surfaces.end();++it ){
 		CSurface *surface=*it;
 		surface->OnRenderCamera( camera );
 	}
-	
-	//push graphics target state
-	CTexture *colorBuffers[4];
-	for( int i=0;i<4;++i ){
-		colorBuffers[i]=App.Graphics()->ColorBuffer( i );
-	}
-	CTexture *depthBuffer=App.Graphics()->DepthBuffer();
-	
+
 	int spotMask=1<<CShader::ModeForName( "spotlight" );
 	int pointMask=1<<CShader::ModeForName( "pointlight" );
 	int distantMask=1<<CShader::ModeForName( "distantlight" );
@@ -526,8 +525,6 @@ void CScene::RenderCamera( CCamera *camera ){
 	SetShaderMode( "ambient" );
 	App.Graphics()->Clear();
 	RenderSurfaces( camera->RenderFrustum() );
-	
-	App.Graphics()->SetDepthBuffer( 0 );
 	
 	//'skybox' for now...
 	SetShaderMode( "clear" );
@@ -618,7 +615,7 @@ void CScene::RenderCamera( CCamera *camera ){
 
 		if( i==passes.size()-1 ){
 			//last pass!
-			colorBuf=colorBuffers[0];
+			colorBuf=bufStates[0];
 			_viewport=camera->Viewport();
 			App.Graphics()->SetViewport( _viewport );
 		}else{
@@ -637,9 +634,9 @@ void CScene::RenderCamera( CCamera *camera ){
 
 	//pop graphics target state
 	for( int i=0;i<4;++i ){
-		App.Graphics()->SetColorBuffer( i,colorBuffers[i] );
+		App.Graphics()->SetColorBuffer( i,bufStates[i] );
 	}
-	App.Graphics()->SetDepthBuffer( depthBuffer );
+	App.Graphics()->SetDepthBuffer( bufStates[4] );
 	
 	--_renderNest;
 }

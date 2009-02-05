@@ -14,18 +14,11 @@ EnableCollisions 1,2,0,0,1
 Local yellow=CreateMaterial()
 SetMaterialColor yellow,"DiffuseColor",1,1,0
 
-Local room_mat=CreateMaterial()
-SetMaterialTexture room_mat,"DiffuseMap",LoadTexture( "stonefloor_d.jpg" )
-SetMaterialTexture room_mat,"NormalMap",LoadTexture( "stonefloor_local.jpg" )
-SetMaterialTexture room_mat,"SpecularMap",LoadTexture( "stonefloor_s.jpg" )
+Local room_mat=LoadMaterial( "stonefloor.jpg" )
 Local room=CreateBox( room_mat,10,10,10,0,0 )
 FlipModel room
 
-Local box_mat=CreateMaterial()
-SetMaterialTexture box_mat,"DiffuseMap",LoadTexture( "eurofan_d.png" )
-SetMaterialTexture box_mat,"NormalMap",LoadTexture( "eurofan_local.png" )
-SetMaterialTexture box_mat,"SpecularMap",LoadTexture( "eurofan_s.png" )
-
+Local box_mat=LoadMaterial( "eurofan.png" )
 Local pbody
 For Local y=5 To 1 Step -1
 	Local body=CreateCapsule( yellow,.1,.8,3,1 )

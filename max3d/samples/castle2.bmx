@@ -3,27 +3,10 @@ Strict
 
 Import Bmx3d.Max3d
 
-Max3dGraphics 1024,768
+Max3dGraphics 1024,768,0,60
 
 SetClearColor .25,.5,1
 SetAmbientColor .25,.25,.25
-
-'fog
-Local fogMat=CreateMaterial()
-SetMaterialFloat fogMat,"FogStart",48
-SetMaterialFloat fogMat,"FogEnd",64
-SetMaterialColor fogMat,"FogColor",.25,.5,1	'same as clear color...
-AddRenderPass LoadShader( "linearfog.glsl" ),fogMat
-
-'god rays
-Local godMat=CreateMaterial()
-SetMaterialColor godMat,"GodRaysColor",1,1,0
-AddRenderPass LoadShader( "godrays.glsl" ),godMat
-
-'blur
-Local blurMat=CreateMaterial()
-SetMaterialFloat blurMat,"BlurStrength",1
-'AddRenderPass LoadShader( "blur.glsl" ),blurMat
 
 'collision types:
 '1=player
@@ -57,14 +40,9 @@ ScaleModelTexCoords ground,50,50
 MoveEntity ground,0,-.5,0
 
 Local light=CreateDistantLight()
-Local lightYaw#=45+90,lightPitch#=45,lightRoll#
-TurnEntity light,lightYaw,lightPitch,lightRoll
-
-Local splits#[]=[0.0,4.0,16.0,64.0]
-SetLightShadowSplitsTable light,4,splits
+TurnEntity light,135,45,0
 
 Local castle=LoadModel( "CASTLE1.X",0,0 )
-'Local castle=LoadModel( "elvenhouse.b3d",0,0 )
 SetEntityScale castle,.035,.035,.035
 ResetModelTransform castle
 CreateModelBody castle,castle,4,0
@@ -91,10 +69,17 @@ SetCameraViewport camera,0,0,1024,768
 SetEntityParent camera,player
 MoveEntity camera,0,1,0
 
-Local bluspark=CreateMaterial()
-SetMaterialColor bluspark,"SpriteColor",1,1,1
-SetMaterialTexture bluspark,"SpriteTexture",LoadTexture( "bluspark.bmp" )
-Local sprite=CreateSprite( bluspark )
+Local mat
+mat=CreateMaterial()
+SetMaterialFloat mat,"FogStart",0
+SetMaterialFloat mat,"FogEnd",64
+SetMaterialColor mat,"FogColor",.25,.5,1
+AddRenderPass LoadShader( "linearfog.glsl" ),mat
+
+mat=CreateMaterial()
+SetMaterialTexture mat,"SkyTexture",LoadTexture( "spacebox.jpg" )
+Local shader=LoadShader( "skyhemi.glsl" )
+AddRenderPass LoadShader( "skyhemi.glsl" ),mat
 
 Local yvel#
 
@@ -127,32 +112,6 @@ While Not KeyHit( KEY_ESCAPE )
 	MoveEntity player,0,yvel,0
 	UpdateWorld
 	yvel=EntityY( player )-y
-	
-	Local cx#=EntityMatrixElement( camera,3,0 )
-	Local cy#=EntityMatrixElement( camera,3,1 )
-	Local cz#=EntityMatrixElement( camera,3,2 )
-	
-	SetEntityTranslation sprite,cx,cy,cz
-	SetEntityRotation sprite,lightYaw,lightPitch,lightRoll
-	MoveEntity sprite,0,0,-20
-	
-	Local sx#=EntityMatrixElement( sprite,3,0 )
-	Local sy#=EntityMatrixElement( sprite,3,1 )
-	Local sz#=EntityMatrixElement( sprite,3,2 )
-
-	If CameraProject( camera,sx,sy,sz )
-		Local x#=ProjectedX(),y#=ProjectedY()
-		Local dx#=x-512,dy#=y-384
-		Local d#=Sqr( dx*dx+dy*dy )/384.0
-		If d>1 d=1
-		SetMaterialFloat godMat,"GodRaysExposure",(1-d)*.5
-		SetMaterialFloat godMat,"GodRaysLightX",ProjectedX()
-		SetMaterialFloat godMat,"GodRaysLightY",ProjectedY()
-	Else
-		SetMaterialFloat godMat,"GodRaysExposure",0
-		SetMaterialFloat godMat,"GodRaysLightX",0
-		SetMaterialFloat godMat,"GodRaysLightY",0
-	EndIf
 	
 	RenderWorld
 	
