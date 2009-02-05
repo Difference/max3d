@@ -50,7 +50,12 @@ static CTexture *accumBuffer3;		//for more renderpasses
 static CTexture *normalBuffer;
 static CTexture *materialBuffer;
 static CTexture *depthBuffer;
+
 static CShader *clearShader;
+
+static CShader *copyShader;
+static CShader *halveShader;
+static CShader *blur15Shader;
 
 static int maxShadowBufSize;
 static CTexture *shadowBuffer;
@@ -102,6 +107,10 @@ void scene_init(){
 	App.Graphics()->SetTextureParam( "bb_NormalBuffer",normalBuffer );
 	App.Graphics()->SetTextureParam( "bb_DepthBuffer",depthBuffer );
 		
+	copyShader=(CShader*)App.ImportObject( "CShader", "copy.glsl" );
+	halveShader=(CShader*)App.ImportObject( "CShader", "halve.glsl" );
+	blur15Shader=(CShader*)App.ImportObject( "CShader", "blur15.glsl" );
+
 	clearShader=(CShader*)App.ImportObject( "CShader", "clear.glsl" );
 	shadowMapShader=(CShader*)App.ImportObject( "CShader", "shadowmap.glsl" );
 }
@@ -558,7 +567,7 @@ void CScene::RenderCamera( CCamera *camera ){
 	vector<CRenderPass*> passes=_passes;
 	if( !passes.size() ){
 		CRenderPass *pass=new CRenderPass;
-		pass->SetShader( App.ShaderUtil()->CopyShader() );
+		pass->SetShader( copyShader );
 		passes.push_back( pass );
 	}
 
@@ -577,7 +586,7 @@ void CScene::RenderCamera( CCamera *camera ){
 				
 				CTexture *colorBuf2=(colorBuf==accumBuffer) ? accumBuffer2 : accumBuffer;
 				
-				App.Graphics()->SetShader( App.ShaderUtil()->HalveShader() );
+				App.Graphics()->SetShader( halveShader );
 
 				App.Graphics()->SetTextureParam( "bb_ColorBuffer",colorBuf );
 				App.Graphics()->SetColorBuffer( 0,colorBuf2 );
@@ -591,8 +600,12 @@ void CScene::RenderCamera( CCamera *camera ){
 				App.Graphics()->SetVec2Param( "bb_ViewportSize",CVec2( _viewport.width/4,_viewport.height/4 ) );
 				RenderQuad();
 				
-				App.Graphics()->SetShader( App.ShaderUtil()->Blur15Shader() );
-				
+				App.Graphics()->SetShader( blur15Shader );
+
+				//Mac GLSL still a PITA - you still can't init arrays!
+				float blurFactors[]={ 0.0044,0.0115,0.0257,0.0488,0.0799,0.1133,0.1394,0.1494,0.1394,0.1133,0.0799,0.0488,0.0257,0.0115,0.0044 };
+				CParam::ForName( "BlurFactors" )->SetFloatValue( 15,blurFactors );
+					
 				App.Graphics()->SetVec2Param( "BlurScale",CVec2( 1.0f,0.0f ) );
 				App.Graphics()->SetTextureParam( "bb_ColorBuffer",accumBuffer3 );
 				App.Graphics()->SetColorBuffer( 0,colorBuf2 );

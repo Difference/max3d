@@ -603,7 +603,7 @@ public:
 		
 		switch( _gltype ){
 		case GL_FLOAT:
-			glUniform1fv( _glloc,1,_param->FloatValue() );
+			glUniform1fv( _glloc,_param->Count(),_param->FloatValue() );
 			break;
 		case GL_FLOAT_VEC2:
 			glUniform2fv( _glloc,1,_param->FloatValue() );
@@ -762,11 +762,11 @@ public:
 		map<string,string> pmap=SplitShaderModes( source );
 	
 		string common=
-		"//@common\n";
+		"//@common\n"
+		"#version 120\n";
 		
 		if( gpu_instancing ){
 			common+=
-			"#version 120\n"
 			"#extension GL_EXT_gpu_shader4 : enable\n"
 			"#define bb_InstanceID gl_InstanceID\n";
 		}else{

@@ -77,7 +77,7 @@
     <File Name="max3d/max3d/renderpass.cpp"/>
     <File Name="max3d/max3d/copy.glsl"/>
     <File Name="max3d/max3d/blur15.glsl"/>
-    <File Name="max3d\max3d\halve.glsl"/>
+    <File Name="max3d/max3d/halve.glsl"/>
   </VirtualDirectory>
   <Dependencies Name="Debug">
     <Project Name="assimp"/>
@@ -98,10 +98,6 @@
   <Dependencies Name="Linux Release">
     <Project Name="ode"/>
     <Project Name="assimp"/>
-  </Dependencies>
-  <Dependencies Name="Macos Release">
-    <Project Name="assimp"/>
-    <Project Name="ode"/>
   </Dependencies>
   <Dependencies Name="Win32 Debug">
     <Project Name="assimp"/>
@@ -308,6 +304,10 @@
     </Configuration>
   </Settings>
   <Dependencies Name="Win32 Release">
+    <Project Name="assimp"/>
+    <Project Name="ode"/>
+  </Dependencies>
+  <Dependencies Name="Macos Release">
     <Project Name="assimp"/>
     <Project Name="ode"/>
   </Dependencies>

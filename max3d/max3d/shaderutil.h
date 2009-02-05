@@ -48,10 +48,6 @@ public:
 	CShader *PointLightShader(){ return _pointLightShader; }
 	CShader *DistantLightShader(){ return _distantLightShader; }
 	
-	CShader *CopyShader(){ return _copyShader; }
-	CShader *HalveShader(){ return _halveShader; }
-	CShader *Blur15Shader(){ return _blur15Shader; }
-
 private:
 	CShader *_modelShader;
 	CShader *_spriteShader;
@@ -61,10 +57,6 @@ private:
 	CShader *_spotLightShader;
 	CShader *_pointLightShader;
 	CShader *_distantLightShader;
-	
-	CShader *_copyShader;
-	CShader *_halveShader;
-	CShader *_blur15Shader;
 };
 
 #endif

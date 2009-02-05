@@ -40,7 +40,7 @@ ScaleModelTexCoords ground,50,50
 MoveEntity ground,0,-.5,0
 
 Local light=CreateDistantLight()
-TurnEntity light,135,45,0
+TurnEntity light,60,45,0
 
 Local castle=LoadModel( "CASTLE1.X",0,0 )
 SetEntityScale castle,.035,.035,.035
@@ -69,14 +69,9 @@ SetCameraViewport camera,0,0,1024,768
 SetEntityParent camera,player
 MoveEntity camera,0,1,0
 
-Local mat
-mat=CreateMaterial()
-SetMaterialFloat mat,"FogStart",0
-SetMaterialFloat mat,"FogEnd",64
-SetMaterialColor mat,"FogColor",.25,.5,1
-AddRenderPass LoadShader( "linearfog.glsl" ),mat
-
-mat=CreateMaterial()
+Local mat=CreateMaterial()
+SetMaterialFloat mat,"SkyStart",48
+SetMaterialFloat mat,"SkyEnd",64
 SetMaterialTexture mat,"SkyTexture",LoadTexture( "spacebox.jpg" )
 AddRenderPass LoadShader( "skysphere.glsl" ),mat
 
