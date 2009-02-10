@@ -144,6 +144,10 @@ void CScene::AddRenderPass( CRenderPass *pass ){
 	_passes.push_back( pass );
 }
 
+void CScene::ClearRenderPasses(){
+	_passes.clear();
+}
+
 void CScene::SetShadowsEnabled( bool enabled ){
 	_shadowsEnabled=enabled;
 }
@@ -654,9 +658,11 @@ void CScene::RenderCamera( CCamera *camera ){
 	--_renderNest;
 }
 
+/*
 void CScene::RenderQuad( const CRect &rect,CShader *shader,CMaterial *material ){
 	SetShaderMode( "postprocess" );
 	App.Graphics()->SetShader( shader );
 	if( material ) material->Bind();
 	RenderQuad();
 }
+*/

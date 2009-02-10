@@ -9,7 +9,9 @@ Module Bmx3D.Max3D
 Import BRL.Pixmap
 Import BRL.FileSystem
 Import BRL.StandardIO
-Import BRL.GLGraphics
+Import BRL.GLMax2D
+Import PUB.glew
+
 
 {INCBINS}
 
@@ -34,14 +36,84 @@ Const TEXTURE_CLAMPST=TEXTURE_CLAMPS|TEXTURE_CLAMPT
 {DECLS}
 
 Global Max3dImportDirs$[]=["{DEVDIR}/max3d/max3d"]
+Global Nax3DDLLDirs$[] = ["" , "{DEVDIR}"]
 
 Rem
 bbdoc: Max3dGraphics
 End Rem
 Function Max3dGraphics( w,h,d=0,r=60,flags=0 )
-	GLGraphics w,h,d,r,GRAPHICS_BACKBUFFER
+	SetGraphicsDriver(GLMax2DDriver())
+	Graphics w , h , d , r , GRAPHICS_BACKBUFFER '| GRAPHICS_DEPTHBUFFER
+	glewinit()
 	OpenMax3d flags
 End Function
+
+Rem
+bbdoc: AddImportPath
+End Rem
+Function AddImportPath(path:String)
+	 Max3dImportDirs = Max3dImportDirs[..Max3dImportDirs.length + 1]
+	 Max3dImportDirs[Max3dImportDirs.length - 1] = path
+End Function
+
+Rem
+bbdoc: PrintImportPathes
+End Rem
+Function PrintImportPathes()	
+	For Local I:Int = 0 To Max3dImportDirs.length - 1
+		Print Max3dImportDirs[I]	
+	Next
+End Function
+
+Rem
+bbdoc: AddDLLPath
+End Rem
+Function AddDLLPath(path:String)	
+	Nax3DDLLDirs = Nax3DDLLDirs[..Nax3DDLLDirs.length + 1]
+	Nax3DDLLDirs[Nax3DDLLDirs.length - 1] = path
+End Function
+
+Rem
+bbdoc: Switch2D()
+End Rem
+Function Switch2D() 
+	 Global viewport:Int[4]
+	 glPushMatrix () ;
+	 glLoadIdentity () ;
+	 glMatrixMode(GL_PROJECTION) ;
+      glPushMatrix () ;
+      glLoadIdentity() ;
+  	 Local MaxTex:Int	
+      glGetIntegerv(GL_MAX_TEXTURE_UNITS , Varptr(MaxTex) )	
+      Local GL_TEXTURE_RECT:Int = $84f5	
+      For Local Layer = 0 Until MaxTex
+			glActiveTexture(GL_TEXTURE0 + Layer) 
+			glDisable(GL_TEXTURE_CUBE_MAP) 
+			glDisable(GL_TEXTURE_GEN_S) 
+			glDisable(GL_TEXTURE_GEN_T) 
+			glDisable(GL_TEXTURE_GEN_R) 
+			glDisable(GL_TEXTURE_RECT)	
+	 Next		
+	 glActiveTexture(GL_TEXTURE0) 
+	 glUseProgramObjectARB(0) 
+	 glGetIntegerv (GL_VIEWPORT , viewport) ;
+	 gluOrtho2D (0 , viewport[2] , viewport[3] , 0) ;
+	 glEnable(GL_DEPTH_TEST) 
+	 glDepthFunc(GL_ALWAYS)	
+	 SetBlend MASKBLEND
+End Function
+
+Rem
+bbdoc: Switch3D()
+End Rem
+Function Switch3D() 
+	glDepthFunc (GL_LESS) ; 
+	glPopMatrix () ; 
+	glMatrixMode(GL_MODELVIEW) ; 
+	glPopMatrix () ;
+	SetBlend( - 1) 
+End Function
+
 
 Rem
 bbdoc: LoadShader
@@ -226,23 +298,38 @@ End Function
 
 Function OpenMax3d( flags )
 	If m3dLib Return
+	Local lib:String
+		
+	For Local path:String = EachIn Nax3DDLLDirs
+		lib = path
+		?Win32
+			m3dLib=LoadLibraryA( "max3d.dll")
+		?Macos
+			m3dLib = dlopen( "max3d.dylib", 1 ) 
+		?Linux
+			m3dLib = dlopen( "max3d.so", 1 )
+		?
+		
+		If Not m3dLib Then
+			?Debug
+				lib:+"/Debug/"
+			?Not Debug
+				lib:+"/Release/"
 	
-	Local lib$="{DEVDIR}/"
-?Debug
-	lib:+"Debug/"
-?Not Debug
-	lib:+"Release/"
-?Win32
-	lib:+"max3d.dll"
-?Macos
-	lib:+"max3d.dylib"
-?Linux
-	lib:+"max3d.so"
-?Win32
-	m3dLib=LoadLibraryA( lib )
-?Not Win32
-	m3dLib=dlopen( lib,1 )
-?
+			?Win32
+				lib:+ "max3d.dll"
+				m3dLib=LoadLibraryA( lib )
+			?Macos
+				lib:+ "max3d.dylib"
+				m3dLib=dlopen( lib,1 )
+			?Linux
+				lib:+ "max3d.so"
+				m3dLib = dlopen( lib , 1 ) 
+			?
+		End If
+		If m3dLib Then Exit
+	Next
+				
 	If Not m3dLib
 		Print "Max3d Error: Can't open Max3d lib:"+lib
 		End

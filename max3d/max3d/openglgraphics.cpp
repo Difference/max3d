@@ -38,8 +38,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "app.h"
 #include "openglgraphics.h"
 
-static bool gpu_instancing;
-
 enum{
 	DIRTY_SHADERPROG=1,
 	DIRTY_FRAMEBUFFER=2
@@ -417,6 +415,11 @@ public:
 		}
 		if( _flags & TEXTURE_MIPMAP ){
 			glTexParameteri( _gltarget,GL_GENERATE_MIPMAP,GL_TRUE );
+			if( _gltarget==GL_TEXTURE_2D && GLEE_EXT_texture_filter_anisotropic ){
+				float maxAnisotropy;
+				glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT,&maxAnisotropy );
+				glTexParameterf( _gltarget,GL_TEXTURE_MAX_ANISOTROPY_EXT,maxAnisotropy );
+			}
 		}
 		if( _flags & TEXTURE_CLAMPS ){
 			glTexParameteri( _gltarget,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE );
@@ -765,7 +768,7 @@ public:
 		"//@common\n"
 		"#version 120\n";
 		
-		if( gpu_instancing ){
+		if( GLEE_EXT_draw_instanced ){
 			common+=
 			"#extension GL_EXT_gpu_shader4 : enable\n"
 			"#define bb_InstanceID gl_InstanceID\n";
@@ -814,9 +817,7 @@ _dirty(~0){
 	if( !GLEE_EXT_framebuffer_object ){
 		Error( "Max3d requires OpenGL EXT_framebuffer_object extension" );
 	}
-	if( GLEE_EXT_draw_instanced ){
-		gpu_instancing=true;
-	}
+	
 	int vp[4];
 	glGetIntegerv( GL_VIEWPORT,vp );
 	_windowWidth=vp[2];
@@ -1063,7 +1064,7 @@ void COpenGLGraphics::Render( int what,int first,int count,int instances ){
 		cout<<"vp="<<vp<<", fp="<<fp<<endl;
 		 */
 
-		if( gpu_instancing ){
+		if( GLEE_EXT_draw_instanced ){
 			if( GLIndexBuffer *ib=(GLIndexBuffer*)_indexBuffer ){
 				glDrawElementsInstancedEXT( prim,count,ib->GLType(),(void*)(first*ib->Pitch()),instances );
 			}else{

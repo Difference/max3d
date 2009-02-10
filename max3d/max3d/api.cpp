@@ -615,12 +615,8 @@ API void m3dAddRenderPass( CShader *shader,CMaterial *material ){
 	App.Scene()->AddRenderPass( pass );
 }
 
-API void m3dSetRenderTarget( CTexture *texture ){
-	App.Graphics()->SetColorBuffer( 0,texture );
-}
-
-API void m3dRenderQuad( int x,int y,int width,int height,CShader *shader,CMaterial *material ){
-	App.Scene()->RenderQuad( CRect( x,y,width,height ),shader,material );
+API void m3dClearRenderPasses(){
+	App.Scene()->ClearRenderPasses();
 }
 
 //***** BSPTree API *****//

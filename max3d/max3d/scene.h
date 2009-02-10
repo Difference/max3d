@@ -55,6 +55,7 @@ public:
 	const vector<CSurface*> &Surfaces(){ return _surfaces; }
 	
 	void AddRenderPass( CRenderPass *pass );
+	void ClearRenderPasses();
 	
 	void SetShadowsEnabled( bool enabled );
 	bool ShadowsEnabled(){ return _shadowsEnabled; }
