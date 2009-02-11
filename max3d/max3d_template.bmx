@@ -10,8 +10,7 @@ Import BRL.Pixmap
 Import BRL.FileSystem
 Import BRL.StandardIO
 Import BRL.GLMax2D
-Import PUB.glew
-
+Import PUB.Glew
 
 {INCBINS}
 
@@ -40,12 +39,24 @@ Global Nax3DDLLDirs$[] = ["" , "{DEVDIR}"]
 
 Rem
 bbdoc: Max3dGraphics
+about: Use this to get pure 3d graphics
 End Rem
 Function Max3dGraphics( w,h,d=0,r=60,flags=0 )
+	SetGraphicsDriver GLGraphicsDriver()
+	Graphics w,h,d,r,GRAPHICS_BACKBUFFER
+	OpenMax3d flags
+End Function
+
+Rem
+bbdoc: Max3dGraphicsEx
+about: Use this to get mixed 2d/3d graphics
+End Rem
+Function Max3dGraphicsEx( w,h,d=0,r=60,flags=0 )
 	SetGraphicsDriver(GLMax2DDriver())
-	Graphics w , h , d , r , GRAPHICS_BACKBUFFER '| GRAPHICS_DEPTHBUFFER
+	Graphics w,h,d,r,GRAPHICS_BACKBUFFER
 	glewinit()
 	OpenMax3d flags
+	SetBlend(-1) 'needs to be there to get the lighting and shadows 
 End Function
 
 Rem

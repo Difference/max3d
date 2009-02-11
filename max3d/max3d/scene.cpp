@@ -170,8 +170,8 @@ void CScene::SetShaderMode( string mode ){
 		App.Graphics()->SetViewport( _viewport );
 		App.Graphics()->SetWriteMask( WRITEMASK_RED|WRITEMASK_GREEN|WRITEMASK_BLUE|WRITEMASK_ALPHA );
 		App.Graphics()->SetBlendFunc( BLENDFUNC_ONE,BLENDFUNC_ZERO );
-		App.Graphics()->SetDepthFunc( DEPTHFUNC_LE );
-		App.Graphics()->SetCullMode( CULLMODE_BACK );
+		App.Graphics()->SetDepthFunc( DEPTHFUNC_EQ );
+		App.Graphics()->SetCullMode( CULLMODE_NONE );
 	}else if( mode=="shadow" ){
 		App.Graphics()->SetColorBuffer( 0,0 );
 		App.Graphics()->SetDepthBuffer( shadowBuffer );
@@ -218,10 +218,16 @@ void CScene::SetShaderMode( string mode ){
 void CScene::RenderQuad(){
 	CRect vp=App.Graphics()->Viewport();
 	float quadVBData[]={
+		/*
 		-1,-1,.999f,0,0,
 		-1,1,.999f,0,vp.height,
 		1,1,.999f,vp.width,vp.height,
 		1,-1,.999f,vp.width,0 };
+		*/
+		-1,-1,1,0,0,
+		-1,1,1,0,vp.height,
+		1,1,1,vp.width,vp.height,
+		1,-1,1,vp.width,0 };
 	quadVB->SetData( quadVBData );
 	App.Graphics()->SetVertexBuffer( quadVB );
 	App.Graphics()->SetIndexBuffer( quadIB );

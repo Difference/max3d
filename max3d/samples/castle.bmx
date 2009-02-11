@@ -23,7 +23,7 @@ AddRenderPass LoadShader( "godrays.glsl" ),godMat
 'blur
 Local blurMat=CreateMaterial()
 SetMaterialFloat blurMat,"BlurStrength",1
-'AddRenderPass LoadShader( "blur.glsl" ),blurMat
+AddRenderPass LoadShader( "blur.glsl" ),blurMat
 
 'collision types:
 '1=player
