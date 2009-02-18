@@ -216,7 +216,9 @@ CMat4 CEntity::InverseRenderMatrix(){
 
 //physics
 void CEntity::SetBody( CBody *body ){
+	if( _body ) _body->SetData( 0 );
 	CResource::Assign( &_body,body );
+	if( _body ) _body->SetData( this );
 }
 
 void CEntity::SetJoint( CJoint *joint ){

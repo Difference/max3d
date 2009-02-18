@@ -40,15 +40,22 @@ static const int ODE_MAX_CONTACTS=100;
 static dJointGroupID odeContactGroup;
 static dContact odeContacts[ODE_MAX_CONTACTS];
 
-static void OdeCallback( void *data,dGeomID geom1,dGeomID geom2 ){
-	((COdePhysics*)data)->OdeCallBack( geom1,geom2 );
+//a global ray geom
+static dGeomID globalRay;
+
+static void OdeUpdateCallback( void *data,dGeomID geom1,dGeomID geom2 ){
+	((COdePhysics*)data)->OdeUpdateCallback( geom1,geom2 );
+}
+
+static void OdeTraceRayCallback( void *data,dGeomID geom1,dGeomID geom2 ){
+	((COdePhysics*)data)->OdeTraceRayCallback( geom1,geom2 );
 }
 
 static COdePhysics *OdePhysics(){
 	return (COdePhysics*)App.World()->Physics();
 }
 
-void COdePhysics::OdeCallBack( dGeomID geom1,dGeomID geom2 ){
+void COdePhysics::OdeUpdateCallback( dGeomID geom1,dGeomID geom2 ){
 
 	int n=dCollide( geom1,geom2,ODE_MAX_CONTACTS,&odeContacts[0].geom,sizeof(dContact) );
 	if( !n ) return;
@@ -69,6 +76,25 @@ void COdePhysics::OdeCallBack( dGeomID geom1,dGeomID geom2 ){
 		dJointID joint=dJointCreateContact( _odeWorld,odeContactGroup,&odeContacts[i] );
 		dJointAttach( joint,odeBody1,odeBody2 );
 	}
+}
+
+void COdePhysics::OdeTraceRayCallback( dGeomID geom1,dGeomID geom2 ){
+	if( dGeomGetClass( geom1 )!=dRayClass || dGeomGetClass( geom2 )==dRayClass ){
+		Error( "Lazy Mark error!" );
+	}
+	
+	int n=dCollide( geom1,geom2,ODE_MAX_CONTACTS,&odeContacts[0].geom,sizeof(dContact) );
+	if( !n ) return;
+	
+	int mini=-1;
+	float mind=_rayContact.depth;
+	for( int i=0;i<n;++i ){
+		if( odeContacts[i].geom.depth<mind ){
+			mind=odeContacts[i].geom.depth;
+			mini=i;
+		}
+	}
+	if( mini!=-1 ) _rayContact=odeContacts[mini].geom;
 }
 
 COdeBody::COdeMeshData::COdeMeshData( const void *verts,int n_verts,int verts_pitch,const void *tris,int n_tris,int tris_pitch ){
@@ -419,9 +445,45 @@ void COdePhysics::SetGravity( const CVec3 &g ){
 }
 
 void COdePhysics::Update(){
-	dSpaceCollide( _odeSpace,this,::OdeCallback );
+	dSpaceCollide( _odeSpace,this,::OdeUpdateCallback );
 	dWorldQuickStep( _odeWorld,1.0f );///60.0f );
 	dJointGroupEmpty( odeContactGroup );
+}
+
+CBody *COdePhysics::TraceRay( const CLine &ray,int collType,float *time,CVec3 *point,CVec3 *normal ){
+	
+	float length=ray.Length();
+	
+	_rayContact.depth=length;
+	
+	dGeomID odeRay=dCreateRay( 0,length );
+	
+	dGeomSetCategoryBits( odeRay,1<<collType );
+
+	dGeomSetCollideBits( odeRay,CollideBits( collType ) );
+
+	dGeomRaySet( odeRay,ray.o.x,ray.o.y,ray.o.z,ray.d.x,ray.d.y,ray.d.z );
+	
+	dSpaceCollide2( odeRay,(dGeomID)_odeSpace,this,::OdeTraceRayCallback );
+	
+	dGeomDestroy( odeRay );
+	
+	if( _rayContact.depth<length ){
+		if( COdeBody *body=(COdeBody*)dGeomGetData( _rayContact.g2 ) ){
+
+			*time=_rayContact.depth/length;
+			
+			memcpy( point,&_rayContact.pos,12 );
+			
+			memcpy( normal,&_rayContact.normal,12 );
+			
+			CVec3 p2=ray.Evaluate( *time );
+			
+			return body;
+		}
+	}
+	
+	return 0;
 }
 
 void COdePhysics::EnableCollisions( int collType1,int collType2,float friction,float bounciness,float stiffness ){

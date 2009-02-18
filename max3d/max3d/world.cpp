@@ -135,7 +135,8 @@ void CWorld::Render(){
 	
 	App.Graphics()->BeginScene();
 	
-	App.Graphics()->SetVec3Param( "bb_ClearColor",ClearColor() );
+	App.Graphics()->SetVec4Param( "bb_ClearColor",CVec4( ClearColor(),1.0f ) );
+	
 	App.Graphics()->SetVec3Param( "bb_AmbientColor",AmbientColor() );
 	
 	for( vector<CCamera*>::const_iterator it=App.Scene()->Cameras().begin();it!=App.Scene()->Cameras().end();++it ){

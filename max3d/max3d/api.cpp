@@ -405,30 +405,72 @@ API void m3dSetCameraPerspective( CCamera *camera,float fovy,float aspect,float 
 	camera->SetProjectionMatrix( CMat4::PerspectiveMatrix( fovy * to_radians,aspect,zNear,zFar ) );
 }
 
-static CVec3 projected;
+static CVec3 projectedPoint;
 
 API int m3dCameraProject( CCamera *camera,float x,float y,float z ){
 	CVec4 t=camera->ProjectionMatrix() * camera->InverseMatrix() * CVec4( x,y,z,1 );
 	
-	projected=t.xyz()/t.w;
+	projectedPoint=t.xyz()/t.w;
 	
-	projected=projected/2.0f+.5f;
+	projectedPoint=projectedPoint/2.0f+.5f;
 	
-	projected.xy()*=CVec2( camera->Viewport().width,camera->Viewport().height );
+	projectedPoint.xy()*=CVec2( camera->Viewport().width,camera->Viewport().height );
 	
-	return projected.z>0;
+	return projectedPoint.z>0;
 }
 
-API float m3dProjectedX(){
-	return projected.x;
+API float m3dProjectedPoint( int coord ){
+	return projectedPoint[coord];
 }
 
-API float m3dProjectedY(){
-	return projected.y;
+static float pickedTime;
+static CVec3 pickedPoint;
+static CVec3 pickedNormal;
+static CEntity *pickedEntity;
+
+API CEntity *m3dCameraPick( CCamera *camera,float viewport_x,float viewport_y,int collType ){
+	
+	//not quite right - should go through inverse proj matrix for complete generality
+	//and all round sexiness.
+	
+	float farz=camera->FarZ();
+	
+	CVec3 o=camera->Matrix().t.xyz();
+	
+	float ix=camera->ProjectionMatrix().i.x;
+	float jy=camera->ProjectionMatrix().j.y;
+	
+	CVec3 v=camera->Matrix() * CVec3(
+		(viewport_x/camera->Viewport().width*2-1)/ix*farz,
+		(viewport_y/camera->Viewport().height*2-1)/jy*farz,
+		farz );
+
+	CLine ray( o,v-o );
+	
+//	cout<<ray<<endl;
+
+	if( CBody *body=App.World()->Physics()->TraceRay( ray,collType,&pickedTime,&pickedPoint,&pickedNormal ) ){
+		pickedEntity=(CEntity*)body->Data();
+	}else{
+		pickedEntity=0;
+	}
+	return pickedEntity;
 }
 
-API float m3dProjectedZ(){
-	return projected.z;
+API float m3dPickedPoint( int coord ){
+	return pickedPoint[coord];
+}
+
+API float m3dPickedNormal( int coord ){
+	return pickedNormal[coord];
+}
+
+API CEntity *m3dPickedEntity(){
+	return pickedEntity;
+}
+
+API float m3dPickedTime(){
+	return pickedTime;
 }
 
 //***** Light API *****

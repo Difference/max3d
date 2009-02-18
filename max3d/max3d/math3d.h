@@ -332,6 +332,18 @@ struct CLine{
 	
 	CLine( const CVec3 &o,const CVec3 &d ):o(o),d(d){
 	}
+
+	float Length()const{
+		return d.Length();
+	}
+	
+	CLine Normalize()const{
+		return CLine( o,d.Normalize() );
+	}
+	
+	CVec3 Evaluate( float time )const{
+		return o+d*time;
+	}
 };
 
 struct CPlane{
@@ -895,5 +907,6 @@ ostream &operator<<( ostream &o,const CVec3 &v );
 ostream &operator<<( ostream &o,const CVec4 &v );
 ostream &operator<<( ostream &o,const CPlane &p );
 ostream &operator<<( ostream &o,const CMat4 &m );
+ostream &operator<<( ostream &o,const CLine &t );
 
 #endif

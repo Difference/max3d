@@ -21,9 +21,9 @@ SetMaterialColor godMat,"GodRaysColor",1,1,0
 AddRenderPass LoadShader( "godrays.glsl" ),godMat
 
 'blur
-Local blurMat=CreateMaterial()
-SetMaterialFloat blurMat,"BlurStrength",1
-AddRenderPass LoadShader( "blur.glsl" ),blurMat
+'Local blurMat=CreateMaterial()
+'SetMaterialFloat blurMat,"BlurStrength",1
+'AddRenderPass LoadShader( "blur.glsl" ),blurMat
 
 'collision types:
 '1=player
@@ -60,8 +60,8 @@ Local light=CreateDistantLight()
 Local lightYaw#=45+90,lightPitch#=45,lightRoll#
 TurnEntity light,lightYaw,lightPitch,lightRoll
 
-Local splits#[]=[0.0,4.0,16.0,64.0]
-SetLightShadowSplitsTable light,4,splits
+'Local splits#[]=[0.0,4.0,16.0,64.0]
+'SetLightShadowSplitsTable light,4,splits
 
 Local castle=LoadModel( "CASTLE1.X",0,0 )
 'Local castle=LoadModel( "elvenhouse.b3d",0,0 )
@@ -96,7 +96,11 @@ SetMaterialColor bluspark,"SpriteColor",1,1,1
 SetMaterialTexture bluspark,"SpriteTexture",LoadTexture( "bluspark.bmp" )
 Local sprite=CreateSprite( bluspark )
 
+Local sprite2=CreateSprite( bluSpark )
+
 Local yvel#
+
+Local mx#=512,my#=384
 
 While Not KeyHit( KEY_ESCAPE )
 
@@ -141,19 +145,37 @@ While Not KeyHit( KEY_ESCAPE )
 	Local sz#=EntityMatrixElement( sprite,3,2 )
 
 	If CameraProject( camera,sx,sy,sz )
-		Local x#=ProjectedX(),y#=ProjectedY()
+		Local x#=ProjectedPoint(0),y#=ProjectedPoint(1)
 		Local dx#=x-512,dy#=y-384
 		Local d#=Sqr( dx*dx+dy*dy )/384.0
 		If d>1 d=1
 		SetMaterialFloat godMat,"GodRaysExposure",(1-d)*.5
-		SetMaterialFloat godMat,"GodRaysLightX",ProjectedX()
-		SetMaterialFloat godMat,"GodRaysLightY",ProjectedY()
+		SetMaterialFloat godMat,"GodRaysLightX",x
+		SetMaterialFloat godMat,"GodRaysLightY",y
 	Else
 		SetMaterialFloat godMat,"GodRaysExposure",0
 		SetMaterialFloat godMat,"GodRaysLightX",0
 		SetMaterialFloat godMat,"GodRaysLightY",0
 	EndIf
 	
+	'doesn't work yet...
+	mx=MouseX()
+	my=768-MouseY()
+	
+	If CameraPick( camera,mx,my,1 )
+		Local x#=pickedpoint(0)
+		Local y#=pickedpoint(1)
+		Local z#=pickedpoint(2)
+		Local nx#=pickednormal(0)
+		Local ny#=pickednormal(1)
+		Local nz#=pickednormal(2)
+		Local tx#=x'+nx'*.1
+		Local ty#=y'+ny'*.1
+		Local tz#=z'+nz'*.1
+		SetEntityTranslation sprite2,tx,ty,tz
+'		Print tz
+	EndIf
+
 	RenderWorld
 	
 	Flip

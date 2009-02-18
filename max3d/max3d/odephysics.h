@@ -127,19 +127,22 @@ public:
 	void SetGravity( const CVec3 &gravity );
 	void EnableCollisions( int colltype1,int collType2,float friction,float bounciness,float stiffness );
 	void Update();
+	CBody *TraceRay( const CLine &ray,int collType,float *time,CVec3 *point,CVec3 *normal );
 
 	//PRIVATE
 	dWorldID OdeWorld(){ return _odeWorld; }
 	dSpaceID OdeSpace(){ return _odeSpace; }
 	int CollideBits( int collType ){ return _collideBits[collType]; }
 
-	void OdeCallBack( dGeomID geom1,dGeomID geom2 );
+	void OdeUpdateCallback( dGeomID geom1,dGeomID geom2 );
+	void OdeTraceRayCallback( dGeomID geom1,dGeomID geom2 );
 
 private:
 	dWorldID _odeWorld;
 	dSpaceID _odeSpace;
 	int _collideBits[32];
 	dSurfaceParameters _surfaces[32*32];	//lazy!
+	dContactGeom _rayContact;
 };
 
 #endif

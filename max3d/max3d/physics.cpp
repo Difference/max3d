@@ -34,3 +34,13 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "physics.h"
 
+CBody::CBody():
+_data(0){
+}
+
+CBody::~CBody(){
+}
+
+void CBody::SetData( CObject *data ){
+	_data=data;
+}

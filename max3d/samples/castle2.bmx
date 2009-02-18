@@ -73,7 +73,7 @@ Local mat=CreateMaterial()
 SetMaterialFloat mat,"SkyStart",64
 SetMaterialFloat mat,"SkyEnd",96
 SetMaterialTexture mat,"SkyTexture",LoadTexture( "spacebox.jpg" )
-'AddRenderPass LoadShader( "skysphere.glsl" ),mat
+AddRenderPass LoadShader( "skysphere.glsl" ),mat
 
 Local yvel#
 

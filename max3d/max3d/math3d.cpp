@@ -58,3 +58,8 @@ ostream &operator<<( ostream &o,const CMat4 &m ){
 	o<<"CMat4("<<m.i<<","<<m.j<<","<<m.k<<","<<m.t<<")";
 	return o;
 }
+
+ostream &operator<<( ostream &o,const CLine &t ){
+	o<<"CLine("<<t.o<<","<<t.d<<")";
+	return o;
+}

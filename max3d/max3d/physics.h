@@ -40,15 +40,23 @@ class CModelSurface;
 
 class CBody : public CResource{
 public:
+	CBody();
+	~CBody();
+
 	virtual void SetEnabled( bool enabled )=0;
 	
 	virtual void Validate( const CMat4 &matrix,bool modified )=0;
+
 	virtual CMat4 Animate()=0;
 	
+	void SetData( CObject *data );
+	CObject *Data(){ return _data; }
+
 	int CollType(){ return _collType; }
 	float Mass(){ return _mass; }
 	
 protected:	
+	CObject *_data;
 	int _collType;
 	float _mass;
 };
@@ -74,6 +82,7 @@ public:
 	virtual void SetGravity( const CVec3 &gravity )=0;
 	virtual void EnableCollisions( int colltype1,int collType2,float friction,float bounciness,float stiffness )=0;
 	virtual void Update()=0;
+	virtual CBody *TraceRay( const CLine &ray,int collType,float *time,CVec3 *point,CVec3 *normal )=0;
 };
 
 #endif
