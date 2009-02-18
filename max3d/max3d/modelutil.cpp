@@ -119,7 +119,7 @@ CModel *CModelUtil::ImportModel( const string &path,int collType,float mass ){
 	aiProcess_Triangulate |
 //	aiProcess_GenSmoothNormals |			//leave these to max3d for now...
 //	aiProcess_CalcTangentSpace |
-	aiProcess_RemoveRedundantMaterials |	//trust the author
+//	aiProcess_RemoveRedundantMaterials |	//trust the author
 	aiProcess_JoinIdenticalVertices |
 	aiProcess_PreTransformVertices |
 	aiProcess_FindDegenerates |
