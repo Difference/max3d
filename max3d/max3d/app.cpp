@@ -50,8 +50,6 @@ void CApp::Init( TObjectImporter importer,int flags ){
 	_importer=importer;
 	_flags=flags;
 	
-	if( flags & APP_USEHDR ) cout<<"HDR rendering enabled."<<endl;
-
 	_graphics=new COpenGLGraphics;
 
 	stdparams_init();

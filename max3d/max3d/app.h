@@ -43,7 +43,9 @@ POSSIBILITY OF SUCH DAMAGE.
 typedef CObject *(*TObjectImporter)( const char *type,const char *path );
 
 enum{
-	APP_USEHDR=1
+	MAX3D_FLOATCOLORBUFFER=1,
+	MAX3D_FLOATNORMALBUFFER=2,
+	MAX3D_AUTOMAXANISOTROPIC=4
 };
 
 class CApp{

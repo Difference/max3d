@@ -3,7 +3,9 @@ Strict
 
 Import Bmx3d.Max3d
 
-Max3dGraphics 1024,768
+Max3dGraphics 1024,768,0,60,MAX3D_AUTOMAXANISOTROPIC
+
+SetDefaultTextureFlags TEXTURE_FILTER|TEXTURE_MIPMAP'|TEXTURE_CLAMPST
 
 SetClearColor .25,.5,1
 SetAmbientColor .25,.25,.25

@@ -32,10 +32,19 @@ Const TEXTURE_RENDER=16
 Const TEXTURE_STATIC=32
 Const TEXTURE_CLAMPST=TEXTURE_CLAMPS|TEXTURE_CLAMPT
 
+Const MAX3D_FLOATCOLORBUFFER=1
+Const MAX3D_FLOATNORMALBUFFER=2
+Const MAX3D_AUTOMAXANISOTROPIC=4
+
 {DECLS}
 
-Global Max3dImportDirs$[]=["{DEVDIR}/max3d/max3d"]
-Global Nax3DDLLDirs$[] = ["" , "{DEVDIR}"]
+Private
+
+Global m3dImportDirs$[]=["{DEVDIR}/max3d/max3d"]
+Global m3dDllDirs$[] = ["" , "{DEVDIR}"]
+Global m3dDefTexFlags=TEXTURE_FILTER|TEXTURE_MIPMAP|TEXTURE_STATIC
+
+Public
 
 Rem
 bbdoc: Max3dGraphics
@@ -63,16 +72,16 @@ Rem
 bbdoc: AddImportPath
 End Rem
 Function AddImportPath(path:String)
-	 Max3dImportDirs = Max3dImportDirs[..Max3dImportDirs.length + 1]
-	 Max3dImportDirs[Max3dImportDirs.length - 1] = path
+	 m3dImportDirs = m3dImportDirs[..m3dImportDirs.length + 1]
+	 m3dImportDirs[m3dImportDirs.length - 1] = path
 End Function
 
 Rem
 bbdoc: PrintImportPathes
 End Rem
 Function PrintImportPathes()	
-	For Local I:Int = 0 To Max3dImportDirs.length - 1
-		Print Max3dImportDirs[I]	
+	For Local I:Int = 0 To m3dImportDirs.length - 1
+		Print m3dImportDirs[I]	
 	Next
 End Function
 
@@ -80,8 +89,8 @@ Rem
 bbdoc: AddDLLPath
 End Rem
 Function AddDLLPath(path:String)	
-	Nax3DDLLDirs = Nax3DDLLDirs[..Nax3DDLLDirs.length + 1]
-	Nax3DDLLDirs[Nax3DDLLDirs.length - 1] = path
+	m3dDllDirs = m3dDllDirs[..m3dDllDirs.length + 1]
+	m3dDllDirs[m3dDllDirs.length - 1] = path
 End Function
 
 Rem
@@ -125,6 +134,16 @@ Function Switch3D()
 	SetBlend( - 1) 
 End Function
 
+Rem
+bbdoc: Set default texture flags for use by LoadTexture and LoadMaterial.
+End Rem
+Function SetDefaultTextureFlags( flags )
+	m3dDefTexFlags=flags
+End Function
+
+Function DefaultTextureFlags()
+	Return m3dDefTexFlags
+End Function
 
 Rem
 bbdoc: LoadShader
@@ -139,8 +158,7 @@ Rem
 bbdoc: LoadTexture
 End Rem
 Function LoadTexture( path$ )
-	Print "Loading texture:"+path
-	Local flags=TEXTURE_FILTER|TEXTURE_MIPMAP|TEXTURE_STATIC'TEXTURE_FILTER|TEXTURE_MIPMAP|TEXTURE_STATIC
+	Local flags=m3dDefTexFlags
 	Local t:TPixmap=LoadPixmap( path )
 	If Not t Return
 	Local fmt=m3dPixelFormat( t )
@@ -155,7 +173,7 @@ Rem
 bbdoc: LoadCubeTexture
 End Rem
 Function LoadCubeTexture( path$ )
-	Local flags=TEXTURE_FILTER|TEXTURE_MIPMAP|TEXTURE_STATIC
+	Local flags=m3dDefTexFlags
 	Local t:TPixmap=LoadPixmap( path )
 	If Not t Return
 	Local size=t.width
@@ -180,7 +198,6 @@ Rem
 bbdoc: LoadMaterial
 End Rem
 Function LoadMaterial( path$ )
-
 	Local file$=StripExt( path )
 	Local extn$=ExtractExt( path )
 	
@@ -238,7 +255,7 @@ Function m3dImporter( classz:Byte Ptr,pathz:Byte Ptr )
 			path=path.ToLower()
 		Else
 			Local file$=StripDir( path ),tpath$
-			For Local dir$=EachIn Max3dImportDirs
+			For Local dir$=EachIn m3dImportDirs
 				tpath=dir+"/"+file
 				If FileType( tpath )=FILETYPE_FILE Exit
 				tpath=""
@@ -311,7 +328,7 @@ Function OpenMax3d( flags )
 	If m3dLib Return
 	Local lib:String
 		
-	For Local path:String = EachIn Nax3DDLLDirs
+	For Local path:String = EachIn m3dDllDirs
 		lib = path
 		?Win32
 			m3dLib=LoadLibraryA( "max3d.dll")

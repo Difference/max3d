@@ -91,15 +91,18 @@ void scene_init(){
 	boxIB=App.Graphics()->CreateIndexBuffer( 36,"1i" );
 	boxIB->SetData( ip );
 	
-	int fmt=FORMAT_RGBA8;
-	if( App.Flags() & APP_USEHDR ) fmt=FORMAT_RGBA16F;
+	int color_fmt=FORMAT_RGBA8;
+	if( App.Flags() & MAX3D_FLOATCOLORBUFFER ) color_fmt=FORMAT_RGBA16F;
 	
-	accumBuffer=App.Graphics()->CreateTexture( w,h,fmt,TEXTURE_CLAMPST|TEXTURE_FILTER|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
-	accumBuffer2=App.Graphics()->CreateTexture( w,h,fmt,TEXTURE_CLAMPST|TEXTURE_FILTER|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
-	accumBuffer3=App.Graphics()->CreateTexture( w/4,h/4,fmt,TEXTURE_CLAMPST|TEXTURE_FILTER|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
+	int normal_fmt=FORMAT_RGBA8;
+	if( App.Flags() & MAX3D_FLOATNORMALBUFFER ) normal_fmt=FORMAT_RGBA16F;
+	
+	accumBuffer=App.Graphics()->CreateTexture( w,h,color_fmt,TEXTURE_CLAMPST|TEXTURE_FILTER|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
+	accumBuffer2=App.Graphics()->CreateTexture( w,h,color_fmt,TEXTURE_CLAMPST|TEXTURE_FILTER|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
+	accumBuffer3=App.Graphics()->CreateTexture( w/4,h/4,color_fmt,TEXTURE_CLAMPST|TEXTURE_FILTER|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
 	
 	materialBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
-	normalBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_RGBA8,TEXTURE_CLAMPST|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
+	normalBuffer=App.Graphics()->CreateTexture( w,h,normal_fmt,TEXTURE_CLAMPST|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
 	depthBuffer=App.Graphics()->CreateTexture( w,h,FORMAT_DEPTH,TEXTURE_CLAMPST|TEXTURE_RENDER|TEXTURE_RECTANGULAR );
 
 	App.Graphics()->SetTextureParam( "bb_AccumBuffer",accumBuffer );

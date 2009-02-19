@@ -415,10 +415,12 @@ public:
 		}
 		if( _flags & TEXTURE_MIPMAP ){
 			glTexParameteri( _gltarget,GL_GENERATE_MIPMAP,GL_TRUE );
-			if( _gltarget==GL_TEXTURE_2D && GLEE_EXT_texture_filter_anisotropic ){
-				float maxAnisotropy;
-				glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT,&maxAnisotropy );
-				glTexParameterf( _gltarget,GL_TEXTURE_MAX_ANISOTROPY_EXT,maxAnisotropy );
+			if( App.Flags() & MAX3D_AUTOMAXANISOTROPIC ){
+				if( _gltarget==GL_TEXTURE_2D && GLEE_EXT_texture_filter_anisotropic ){
+					float maxAnisotropy;
+					glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT,&maxAnisotropy );
+					glTexParameterf( _gltarget,GL_TEXTURE_MAX_ANISOTROPY_EXT,maxAnisotropy );
+				}
 			}
 		}
 		if( _flags & TEXTURE_CLAMPS ){
