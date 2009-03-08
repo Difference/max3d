@@ -163,8 +163,6 @@
     <File Name="opende/OPCODE/OPC_BaseModel.cpp"/>
     <File Name="opende/OPCODE/OPC_BaseModel.h"/>
     <File Name="opende/OPCODE/OPC_BoxBoxOverlap.h"/>
-    <File Name="opende/OPCODE/OPC_BoxPruning.cpp"/>
-    <File Name="opende/OPCODE/OPC_BoxPruning.h"/>
     <File Name="opende/OPCODE/OPC_Collider.cpp"/>
     <File Name="opende/OPCODE/OPC_Collider.h"/>
     <File Name="opende/OPCODE/OPC_Common.cpp"/>
@@ -199,10 +197,6 @@
     <File Name="opende/OPCODE/OPC_SphereCollider.cpp"/>
     <File Name="opende/OPCODE/OPC_SphereCollider.h"/>
     <File Name="opende/OPCODE/OPC_SphereTriOverlap.h"/>
-    <File Name="opende/OPCODE/OPC_SweepAndPrune.cpp"/>
-    <File Name="opende/OPCODE/OPC_SweepAndPrune.h"/>
-    <File Name="opende/OPCODE/OPC_ThreadLocalData.cpp"/>
-    <File Name="opende/OPCODE/OPC_ThreadLocalData.h"/>
     <File Name="opende/OPCODE/OPC_TreeBuilders.cpp"/>
     <File Name="opende/OPCODE/OPC_TreeBuilders.h"/>
     <File Name="opende/OPCODE/OPC_TreeCollider.cpp"/>

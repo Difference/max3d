@@ -247,7 +247,7 @@ API CEntity *m3dEntityParent( CEntity *entity ){
 }
 
 API float m3dEntityMatrixElement( CEntity *entity,int row,int column ){
-	return entity->Matrix()[row][column];
+	return entity->WorldMatrix()[row][column];
 }
 
 // Translation stuff...
@@ -408,7 +408,7 @@ API void m3dSetCameraPerspective( CCamera *camera,float fovy,float aspect,float 
 static CVec3 projectedPoint;
 
 API int m3dCameraProject( CCamera *camera,float x,float y,float z ){
-	CVec4 t=camera->ProjectionMatrix() * camera->InverseMatrix() * CVec4( x,y,z,1 );
+	CVec4 t=camera->ProjectionMatrix() * camera->InverseWorldMatrix() * CVec4( x,y,z,1 );
 	
 	projectedPoint=t.xyz()/t.w;
 	
@@ -435,12 +435,12 @@ API CEntity *m3dCameraPick( CCamera *camera,float viewport_x,float viewport_y,in
 	
 	float farz=camera->FarZ();
 	
-	CVec3 o=camera->Matrix().t.xyz();
+	CVec3 o=camera->WorldMatrix().t.xyz();
 	
 	float ix=camera->ProjectionMatrix().i.x;
 	float jy=camera->ProjectionMatrix().j.y;
 	
-	CVec3 v=camera->Matrix() * CVec3(
+	CVec3 v=camera->WorldMatrix() * CVec3(
 		(viewport_x/camera->Viewport().width*2-1)/ix*farz,
 		(viewport_y/camera->Viewport().height*2-1)/jy*farz,
 		farz );
