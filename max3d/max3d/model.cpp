@@ -119,8 +119,8 @@ void CModel::ScaleTexCoords( float s_scale,float t_scale ){
 }
 
 void CModel::ResetTransform(){
-	TransformSurfaces( Matrix() );
-	SetMatrix( CMat4() );
+	TransformSurfaces( WorldMatrix() );
+	SetWorldMatrix( CMat4() );
 }
 
 void CModel::SplitEdges( float length ){

@@ -48,18 +48,15 @@ public:
 	virtual void OnRenderWorld();
 	
 	//hierarchy ops
-	void SetVisible( bool visible );
-	bool Visible(){ return !!(_flags & VISIBLE); }
-	
 	void SetParent( CEntity *parent );
 	CEntity *Parent(){ return _parent; }
 	CEntity *Children(){ return _head; }
 	CEntity *Next(){ return _succ; }
 
+	void SetVisible( bool visible );
+	bool Visible(){ return !!(_flags & VISIBLE); }
+	
 	//local space
-	void SetTRS( const CVec3 &v,const CQuat &q,const CVec3 &s );
-	void GetTRS( CVec3 &v,CQuat &q,CVec3 &s );
-
 	void SetTranslation( const CVec3 &v );
 	CVec3 Translation();
 
@@ -69,10 +66,26 @@ public:
 	void SetScale( const CVec3 &v );
 	CVec3 Scale();
 	
+	void SetTRS( const CVec3 &v,const CQuat &q,const CVec3 &s );
+	void GetTRS( CVec3 &v,CQuat &q,CVec3 &s );
+
 	//world space
-	void SetMatrix( const CMat4 &m );
-	CMat4 Matrix();
-	CMat4 InverseMatrix();
+	void SetWorldTranslation( const CVec3 &v );
+	CVec3 WorldTranslation();
+	
+	void SetWorldRotation( const CQuat &q );
+	CQuat WorldRotation();
+	
+	void SetWorldScale( const CVec3 &scale );
+	CVec3 WorldScale();
+	
+	void SetWorldTRS( const CVec3 &v,const CQuat &q,const CVec3 &s );
+	void GetWorldTRS( CVec3 &v,CQuat &q,CVec3 &s );
+	
+	void SetWorldMatrix( const CMat4 &m );
+	CMat4 WorldMatrix();
+	CMat4 InverseWorldMatrix();
+
 	CMat4 RenderMatrix();
 	CMat4 InverseRenderMatrix();
 

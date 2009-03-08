@@ -77,6 +77,21 @@ CEntity::~CEntity(){
 }
 
 //hierarchy ops
+void CEntity::SetParent( CEntity *parent ){
+	ValidateTRS();
+	if( _parent ){
+		if( _succ ) _succ->_pred=_pred; else _parent->_tail=_pred;
+		if( _pred ) _pred->_succ=_succ; else _parent->_head=_succ;
+		_succ=_pred=0;
+	}
+	_parent=parent;
+	if( _parent ){
+		if( _pred=_parent->_tail ) _pred->_succ=this; else _parent->_head=this;
+		_parent->_tail=this;
+	}
+	InvalidateMatrix();
+}
+
 void CEntity::SetVisible( bool visible ){
 	if( visible ){
 		if( !Visible() ){
@@ -94,26 +109,11 @@ void CEntity::SetVisible( bool visible ){
 	}
 }
 
-void CEntity::SetParent( CEntity *parent ){
-	ValidateTRS();
-	if( _parent ){
-		if( _succ ) _succ->_pred=_pred; else _parent->_tail=_pred;
-		if( _pred ) _pred->_succ=_succ; else _parent->_head=_succ;
-		_succ=_pred=0;
-	}
-	_parent=parent;
-	if( _parent ){
-		if( _pred=_parent->_tail ) _pred->_succ=this; else _parent->_head=this;
-		_parent->_tail=this;
-	}
-	InvalidateMatrix();
-}
-
 //internal state management
 void CEntity::ValidateTRS(){
 	if( _flags & TRS_DIRTY ){
 		if( _flags & MATRIX_DIRTY ) Error( "CEntity::ValidateTRS()" );
-		CMat4 matrix=_parent ? -_parent->Matrix() * _matrix : _matrix;
+		CMat4 matrix=_parent ? _parent->InverseWorldMatrix() * _matrix : _matrix;
 		_trans=matrix.Translation();
 		_rot=matrix.Rotation();
 		_scale=matrix.Scale();
@@ -125,7 +125,7 @@ void CEntity::ValidateMatrix(){
 	if( _flags & MATRIX_DIRTY ){
 		if( _flags & TRS_DIRTY ) Error( "CEntity::ValidateMatrix()" );
 		_matrix=CMat4::TranslationMatrix( _trans ) * CMat4::RotationMatrix( _rot ) * CMat4::ScaleMatrix( _scale );
-		if( _parent ) _matrix=_parent->Matrix() * _matrix;
+		if( _parent ) _matrix=_parent->WorldMatrix() * _matrix;
 		_flags&=~MATRIX_DIRTY;
 	}
 }
@@ -140,20 +140,6 @@ void CEntity::InvalidateMatrix(){
 }
 
 //local space
-void CEntity::SetTRS( const CVec3 &v,const CQuat &q,const CVec3 &s ){
-	_trans=v;
-	_rot=q;
-	_scale=s;
-	InvalidateMatrix();
-}
-
-void CEntity::GetTRS( CVec3 &v,CQuat &q,CVec3 &s ){
-	ValidateTRS();
-	v=_trans;
-	q=_rot;
-	s=_scale;
-}
-
 void CEntity::SetTranslation( const CVec3 &v ){
 	ValidateTRS();
 	_trans=v;
@@ -187,8 +173,58 @@ CVec3 CEntity::Scale(){
 	return _scale;
 }
 
+void CEntity::SetTRS( const CVec3 &v,const CQuat &q,const CVec3 &s ){
+	_trans=v;
+	_rot=q;
+	_scale=s;
+	InvalidateMatrix();
+}
+
+void CEntity::GetTRS( CVec3 &v,CQuat &q,CVec3 &s ){
+	ValidateTRS();
+	v=_trans;
+	q=_rot;
+	s=_scale;
+}
+
 //world space
-void CEntity::SetMatrix( const CMat4 &m ){
+void CEntity::SetWorldTranslation( const CVec3 &v ){
+	SetTranslation( _parent ? _parent->InverseWorldMatrix() * v : v );
+}
+
+CVec3 CEntity::WorldTranslation(){
+	return _parent ? WorldMatrix().Translation() : Translation();
+}
+
+void CEntity::SetWorldRotation( const CQuat &q ){
+	SetRotation( _parent ? -_parent->WorldRotation() * q : q );
+}
+
+CQuat CEntity::WorldRotation(){
+	return _parent ? _parent->WorldRotation() * Rotation() : Rotation();
+}
+
+void CEntity::SetWorldScale( const CVec3 &s ){
+	SetScale( _parent ? s/_parent->WorldScale() : s );
+}
+
+CVec3 CEntity::WorldScale(){
+	return _parent ? _parent->WorldScale() * Scale() : Scale();
+}
+
+void CEntity::SetWorldTRS( const CVec3 &v,const CQuat &q,const CVec3 &s ){
+	SetWorldTranslation( v );
+	SetWorldRotation( q );
+	SetWorldScale( s );
+}
+
+void CEntity::GetWorldTRS( CVec3 &v,CQuat &q,CVec3 &s ){
+	v=WorldTranslation();
+	q=WorldRotation();
+	s=WorldScale();
+}
+
+void CEntity::SetWorldMatrix( const CMat4 &m ){
 	_matrix=m;
 	_flags&=~MATRIX_DIRTY;
 	_flags|=TRS_DIRTY|MATRIX_MODIFIED;
@@ -197,17 +233,17 @@ void CEntity::SetMatrix( const CMat4 &m ){
 	}
 }
 
-CMat4 CEntity::Matrix(){
+CMat4 CEntity::WorldMatrix(){
 	ValidateMatrix();
 	return _matrix;
 }
 
-CMat4 CEntity::InverseMatrix(){
-	return -Matrix();
+CMat4 CEntity::InverseWorldMatrix(){
+	return -WorldMatrix();
 }
 
 CMat4 CEntity::RenderMatrix(){
-	return Matrix();
+	return WorldMatrix();
 }
 
 CMat4 CEntity::InverseRenderMatrix(){

@@ -151,7 +151,7 @@ void CMirror::OnRenderScene( CCamera *camera ){
 	mat.t.xyz()=eye;
 	mat=mir * mat;
 
-	_camera->SetMatrix( mat );
+	_camera->SetWorldMatrix( mat );
 	_camera->SetProjectionMatrix( proj );
 	
 	CTexture *cb=App.Graphics()->ColorBuffer( 0 );
