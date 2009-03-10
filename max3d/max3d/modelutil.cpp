@@ -39,7 +39,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <aiScene.h>
 #include <aiPostProcess.h>
 
-static CVec3 scale( .05f );
+static CVec3 scale( 1.0f );
 
 static vector<CMaterial*> materials;		//same index as scene
 static vector<CModelSurface*> surfaces;	//same index as scene
@@ -117,7 +117,7 @@ static CModelSurface *loadSurface( const aiMesh *mesh ){
 	return surf;
 }
 
-static CModel *loadModel( const aiNode *node,CModel *parent,int collType,float mass ){
+static CModel *loadModel( const aiNode *node,CModel *parent ){
 	
 	CModel *model=new CModel;
 	model->SetParent( parent );
@@ -131,23 +131,15 @@ static CModel *loadModel( const aiNode *node,CModel *parent,int collType,float m
 	
 	model->SetTRS( Vec3( position ) * scale,Quat( rotation ),Vec3( scaling ) );
 	
-	for( int i=0;i<node->mNumMeshes;++i ){
-		CModelSurface *surf=surfaces[ node->mMeshes[i] ];
-		model->AddSurface( surf );
-	}
-	
-	if( collType || mass ){
-		CModelSurface *physSurf=new CModelSurface;
-		for( vector<CModelSurface*>::const_iterator it=model->Surfaces().begin();it!=model->Surfaces().end();++it ){
-			physSurf->AddSurface( *it );
+	if( node->mNumMeshes ){
+		for( int i=0;i<node->mNumMeshes;++i ){
+			CModelSurface *surf=surfaces[ node->mMeshes[i] ];
+			model->AddSurface( surf );
 		}
-		CBody *body=App.World()->Physics()->CreateSurfaceBody( physSurf,collType,mass );
-		physSurf->Release();
-		model->SetBody( body );
 	}
 	
 	for( int i=0;i<node->mNumChildren;++i ){
-		loadModel( node->mChildren[i],model,collType,mass );
+		loadModel( node->mChildren[i],model );
 	}
 
 	return model;
@@ -188,7 +180,7 @@ CModel *CModelUtil::ImportModel( const string &path,int collType,float mass ){
 		surfaces.push_back( loadSurface( scene->mMeshes[i] ) );
 	}
 	
-	CModel *model=loadModel( scene->mRootNode,0,collType,mass );
+	CModel *model=loadModel( scene->mRootNode,0 );
 	
 	for( int i=0;i<materials.size();++i ){
 		materials[i]->Release();
@@ -199,6 +191,8 @@ CModel *CModelUtil::ImportModel( const string &path,int collType,float mass ){
 		surfaces[i]->Release();
 	}
 	surfaces.clear();
+	
+	if( collType || mass ) model->SetBody( CreateModelBody( model,collType,mass ) );
 	
 	return model;
 }
@@ -263,11 +257,22 @@ CModel *CModelUtil::ImportModel( const string &path,int collType,float mass ){
 }
 */
 
+static void createBodySurf( CModelSurface *surf,CModel *model ){
+	CMat4 mat=model->WorldMatrix();
+	CMat4 itMat=(-mat).Transpose();
+	for( vector<CModelSurface*>::const_iterator it=model->Surfaces().begin();it!=model->Surfaces().end();++it ){
+		CModelSurface *tsurf=(CModelSurface*)( (*it)->Copy() );
+		tsurf->Transform( mat,itMat );
+		surf->AddSurface( tsurf );
+	}
+	for( CEntity *child=model->Children();child;child=child->Next() ){
+		if( CModel *model=dynamic_cast<CModel*>( child ) ) createBodySurf( surf,model );
+	}
+}
+
 CBody *CModelUtil::CreateModelBody( CModel *model,int collType,float mass ){
 	CModelSurface *physSurf=new CModelSurface;
-	for( vector<CModelSurface*>::const_iterator it=model->Surfaces().begin();it!=model->Surfaces().end();++it ){
-		physSurf->AddSurface( *it );
-	}
+	createBodySurf( physSurf,model );
 	CBody *body=App.World()->Physics()->CreateSurfaceBody( physSurf,collType,mass );
 	physSurf->Release();
 	return body;

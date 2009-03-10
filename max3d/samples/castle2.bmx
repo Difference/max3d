@@ -43,14 +43,14 @@ Local light=CreateDistantLight()
 TurnEntity light,60,45,0
 
 Local dwarf=LoadModel( "dwarf.x",0,0 )
-'SetEntityScale dwarf,.05,.05,.05
+SetEntityScale dwarf,.05,.05,.05
+ResetModelTransform dwarf
 MoveEntity dwarf,0,0,-7
-'ResetModelTransform dwarf
 
-Local castle=LoadModel( "CASTLE1.X",4,0 )
-'SetEntityScale castle,.035,.035,.035
-'ResetModelTransform castle
-'CreateModelBody castle,castle,4,0
+Local castle=LoadModel( "CASTLE1.X",0,0 )
+SetEntityScale castle,.035,.035,.035
+ResetModelTransform castle
+CreateModelBody castle,castle,4,0
 
 Rem
 For Local i=0 Until CountModelSurfaces( castle )

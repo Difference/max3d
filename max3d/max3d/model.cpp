@@ -105,6 +105,14 @@ void CModel::UpdateTangents(){
 	}
 }
 
+void CModel::Scale( const CVec3 &v ){
+	SetTranslation( Translation() * v );
+	TransformSurfaces( CMat4::ScaleMatrix( v ) );
+	for( CEntity *child=Children();child;child=child->Next() ){
+		if( CModel *model=dynamic_cast<CModel*>( child ) ) model->Scale( v );
+	}
+}
+
 void CModel::TransformSurfaces( const CMat4 &matrix ){
 	CMat4 itMatrix=(-matrix).Transpose();
 	for( vector<CModelSurface*>::iterator it=_surfaces.begin();it!=_surfaces.end();++it ){
@@ -113,23 +121,35 @@ void CModel::TransformSurfaces( const CMat4 &matrix ){
 }
 
 void CModel::ScaleTexCoords( float s_scale,float t_scale ){
+	for( CEntity *child=Children();child;child=child->Next() ){
+		if( CModel *model=dynamic_cast<CModel*>( child ) ) model->ScaleTexCoords( s_scale,t_scale );
+	}
 	for( vector<CModelSurface*>::iterator it=_surfaces.begin();it!=_surfaces.end();++it ){
 		(*it)->ScaleTexCoords( s_scale,t_scale );
 	}
 }
 
 void CModel::ResetTransform(){
+	for( CEntity *child=Children();child;child=child->Next() ){
+		if( CModel *model=dynamic_cast<CModel*>( child ) ) model->ResetTransform();
+	}
 	TransformSurfaces( WorldMatrix() );
 	SetWorldMatrix( CMat4() );
 }
 
 void CModel::SplitEdges( float length ){
+	for( CEntity *child=Children();child;child=child->Next() ){
+		if( CModel *model=dynamic_cast<CModel*>( child ) ) model->SplitEdges( length );
+	}
 	for( vector<CModelSurface*>::iterator it=_surfaces.begin();it!=_surfaces.end();++it ){
 		(*it)->SplitEdges( length );
 	}
 }
 
 void CModel::Optimize(){
+	for( CEntity *child=Children();child;child=child->Next() ){
+		if( CModel *model=dynamic_cast<CModel*>( child ) ) model->Optimize();
+	}
 	for( vector<CModelSurface*>::iterator it=_surfaces.begin();it!=_surfaces.end();++it ){
 		(*it)->Optimize();
 	}

@@ -50,6 +50,7 @@ public:
 	void Flip();
 	void UpdateNormals();
 	void UpdateTangents();
+	void Scale( const CVec3 &v );
 	void TransformSurfaces( const CMat4 &matrix );
 	void ScaleTexCoords( float s_scale,float t_scale );
 	void ResetTransform();

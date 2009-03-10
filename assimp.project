@@ -211,7 +211,6 @@
     <File Name="assimp/code/UnrealLoader.cpp"/>
     <File Name="assimp/code/UnrealLoader.h"/>
   </VirtualDirectory>
-  <Dependencies Name="Debug"/>
   <Settings Type="Static Library">
     <Configuration Name="Debug" CompilerType="gnu gcc" DebuggerType="GNU gdb debugger" Type="Static Library">
       <General OutputFile="$(IntermediateDirectory)/lib$(ProjectName).a" IntermediateDirectory="./Debug" Command="" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
@@ -271,4 +270,5 @@
     </Configuration>
   </Settings>
   <Dependencies Name="Release"/>
+  <Dependencies Name="Debug"/>
 </CodeLite_Project>

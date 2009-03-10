@@ -4,7 +4,7 @@
   <Project Name="ode" Path="ode.project" Active="No"/>
   <Project Name="assimp" Path="assimp.project" Active="No"/>
   <BuildMatrix>
-    <WorkspaceConfiguration Name="Macos Debug" Selected="yes">
+    <WorkspaceConfiguration Name="Macos Debug" Selected="no">
       <Project Name="ode" ConfigName="Debug"/>
       <Project Name="max3d" ConfigName="Macos Debug"/>
       <Project Name="assimp" ConfigName="Debug"/>
@@ -24,7 +24,7 @@
       <Project Name="max3d" ConfigName="Linux Debug"/>
       <Project Name="assimp" ConfigName="Debug"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Win32 Release" Selected="no">
+    <WorkspaceConfiguration Name="Win32 Release" Selected="yes">
       <Project Name="ode" ConfigName="Release"/>
       <Project Name="max3d" ConfigName="Win32 Release"/>
       <Project Name="assimp" ConfigName="Release"/>

@@ -355,6 +355,10 @@ API void m3dUpdateModelTangents( CModel *model ){
 	model->UpdateTangents();
 }
 
+API void m3dScaleModel( CModel *model,float x,float y,float z ){
+	model->Scale( CVec3( x,y,z ) );
+}
+
 API void m3dScaleModelSurfaces( CModel *model,float x,float y,float z ){
 	model->TransformSurfaces( CMat4::ScaleMatrix( CVec3( x,y,z ) ) );
 }

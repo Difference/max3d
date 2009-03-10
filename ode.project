@@ -316,7 +316,7 @@
       </AdditionalRules>
     </Configuration>
   </Settings>
-  <Dependencies Name="Debug"/>
   <Dependencies Name="VC9 Release"/>
   <Dependencies Name="Release"/>
+  <Dependencies Name="Debug"/>
 </CodeLite_Project>
