@@ -4,12 +4,12 @@
   <Project Name="ode" Path="ode.project" Active="No"/>
   <Project Name="assimp" Path="assimp.project" Active="No"/>
   <BuildMatrix>
-    <WorkspaceConfiguration Name="Macos Debug" Selected="no">
+    <WorkspaceConfiguration Name="Macos Debug" Selected="yes">
       <Project Name="ode" ConfigName="Debug"/>
       <Project Name="max3d" ConfigName="Macos Debug"/>
       <Project Name="assimp" ConfigName="Debug"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Macos Release" Selected="yes">
+    <WorkspaceConfiguration Name="Macos Release" Selected="no">
       <Project Name="ode" ConfigName="Release"/>
       <Project Name="max3d" ConfigName="Macos Release"/>
       <Project Name="assimp" ConfigName="Release"/>

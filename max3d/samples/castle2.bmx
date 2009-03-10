@@ -43,14 +43,16 @@ Local light=CreateDistantLight()
 TurnEntity light,60,45,0
 
 Local dwarf=LoadModel( "dwarf.x",0,0 )
-SetEntityScale dwarf,.035,.035,.035
-ResetModelTransform dwarf
+'SetEntityScale dwarf,.05,.05,.05
+MoveEntity dwarf,0,0,-7
+'ResetModelTransform dwarf
 
-Local castle=LoadModel( "CASTLE1.X",0,0 )
-SetEntityScale castle,.035,.035,.035
-ResetModelTransform castle
-CreateModelBody castle,castle,4,0
+Local castle=LoadModel( "CASTLE1.X",4,0 )
+'SetEntityScale castle,.035,.035,.035
+'ResetModelTransform castle
+'CreateModelBody castle,castle,4,0
 
+Rem
 For Local i=0 Until CountModelSurfaces( castle )
 	Local surface=GetModelSurface( castle,i )
 	Local material=GetSurfaceMaterial( surface )
@@ -63,6 +65,7 @@ For Local i=0 Until CountModelSurfaces( castle )
 		SetSurfaceMaterial surface,LoadMaterial( "eurofan.png" )
 	End Select
 Next
+End Rem
 
 Local player=CreateCapsule( blue,.5,2,1,-1 )
 MoveEntity player,0,5,-10

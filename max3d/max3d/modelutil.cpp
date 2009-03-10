@@ -39,6 +39,19 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <aiScene.h>
 #include <aiPostProcess.h>
 
+static CVec3 scale( .05f );
+
+static vector<CMaterial*> materials;		//same index as scene
+static vector<CModelSurface*> surfaces;	//same index as scene
+
+static CVec3 Vec3( const aiVector3D &v ){
+	return CVec3( v.x,v.y,v.z );
+}
+
+static CQuat Quat( const aiQuaternion &q ){
+	return CQuat( CVec3( q.x,q.y,q.z ),q.w );
+}
+
 static CMaterial *loadMaterial( aiMaterial *mat ){
 	CMaterial *cmat=new CMaterial;
 	
@@ -78,6 +91,7 @@ static CMaterial *loadMaterial( aiMaterial *mat ){
 
 static CModelSurface *loadSurface( const aiMesh *mesh ){
 	CModelSurface *surf=new CModelSurface;
+	surf->SetMaterial( materials[mesh->mMaterialIndex] );	
 	
 	aiVector3D *mv=mesh->mVertices;
 	aiVector3D *mn=mesh->mNormals;
@@ -85,7 +99,7 @@ static CModelSurface *loadSurface( const aiMesh *mesh ){
 	
 	for( int i=0;i<mesh->mNumVertices;++i ){
 		CVertex v;
-		v.position=*(CVec3*)mv++;
+		v.position=*(CVec3*)mv++ * scale;
 		if( mn ) memcpy( &v.normal,mn++,12 );
 		if( mc ) memcpy( &v.texcoords[0],mc++,8 );
 		surf->AddVertex( v );
@@ -103,23 +117,97 @@ static CModelSurface *loadSurface( const aiMesh *mesh ){
 	return surf;
 }
 
-CBody *CModelUtil::CreateModelBody( CModel *model,int collType,float mass ){
-	CModelSurface *physSurf=new CModelSurface;
-	for( vector<CModelSurface*>::const_iterator it=model->Surfaces().begin();it!=model->Surfaces().end();++it ){
-		physSurf->AddSurface( *it );
+static CModel *loadModel( const aiNode *node,CModel *parent,int collType,float mass ){
+	
+	CModel *model=new CModel;
+	model->SetParent( parent );
+	
+	aiVector3D scaling;
+	aiQuaternion rotation;
+	aiVector3D position;
+	node->mTransformation.Decompose( scaling,rotation,position );
+	
+//	cout<<"Position="<<Vec3( position )<<"Scaling="<<Vec3(scaling)<<endl;
+	
+	model->SetTRS( Vec3( position ) * scale,Quat( rotation ),Vec3( scaling ) );
+	
+	for( int i=0;i<node->mNumMeshes;++i ){
+		CModelSurface *surf=surfaces[ node->mMeshes[i] ];
+		model->AddSurface( surf );
 	}
-	CBody *body=App.World()->Physics()->CreateSurfaceBody( physSurf,collType,mass );
-	physSurf->Release();
-	return body;
+	
+	if( collType || mass ){
+		CModelSurface *physSurf=new CModelSurface;
+		for( vector<CModelSurface*>::const_iterator it=model->Surfaces().begin();it!=model->Surfaces().end();++it ){
+			physSurf->AddSurface( *it );
+		}
+		CBody *body=App.World()->Physics()->CreateSurfaceBody( physSurf,collType,mass );
+		physSurf->Release();
+		model->SetBody( body );
+	}
+	
+	for( int i=0;i<node->mNumChildren;++i ){
+		loadModel( node->mChildren[i],model,collType,mass );
+	}
+
+	return model;
 }
 
+CModel *CModelUtil::ImportModel( const string &path,int collType,float mass ){
+
+	int flags=
+	aiProcess_Triangulate |
+	aiProcess_JoinIdenticalVertices |
+	aiProcess_FindDegenerates |
+	aiProcess_ImproveCacheLocality |
+	aiProcess_SortByPType |
+	aiProcess_ConvertToLeftHanded |
+	0;
+
+	Assimp::Importer importer;
+	importer.SetPropertyInteger( AI_CONFIG_PP_SBP_REMOVE,aiPrimitiveType_LINE|aiPrimitiveType_POINT ); 	
+
+	const aiScene *scene=importer.ReadFile( path,flags );
+
+	string err=importer.GetErrorString();
+	if( err.size() ) Warning( "aiImporter error:"+err );
+	if( !scene ) return 0;
+
+	cout<<"ImportModel, path="<<path<<", numAnimations="<<scene->mNumAnimations<<endl;
+	for( int i=0;i<scene->mNumAnimations;++i ){
+		aiAnimation *anim=scene->mAnimations[i];
+		cout<<"Animation "<<i<<", name="<<anim->mName.data<<", duration="<<anim->mDuration<<", NumChannels="<<anim->mNumChannels<<endl;
+	}
+
+	materials.clear();
+	for( int i=0;i<scene->mNumMaterials;++i ){
+		materials.push_back( loadMaterial( scene->mMaterials[i] ) );
+	}
+	
+	for( int i=0;i<scene->mNumMeshes;++i ){
+		surfaces.push_back( loadSurface( scene->mMeshes[i] ) );
+	}
+	
+	CModel *model=loadModel( scene->mRootNode,0,collType,mass );
+	
+	for( int i=0;i<materials.size();++i ){
+		materials[i]->Release();
+	}
+	materials.clear();
+	
+	for( int i=0;i<surfaces.size();++i ){
+		surfaces[i]->Release();
+	}
+	surfaces.clear();
+	
+	return model;
+}
+
+/*
 CModel *CModelUtil::ImportModel( const string &path,int collType,float mass ){
 	
 	int flags=
 	aiProcess_Triangulate |
-//	aiProcess_GenSmoothNormals |			//leave these to max3d for now...
-//	aiProcess_CalcTangentSpace |
-//	aiProcess_RemoveRedundantMaterials |	//trust the author
 	aiProcess_JoinIdenticalVertices |
 	aiProcess_PreTransformVertices |
 	aiProcess_FindDegenerates |
@@ -132,6 +220,12 @@ CModel *CModelUtil::ImportModel( const string &path,int collType,float mass ){
 	importer.SetPropertyInteger( AI_CONFIG_PP_SBP_REMOVE,aiPrimitiveType_LINE|aiPrimitiveType_POINT ); 	
 
 	const aiScene *scene=importer.ReadFile( path,flags );
+	
+	cout<<"ImportModel, path="<<path<<", numAnimations="<<scene->mNumAnimations<<endl;
+	for( int i=0;i<scene->mNumAnimations;++i ){
+		aiAnimation *anim=scene->mAnimations[i];
+		cout<<"Animation "<<i<<", name="<<anim->mName.data<<", duration="<<anim->mDuration<<", NumChannels="<<anim->mNumChannels<<endl;
+	}
 
 	string err=importer.GetErrorString();
 	if( err.size() ) Warning( "aiImporter error:"+err );
@@ -167,15 +261,20 @@ CModel *CModelUtil::ImportModel( const string &path,int collType,float mass ){
 
 	return model;
 }
+*/
+
+CBody *CModelUtil::CreateModelBody( CModel *model,int collType,float mass ){
+	CModelSurface *physSurf=new CModelSurface;
+	for( vector<CModelSurface*>::const_iterator it=model->Surfaces().begin();it!=model->Surfaces().end();++it ){
+		physSurf->AddSurface( *it );
+	}
+	CBody *body=App.World()->Physics()->CreateSurfaceBody( physSurf,collType,mass );
+	physSurf->Release();
+	return body;
+}
 
 CModel *CModelUtil::CreateSphere( CMaterial *material,float radius,int collType,float mass ){
-//	int segs=8;
-	int segs=int( radius );
-	if( segs<8 ){
-		segs=8;
-	}else if( segs>64 ){
-		segs=64;
-	}
+	int segs=8;
 	CModelSurface *surf=new CModelSurface;
 	surf->SetMaterial( material );
 	int segs2=segs*2;

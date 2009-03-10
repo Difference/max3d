@@ -48,6 +48,7 @@ void CResource::FlushResources(){
 		if( resource->Refs()>0 ){
 			out.push_back( resource );
 		}else{
+			cout<<"Deleting resource!"<<endl;
 			delete resource;
 		}
 	}

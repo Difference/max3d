@@ -35,7 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "app.h"
 #include "odephysics.h"
 
-static const int ODE_MAX_CONTACTS=100;
+static const int ODE_MAX_CONTACTS=10;
 
 static dJointGroupID odeContactGroup;
 static dContact odeContacts[ODE_MAX_CONTACTS];
